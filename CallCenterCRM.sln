@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32104.313
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CallCenterCRM", "CallCenterCRM\CallCenterCRM.csproj", "{731D0628-EF42-4E88-AE64-9BC4C673D4C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{731D0628-EF42-4E88-AE64-9BC4C673D4C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{731D0628-EF42-4E88-AE64-9BC4C673D4C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{731D0628-EF42-4E88-AE64-9BC4C673D4C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{731D0628-EF42-4E88-AE64-9BC4C673D4C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0854E708-5C1B-4BE4-9F3C-0B168DE527DC}
+	EndGlobalSection
+EndGlobal
