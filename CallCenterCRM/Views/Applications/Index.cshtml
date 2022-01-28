@@ -1,0 +1,107 @@
+﻿@model IEnumerable<CallCenterCRM.Models.Application>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Direction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipient)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpireTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RelevantApplications)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Applicant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attachment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Classification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Recipient)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpireTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RelevantApplications)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Applicant.AdditionalNote)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Attachment.Extension)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Classification.Direction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
