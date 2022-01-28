@@ -55,5 +55,8 @@ namespace CallCenterCRM.Models
         public virtual User User { get; set; } = null!;
         [InverseProperty("Application")]
         public virtual Answer Answer { get; set; } = null!;
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

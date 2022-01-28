@@ -30,5 +30,8 @@ namespace CallCenterCRM.Models
 
         [InverseProperty(nameof(Application.Classification))]
         public virtual ICollection<Application> Applications { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

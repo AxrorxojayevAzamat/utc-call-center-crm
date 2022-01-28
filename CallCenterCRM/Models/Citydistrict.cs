@@ -26,5 +26,8 @@ namespace CallCenterCRM.Models
 
         [InverseProperty(nameof(Applicant.CityDistrict))]
         public virtual ICollection<Applicant> Applicants { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

@@ -29,5 +29,8 @@ namespace CallCenterCRM.Models
         public virtual Answer Answer { get; set; } = null!;
         [InverseProperty("Attachment")]
         public virtual Application Application { get; set; } = null!;
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

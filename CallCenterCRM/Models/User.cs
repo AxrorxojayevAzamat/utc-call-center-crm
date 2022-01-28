@@ -61,5 +61,8 @@ namespace CallCenterCRM.Models
         public virtual ICollection<Application> Applications { get; set; }
         [InverseProperty(nameof(User.Organization))]
         public virtual ICollection<User> InverseOrganization { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

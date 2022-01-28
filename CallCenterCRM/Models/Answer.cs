@@ -47,5 +47,8 @@ namespace CallCenterCRM.Models
         [ForeignKey(nameof(OrganizationId))]
         [InverseProperty(nameof(User.Answers))]
         public virtual User Organization { get; set; } = null!;
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }
