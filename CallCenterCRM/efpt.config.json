@@ -1,0 +1,62 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "CallcentercrmContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": "Data",
+   "OutputPath": "Models",
+   "ProjectRootNamespace": "CallCenterCRM",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "answers",
+         "ObjectType": 0
+      },
+      {
+         "Name": "applicants",
+         "ObjectType": 0
+      },
+      {
+         "Name": "application",
+         "ObjectType": 0
+      },
+      {
+         "Name": "attachments",
+         "ObjectType": 0
+      },
+      {
+         "Name": "citydistrict",
+         "ObjectType": 0
+      },
+      {
+         "Name": "classification",
+         "ObjectType": 0
+      },
+      {
+         "Name": "users",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "callcentercrm",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": true,
+   "UseManyToManyEntity": true,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": true,
+   "UseNullableReferences": true,
+   "UseSchemaFolders": false,
+   "UseSpatial": true
+}
