@@ -4,16 +4,30 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CallCenterCRM.Models
 {
     [Table("citydistrict")]
-    public partial class Citydistrict
+    public partial class Citydistrict : BaseModel
     {
+
+
         public Citydistrict()
         {
             Applicants = new HashSet<Applicant>();
+
+            RegionsList = new List<SelectListItem>();
+
+            foreach (Regions region in (Regions[])Enum.GetValues(typeof(Regions)))
+            {
+                RegionsList.Add(new SelectListItem
+                {
+                    Value = ((int)region).ToString(),
+                    Text = region.GetDisplayName()
+                });
+            }
         }
 
         [Key]
@@ -21,13 +35,28 @@ namespace CallCenterCRM.Models
         public int Id { get; set; }
         [StringLength(255)]
         public string Title { get; set; } = null!;
-        [Column(TypeName = "int(11)")]
-        public int RegionId { get; set; }
-
+        public Regions Region { get; set; }
+        [NotMapped]
+        public List<SelectListItem> RegionsList { get; set; }
         [InverseProperty(nameof(Applicant.CityDistrict))]
         public virtual ICollection<Applicant> Applicants { get; set; }
+    }
 
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
+    public enum Regions
+    {
+        [Display(Name = "г. Ташкент")] TashkentCity,
+        [Display(Name = "Андижан")] Andijan = 2,
+        [Display(Name = "Бухара")] Bukhara = 3,
+        [Display(Name = "Фергана")] Fergana = 4,
+        [Display(Name = "Джизак")] Jizzakh = 5,
+        [Display(Name = "Наманган")] Namangan = 6,
+        [Display(Name = "Навои")] Navoiy = 7,
+        [Display(Name = "Кашкадарья")] Qashqadaryo = 8,
+        [Display(Name = "Самарканд")] Samarqand = 9,
+        [Display(Name = "Сырдарья")] Sirdaryo = 10,
+        [Display(Name = "Сурхандарьинская область")] Surxondaryo = 11,
+        [Display(Name = "Ташкентская область")] TashkentRegion = 12,
+        [Display(Name = "Хорезм")] Xorazm = 13,
+        [Display(Name = "Каракалпакстан")] Karakalpakstan = 14,
     }
 }

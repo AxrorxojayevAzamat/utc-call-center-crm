@@ -5,8 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Services.AddDbContext<CallcentercrmContext>(options =>
-//                options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+builder.Services.AddDbContext<CallcentercrmContext>(options =>
+              options.UseMySql("server=localhost;port=3306;database=callcentercrm;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"), x => x.UseNetTopologySuite()));
+//builder.Services.AddDbContext<CallcentercrmContext>();
 
 var app = builder.Build();
 

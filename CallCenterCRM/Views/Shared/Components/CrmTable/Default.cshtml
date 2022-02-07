@@ -1,17 +1,17 @@
-﻿@model IEnumerable<CallCenterCRM.Models.Applicant>
+﻿<h1>Header 1</h1>
 
+@*@model IEnumerable<TModel>*@
 @{
-    ViewData["Title"] = "Index";
+    //List<T> columns = ViewData["Columns"];
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
-    <thead>
+@*    <thead>
         <tr>
+        @foreach (var column in ViewData["Columns"])
+        {
+            
+        }
             <th>
                 @Html.DisplayNameFor(model => model.ReferenceSource)
             </th>
@@ -79,7 +79,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.ReferenceSource)
@@ -150,6 +150,6 @@
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-}
-    </tbody>
+    }
+    </tbody>*@
 </table>

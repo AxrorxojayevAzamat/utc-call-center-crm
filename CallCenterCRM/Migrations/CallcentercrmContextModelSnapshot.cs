@@ -25,24 +25,20 @@ namespace CallCenterCRM.Migrations
             modelBuilder.Entity("CallCenterCRM.Models.Answer", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)");
 
                     b.Property<int>("ApplicationId")
                         .HasColumnType("int(11)");
 
-                    b.Property<int>("AttachmentId")
+                    b.Property<int?>("AttachmentId")
                         .HasColumnType("int(11)");
-
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Conclusion")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Executor")
@@ -56,10 +52,9 @@ namespace CallCenterCRM.Migrations
                     b.Property<int>("RegisterNumber")
                         .HasColumnType("int(11)");
 
-                    b.Property<string>("RerponseLetter")
+                    b.Property<string>("ResponseLetter")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ResponsiblePerson")
                         .IsRequired()
@@ -71,7 +66,7 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
@@ -115,7 +110,7 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Employment")
@@ -124,7 +119,6 @@ namespace CallCenterCRM.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ExtraContact")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -134,7 +128,6 @@ namespace CallCenterCRM.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Maxalla")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -143,7 +136,6 @@ namespace CallCenterCRM.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Middlename")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -158,10 +150,8 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Region")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("Region")
+                        .HasColumnType("int(11)");
 
                     b.Property<string>("Sex")
                         .IsRequired()
@@ -178,7 +168,7 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
@@ -209,14 +199,19 @@ namespace CallCenterCRM.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Direction")
-                        .HasColumnType("int(11)");
+                    b.Property<string>("Direction")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("ExpireTime")
                         .HasColumnType("datetime");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Recipient")
                         .IsRequired()
@@ -233,7 +228,7 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("UserId")
@@ -265,7 +260,7 @@ namespace CallCenterCRM.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Extension")
@@ -291,7 +286,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int(11)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
@@ -305,18 +300,18 @@ namespace CallCenterCRM.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("RegionId")
-                        .HasColumnType("int(11)");
+                    b.Property<int>("Region")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
@@ -330,7 +325,7 @@ namespace CallCenterCRM.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int(11)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
@@ -346,7 +341,7 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Value")
@@ -378,7 +373,7 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
@@ -415,7 +410,7 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Username")
@@ -446,7 +441,6 @@ namespace CallCenterCRM.Migrations
                     b.HasOne("CallCenterCRM.Models.Attachment", "Attachment")
                         .WithOne("Answer")
                         .HasForeignKey("CallCenterCRM.Models.Answer", "AttachmentId")
-                        .IsRequired()
                         .HasConstraintName("Answers_fk0");
 
                     b.HasOne("CallCenterCRM.Models.User", "Organization")

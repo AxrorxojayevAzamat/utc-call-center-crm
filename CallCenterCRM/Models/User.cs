@@ -12,7 +12,7 @@ namespace CallCenterCRM.Models
     [Index(nameof(Email), Name = "Email", IsUnique = true)]
     [Index(nameof(Username), Name = "Username", IsUnique = true)]
     [Index(nameof(OrganizationId), Name = "Users_fk0")]
-    public partial class User
+    public partial class User : BaseModel
     {
         public User()
         {
@@ -61,8 +61,5 @@ namespace CallCenterCRM.Models
         public virtual ICollection<Application> Applications { get; set; }
         [InverseProperty(nameof(User.Organization))]
         public virtual ICollection<User> InverseOrganization { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
     }
 }

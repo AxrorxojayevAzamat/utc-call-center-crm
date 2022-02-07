@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
 
-namespace CallCenterCRM
+namespace CallCenterCRM.Controllers
 {
     public class AnswersController : Controller
     {
@@ -62,17 +62,17 @@ namespace CallCenterCRM
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ResponsiblePerson,Executor,RerponseLetter,AttachmentId,RegisterNumber,Author,Result,Conclusion,OrganizationId,ApplicationId,CreatedDate,UpdatedDate")] Answer answer)
+        public IActionResult Create([Bind("Id,ResponsiblePerson,Executor,ResponseLetter,AttachmentId,RegisterNumber,Result,Conclusion,OrganizationId,ApplicationId")] Answer answer)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(answer);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment", answer.ApplicationId);
-            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", answer.AttachmentId);
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
+            //ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment", answer.ApplicationId);
+            //ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", answer.AttachmentId);
+            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
             return View(answer);
         }
 
@@ -100,7 +100,7 @@ namespace CallCenterCRM
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ResponsiblePerson,Executor,RerponseLetter,AttachmentId,RegisterNumber,Author,Result,Conclusion,OrganizationId,ApplicationId,CreatedDate,UpdatedDate")] Answer answer)
+        public IActionResult Edit(int id, [Bind("Id,ResponsiblePerson,Executor,ResponseLetter,AttachmentId,RegisterNumber,Result,Conclusion,OrganizationId,ApplicationId")] Answer answer)
         {
             if (id != answer.Id)
             {
@@ -112,7 +112,7 @@ namespace CallCenterCRM
                 try
                 {
                     _context.Update(answer);
-                    await _context.SaveChangesAsync();
+                   _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

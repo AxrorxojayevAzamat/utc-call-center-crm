@@ -12,7 +12,7 @@ namespace CallCenterCRM.Models
     [Index(nameof(OrganizationId), Name = "Answers_fk1")]
     [Index(nameof(ApplicationId), Name = "ApplicationId", IsUnique = true)]
     [Index(nameof(AttachmentId), Name = "AttachmentId", IsUnique = true)]
-    public partial class Answer
+    public partial class Answer : BaseModel
     {
         [Key]
         [Column(TypeName = "int(11)")]
@@ -21,14 +21,12 @@ namespace CallCenterCRM.Models
         public string ResponsiblePerson { get; set; } = null!;
         [StringLength(255)]
         public string Executor { get; set; } = null!;
-        [StringLength(255)]
-        public string RerponseLetter { get; set; } = null!;
+        [Column(TypeName = "text")]
+        public string ResponseLetter { get; set; } = null!;
         [Column(TypeName = "int(11)")]
-        public int AttachmentId { get; set; }
+        public int? AttachmentId { get; set; }
         [Column(TypeName = "int(11)")]
         public int RegisterNumber { get; set; }
-        [StringLength(255)]
-        public string Author { get; set; } = null!;
         [StringLength(255)]
         public string Result { get; set; } = null!;
         [Column(TypeName = "text")]
@@ -43,12 +41,10 @@ namespace CallCenterCRM.Models
         public virtual Application Application { get; set; } = null!;
         [ForeignKey(nameof(AttachmentId))]
         [InverseProperty("Answer")]
-        public virtual Attachment Attachment { get; set; } = null!;
+        public virtual Attachment? Attachment { get; set; } = null!;
         [ForeignKey(nameof(OrganizationId))]
         [InverseProperty(nameof(User.Answers))]
         public virtual User Organization { get; set; } = null!;
 
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
     }
 }

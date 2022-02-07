@@ -19,13 +19,10 @@
                 @Html.DisplayNameFor(model => model.Executor)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RerponseLetter)
+                @Html.DisplayNameFor(model => model.ResponseLetter)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RegisterNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Result)
@@ -43,10 +40,10 @@
                 @Html.DisplayNameFor(model => model.Organization)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
+                @Html.DisplayNameFor(model => model.UpdatedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UpdatedDate)
+                @Html.DisplayNameFor(model => model.CreatedDate)
             </th>
             <th></th>
         </tr>
@@ -61,13 +58,10 @@
                 @Html.DisplayFor(modelItem => item.Executor)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.RerponseLetter)
+                @Html.DisplayFor(modelItem => item.ResponseLetter)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RegisterNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Result)
@@ -85,10 +79,10 @@
                 @Html.DisplayFor(modelItem => item.Organization.City)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
+                @Html.DisplayFor(modelItem => item.UpdatedDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UpdatedDate)
+                @Html.DisplayFor(modelItem => item.CreatedDate)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

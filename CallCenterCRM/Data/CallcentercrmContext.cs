@@ -27,14 +27,14 @@ namespace CallCenterCRM.Data
         public virtual DbSet<Classification> Classifications { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=localhost;port=3306;database=callcentercrm;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"), x => x.UseNetTopologySuite());
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        //        optionsBuilder.UseMySql("server=localhost;port=3306;database=callcentercrm;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"), x => x.UseNetTopologySuite());
+        //    }
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,6 @@ namespace CallCenterCRM.Data
 
             modelBuilder.Entity<Answer>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Application)
                     .WithOne(p => p.Answer)
@@ -114,9 +113,40 @@ namespace CallCenterCRM.Data
                     .HasConstraintName("Users_fk0");
             });
 
+            modelBuilder.Entity<Citydistrict>().Property(c => c.Region).HasConversion<int>();
+
+            //var allEntities = modelBuilder.Model.GetEntityTypes();
+
+            //foreach (var entity in allEntities)
+            //{
+            //    entity.AddProperty("CreatedDate", typeof(DateTimeOffset));
+            //    entity.AddProperty("UpdatedDate", typeof(DateTimeOffset));
+            //}
+
             OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public override int SaveChanges()
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e =>
+                        e.State == EntityState.Added
+                        || e.State == EntityState.Modified);
+
+            foreach (var entityEntry in entries)
+            {
+                entityEntry.Property("UpdatedDate").CurrentValue = DateTimeOffset.Now;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    entityEntry.Property("CreatedDate").CurrentValue = DateTimeOffset.Now;
+                }
+            }
+
+            return base.SaveChanges();
+        }
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CallCenterCRM.Models
@@ -11,11 +12,22 @@ namespace CallCenterCRM.Models
     [Table("applicants")]
     [Index(nameof(CityDistrictId), Name = "Applicants_fk0")]
     [Index(nameof(OrganizationId), Name = "Applicants_fk1")]
-    public partial class Applicant
+    public partial class Applicant : BaseModel
     {
         public Applicant()
         {
             Applications = new HashSet<Application>();
+
+            RegionsList = new List<SelectListItem>();
+
+            foreach (Regions region in (Regions[])Enum.GetValues(typeof(Regions)))
+            {
+                RegionsList.Add(new SelectListItem
+                {
+                    Value = ((int)region).ToString(),
+                    Text = region.GetDisplayName()
+                });
+            }
         }
 
         [Key]
@@ -28,17 +40,18 @@ namespace CallCenterCRM.Models
         [StringLength(255)]
         public string Firstname { get; set; } = null!;
         [StringLength(255)]
-        public string Middlename { get; set; } = null!;
+        public string? Middlename { get; set; } = null!;
         [StringLength(255)]
         public string Contact { get; set; } = null!;
         [StringLength(255)]
-        public string ExtraContact { get; set; } = null!;
-        [StringLength(255)]
-        public string Region { get; set; } = null!;
+        public string? ExtraContact { get; set; } = null!;
         [Column(TypeName = "int(11)")]
+        public Regions Region { get; set; }
+        [NotMapped]
+        public List<SelectListItem> RegionsList { get; set; }
         public int CityDistrictId { get; set; }
         [StringLength(255)]
-        public string Maxalla { get; set; } = null!;
+        public string? Maxalla { get; set; } = null!;
         [Column(TypeName = "text")]
         public string Address { get; set; } = null!;
         [StringLength(255)]
@@ -68,7 +81,5 @@ namespace CallCenterCRM.Models
         [InverseProperty(nameof(Application.Applicant))]
         public virtual ICollection<Application> Applications { get; set; }
 
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
     }
 }

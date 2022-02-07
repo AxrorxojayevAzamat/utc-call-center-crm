@@ -28,8 +28,8 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Extension = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,9 +46,9 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RegionId = table.Column<int>(type: "int(11)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Region = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -71,8 +71,8 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -112,8 +112,8 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Type = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,16 +139,15 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Firstname = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Middlename = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
+                    Middlename = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Contact = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ExtraContact = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
+                    ExtraContact = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Region = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Region = table.Column<int>(type: "int(11)", nullable: false),
                     CityDistrictId = table.Column<int>(type: "int(11)", nullable: false),
-                    Maxalla = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
+                    Maxalla = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Address = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -166,8 +165,8 @@ namespace CallCenterCRM.Migrations
                     AdditionalNote = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OrganizationId = table.Column<int>(type: "int(255)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -192,7 +191,8 @@ namespace CallCenterCRM.Migrations
                 {
                     Id = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Direction = table.Column<int>(type: "int(11)", nullable: false),
+                    Direction = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ClassificationId = table.Column<int>(type: "int(11)", nullable: false),
@@ -205,11 +205,12 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Comment = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsSelected = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UserId = table.Column<int>(type: "int(11)", nullable: false),
                     AttachmentId = table.Column<int>(type: "int(11)", nullable: false),
                     ApplicantId = table.Column<int>(type: "int(11)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -242,25 +243,24 @@ namespace CallCenterCRM.Migrations
                 name: "answers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int(11)", nullable: false),
+                    Id = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ResponsiblePerson = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Executor = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RerponseLetter = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
+                    ResponseLetter = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AttachmentId = table.Column<int>(type: "int(11)", nullable: false),
+                    AttachmentId = table.Column<int>(type: "int(11)", nullable: true),
                     RegisterNumber = table.Column<int>(type: "int(11)", nullable: false),
-                    Author = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Result = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Conclusion = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OrganizationId = table.Column<int>(type: "int(11)", nullable: false),
                     ApplicationId = table.Column<int>(type: "int(11)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {

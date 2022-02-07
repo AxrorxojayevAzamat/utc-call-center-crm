@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
+using static CallCenterCRM.Models.Citydistrict;
 
 namespace CallCenterCRM.Controllers
 {
@@ -23,7 +24,9 @@ namespace CallCenterCRM.Controllers
         // GET: Citydistricts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Citydistricts.ToListAsync());
+            var citydistricts = await _context.Citydistricts.ToListAsync();
+
+            return View(citydistricts);
         }
 
         // GET: Citydistricts/Details/5
@@ -47,7 +50,8 @@ namespace CallCenterCRM.Controllers
         // GET: Citydistricts/Create
         public IActionResult Create()
         {
-            return View();
+            Citydistrict citydistrict = new Citydistrict();
+            return View(citydistrict);
         }
 
         // POST: Citydistricts/Create
@@ -55,12 +59,12 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,RegionId,CreatedDate,UpdatedDate")] Citydistrict citydistrict)
+        public IActionResult Create([Bind("Id,Title,RegionId")] Citydistrict citydistrict)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(citydistrict);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(citydistrict);
@@ -74,7 +78,8 @@ namespace CallCenterCRM.Controllers
                 return NotFound();
             }
 
-            var citydistrict = await _context.Citydistricts.FindAsync(id);
+            var citydistrict = await _context.Citydistricts.FindAsync(id );
+            
             if (citydistrict == null)
             {
                 return NotFound();
@@ -87,7 +92,7 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,RegionId,CreatedDate,UpdatedDate")] Citydistrict citydistrict)
+        public IActionResult Edit(int id, [Bind] Citydistrict citydistrict)
         {
             if (id != citydistrict.Id)
             {
@@ -99,7 +104,7 @@ namespace CallCenterCRM.Controllers
                 try
                 {
                     _context.Update(citydistrict);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

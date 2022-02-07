@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CallCenterCRM.Models
 {
     [Table("classification")]
-    public partial class Classification
+    public partial class Classification : BaseModel
     {
         public Classification()
         {
@@ -30,8 +30,5 @@ namespace CallCenterCRM.Models
 
         [InverseProperty(nameof(Application.Classification))]
         public virtual ICollection<Application> Applications { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
     }
 }

@@ -14,13 +14,15 @@
 	<partial name="Header" />
 	<div class="container-fluid page-body-wrapper pt-0">
 		<partial name="Sidebar" />
-
-		@*<main role="main" class="pb-3">*@
-		@*</main>*@
 		<div class="main-panel">
 			<div class="content-wrapper">
 				<div class="row">
-					@RenderBody()
+					<div class="card">
+						<div class="card-body">
+							
+							@RenderBody()
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

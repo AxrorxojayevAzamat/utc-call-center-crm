@@ -13,13 +13,13 @@ namespace CallCenterCRM.Models
     [Index(nameof(UserId), Name = "Application_fk1")]
     [Index(nameof(ApplicantId), Name = "Application_fk3")]
     [Index(nameof(AttachmentId), Name = "AttachmentId", IsUnique = true)]
-    public partial class Application
+    public partial class Application : BaseModel
     {
         [Key]
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
-        [Column(TypeName = "int(11)")]
-        public int Direction { get; set; }
+        [StringLength(255)]
+        public string Direction { get; set; }
         [StringLength(255)]
         public string Value { get; set; } = null!;
         [Column(TypeName = "int(11)")]
@@ -34,6 +34,7 @@ namespace CallCenterCRM.Models
         public string Type { get; set; } = null!;
         [Column(TypeName = "text")]
         public string Comment { get; set; } = null!;
+        public bool IsSelected { get; set; }
         [Column(TypeName = "int(11)")]
         public int UserId { get; set; }
         [Column(TypeName = "int(11)")]
@@ -55,8 +56,5 @@ namespace CallCenterCRM.Models
         public virtual User User { get; set; } = null!;
         [InverseProperty("Application")]
         public virtual Answer Answer { get; set; } = null!;
-
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
     }
 }
