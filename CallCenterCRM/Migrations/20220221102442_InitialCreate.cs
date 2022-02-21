@@ -87,15 +87,18 @@ namespace CallCenterCRM.Migrations
                 {
                     Id = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IdentityId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Username = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "varchar(255)", nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     City = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Contact = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Username = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Role = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OrganizationName = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -119,7 +122,7 @@ namespace CallCenterCRM.Migrations
                 {
                     table.PrimaryKey("PK_users", x => x.Id);
                     table.ForeignKey(
-                        name: "Users_fk0",
+                        name: "FK_users_users_OrganizationId",
                         column: x => x.OrganizationId,
                         principalTable: "users",
                         principalColumn: "Id");
@@ -133,8 +136,7 @@ namespace CallCenterCRM.Migrations
                 {
                     Id = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ReferenceSource = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ReferenceSource = table.Column<int>(type: "int", nullable: false),
                     Surname = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Firstname = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
@@ -146,25 +148,21 @@ namespace CallCenterCRM.Migrations
                     ExtraContact = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Region = table.Column<int>(type: "int(11)", nullable: false),
-                    CityDistrictId = table.Column<int>(type: "int(11)", nullable: false),
+                    CityDistrictId = table.Column<int>(type: "int(11)", nullable: true),
                     Maxalla = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Address = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Sex = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    BirthDate = table.Column<DateTime>(type: "timestamp", nullable: false),
-                    Type = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Employment = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NumberOfApplication = table.Column<int>(type: "int(255)", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 2, 21, 15, 24, 42, 308, DateTimeKind.Local).AddTicks(5883)),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Employment = table.Column<int>(type: "int", nullable: false),
                     Confidentiality = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     MeaningOfApplication = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AdditionalNote = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    OrganizationId = table.Column<int>(type: "int(255)", nullable: false),
+                    OrganizationId = table.Column<int>(type: "int(11)", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
@@ -191,21 +189,17 @@ namespace CallCenterCRM.Migrations
                 {
                     Id = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Direction = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Value = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     ClassificationId = table.Column<int>(type: "int(11)", nullable: false),
                     Recipient = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ExpireTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     RelevantApplications = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Type = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsSelected = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Status = table.Column<int>(type: "int(11)", nullable: false),
                     UserId = table.Column<int>(type: "int(11)", nullable: false),
                     AttachmentId = table.Column<int>(type: "int(11)", nullable: false),
                     ApplicantId = table.Column<int>(type: "int(11)", nullable: false),

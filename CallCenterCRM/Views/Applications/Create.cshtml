@@ -1,0 +1,80 @@
+﻿@model CallCenterCRM.Models.Application
+
+@{
+	ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Application</h4>
+<hr />
+<form asp-action="Create">
+	<div class="row">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+		<div class="form-group col-md-4">
+			<label asp-for="ClassificationId" class="control-label"></label>
+			<select asp-for="ClassificationId" class="form-control" asp-items="ViewBag.ClassificationId"></select>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="Recipient" class="control-label"></label>
+			<input asp-for="Recipient" class="form-control" />
+			<span asp-validation-for="Recipient" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="ExpireTime" class="control-label"></label>
+			<input asp-for="ExpireTime" class="form-control" />
+			<span asp-validation-for="ExpireTime" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="RelevantApplications" class="control-label"></label>
+			<input asp-for="RelevantApplications" class="form-control" />
+			<span asp-validation-for="RelevantApplications" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="Type" class="control-label"></label>
+			<input asp-for="Type" class="form-control" />
+			<span asp-validation-for="Type" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="Comment" class="control-label"></label>
+			<input asp-for="Comment" class="form-control" />
+			<span asp-validation-for="Comment" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="UserId" class="control-label"></label>
+			<select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="AttachmentId" class="control-label"></label>
+			<select asp-for="AttachmentId" class="form-control" asp-items="ViewBag.AttachmentId"></select>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="ApplicantId" class="control-label"></label>
+			<select asp-for="ApplicantId" class="form-control" asp-items="ViewBag.ApplicantId"></select>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="CreatedDate" class="control-label"></label>
+			<input asp-for="CreatedDate" class="form-control" />
+			<span asp-validation-for="CreatedDate" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="UpdatedDate" class="control-label"></label>
+			<input asp-for="UpdatedDate" class="form-control" />
+			<span asp-validation-for="UpdatedDate" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-4">
+			<input type="submit" value="Создать" class="btn btn-success btn-rounded" />
+		</div>
+	</div>
+</form>
+
+<div>
+	<a asp-action="Index"  class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+</div>
+
+@section Scripts {
+    @{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

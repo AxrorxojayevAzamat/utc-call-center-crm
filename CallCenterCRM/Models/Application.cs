@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CallCenterCRM.Utilities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CallCenterCRM.Models
@@ -15,29 +17,43 @@ namespace CallCenterCRM.Models
     [Index(nameof(AttachmentId), Name = "AttachmentId", IsUnique = true)]
     public partial class Application : BaseModel
     {
+        public Application()
+        {
+            TypesList = new List<SelectListItem>();
+
+            TypesList = ListEnums.GetEnumList<AppTypes>(TypesList);
+        }
+
         [Key]
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
-        [StringLength(255)]
-        public string Direction { get; set; }
-        [StringLength(255)]
-        public string Value { get; set; } = null!;
+        
         [Column(TypeName = "int(11)")]
+        [Display(Name = "Классификация ")]
         public int ClassificationId { get; set; }
         [StringLength(255)]
+        [Display(Name = "Получатель")]
         public string Recipient { get; set; } = null!;
         [Column(TypeName = "datetime")]
+        [Display(Name = "Срок")]
         public DateTime ExpireTime { get; set; }
         [StringLength(255)]
+        [Display(Name = "Соответствующие обращения")]
         public string RelevantApplications { get; set; } = null!;
-        [StringLength(255)]
-        public string Type { get; set; } = null!;
+        [Display(Name = "Тип обращения")]
+        public AppTypes Type { get; set; }
         [Column(TypeName = "text")]
+        [Display(Name = "Комментарий")]
         public string Comment { get; set; } = null!;
+        [Display(Name = "Избранный")]
         public bool IsSelected { get; set; }
+        [Column(TypeName = "int(11)")]
+        [Display(Name = "Статус")]
+        public int Status { get; set; }
         [Column(TypeName = "int(11)")]
         public int UserId { get; set; }
         [Column(TypeName = "int(11)")]
+        [Display(Name = "Вложение ")]
         public int AttachmentId { get; set; }
         [Column(TypeName = "int(11)")]
         public int ApplicantId { get; set; }
@@ -56,5 +72,11 @@ namespace CallCenterCRM.Models
         public virtual User User { get; set; } = null!;
         [InverseProperty("Application")]
         public virtual Answer Answer { get; set; } = null!;
+
+        /*notmapped*/
+        [NotMapped]
+        public List<SelectListItem> TypesList { get; set; }
+
+        /* / notmapped*/
     }
 }

@@ -20,12 +20,16 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
         [StringLength(255)]
+        [Display(Name = "Название")]
         public string Title { get; set; } = null!;
-        [Column(TypeName = "text")]
+        [Column(TypeName = "text")] 
+        [Display(Name = "Описание")]
         public string? Description { get; set; }
         [StringLength(255)]
-        public string Direction { get; set; } = null!;
+        [Display(Name = "Направление")]
+        public string Direction { get; set; }= null!;
         [StringLength(255)]
+        [Display(Name = "Значение")]
         public string Value { get; set; } = null!;
 
         [InverseProperty(nameof(Application.Classification))]

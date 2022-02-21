@@ -76,6 +76,11 @@ namespace CallCenterCRM.Data
                     .HasForeignKey(d => d.OrganizationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Applicants_fk1");
+                entity.Property(d => d.BirthDate).HasDefaultValue(DateTime.Now);
+                entity.Property(c => c.ReferenceSource).HasConversion<int>();
+                entity.Property(c => c.Type).HasConversion<int>();
+                entity.Property(c => c.Employment).HasConversion<int>();
+                entity.Property(c => c.Gender).HasConversion<int>();
             });
 
             modelBuilder.Entity<Application>(entity =>
@@ -103,17 +108,24 @@ namespace CallCenterCRM.Data
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Application_fk1");
+                entity.Property(c => c.Type).HasConversion<int>();
+
             });
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasOne(d => d.Organization)
-                    .WithMany(p => p.InverseOrganization)
-                    .HasForeignKey(d => d.OrganizationId)
-                    .HasConstraintName("Users_fk0");
+                //entity.HasOne(d => d.Organization)
+                //    .WithMany(p => p.InverseOrganization)
+                //    .HasForeignKey(d => d.OrganizationId)
+                //    .HasConstraintName("Users_fk0");
+
             });
 
-            modelBuilder.Entity<Citydistrict>().Property(c => c.Region).HasConversion<int>();
+            modelBuilder.Entity<Citydistrict>(
+                entity =>
+                {
+                    entity.Property(c => c.Region).HasConversion<int>();
+                });
 
             //var allEntities = modelBuilder.Model.GetEntityTypes();
 

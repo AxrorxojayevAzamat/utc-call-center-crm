@@ -1,95 +1,98 @@
 ﻿@model IEnumerable<CallCenterCRM.Models.Answer>
-
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create" class="btn btn-success btn-rounded">Создать новое</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ResponsiblePerson)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Executor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ResponseLetter)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RegisterNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Result)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Conclusion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Application)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Attachment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Organization)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ResponsiblePerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Executor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ResponseLetter)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegisterNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Result)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Conclusion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Application.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Attachment.Extension)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Organization.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.ResponsiblePerson)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Executor)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.ResponseLetter)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.RegisterNumber)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Result)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Conclusion)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Application)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Attachment)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Organization)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.UpdatedDate)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.CreatedDate)
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.ResponsiblePerson)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Executor)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ResponseLetter)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.RegisterNumber)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Result)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Conclusion)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Application.Comment)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Attachment.Extension)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Organization.City)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.UpdatedDate)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.CreatedDate)
+					</td>
+					<td>
+						<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
+						<a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
+						<a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+

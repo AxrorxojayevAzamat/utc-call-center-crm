@@ -15,14 +15,19 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
         [Column(TypeName = "int(11)")]
+        [Display(Name = "Тип")]
         public int Type { get; set; }
         [StringLength(255)]
+        [Display(Name = "Имя хеша")]
         public string HashName { get; set; } = null!;
         [StringLength(255)]
+        [Display(Name = "Путь")]
         public string Path { get; set; } = null!;
         [StringLength(255)]
+        [Display(Name = "Оригинальное название")]
         public string OriginName { get; set; } = null!;
         [StringLength(255)]
+        [Display(Name = "Расширение")]
         public string Extension { get; set; } = null!;
 
         [InverseProperty("Attachment")]

@@ -30,6 +30,7 @@ namespace CallCenterCRM.Controllers
         }
 
         // GET: Citydistricts/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -59,7 +60,8 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Title,RegionId")] Citydistrict citydistrict)
+        public IActionResult Create([Bind] Citydistrict citydistrict)
+        
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +80,7 @@ namespace CallCenterCRM.Controllers
                 return NotFound();
             }
 
-            var citydistrict = await _context.Citydistricts.FindAsync(id );
+            var citydistrict = await _context.Citydistricts.FindAsync(id);
             
             if (citydistrict == null)
             {

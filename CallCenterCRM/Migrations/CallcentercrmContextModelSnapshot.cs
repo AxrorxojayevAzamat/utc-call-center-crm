@@ -97,9 +97,11 @@ namespace CallCenterCRM.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("BirthDate")
-                        .HasColumnType("timestamp");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValue(new DateTime(2022, 2, 21, 15, 24, 42, 308, DateTimeKind.Local).AddTicks(5883));
 
-                    b.Property<int>("CityDistrictId")
+                    b.Property<int?>("CityDistrictId")
                         .HasColumnType("int(11)");
 
                     b.Property<bool>("Confidentiality")
@@ -113,10 +115,8 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Employment")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("Employment")
+                        .HasColumnType("int");
 
                     b.Property<string>("ExtraContact")
                         .HasMaxLength(255)
@@ -126,6 +126,9 @@ namespace CallCenterCRM.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<string>("Maxalla")
                         .HasMaxLength(255)
@@ -139,34 +142,22 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("NumberOfApplication")
-                        .HasColumnType("int(255)");
+                    b.Property<int?>("OrganizationId")
+                        .HasColumnType("int(11)");
 
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int(255)");
-
-                    b.Property<string>("ReferenceSource")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("ReferenceSource")
+                        .HasColumnType("int");
 
                     b.Property<int>("Region")
                         .HasColumnType("int(11)");
-
-                    b.Property<string>("Sex")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -202,11 +193,6 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Direction")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("ExpireTime")
                         .HasColumnType("datetime");
 
@@ -223,21 +209,17 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int(11)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int(11)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -383,6 +365,9 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<Guid>("IdentityId")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Middlename")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
@@ -401,6 +386,11 @@ namespace CallCenterCRM.Migrations
 
                     b.Property<string>("PasswordData")
                         .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Surname")
                         .HasMaxLength(255)
@@ -461,13 +451,11 @@ namespace CallCenterCRM.Migrations
                     b.HasOne("CallCenterCRM.Models.Citydistrict", "CityDistrict")
                         .WithMany("Applicants")
                         .HasForeignKey("CityDistrictId")
-                        .IsRequired()
                         .HasConstraintName("Applicants_fk0");
 
                     b.HasOne("CallCenterCRM.Models.User", "Organization")
                         .WithMany("Applicants")
                         .HasForeignKey("OrganizationId")
-                        .IsRequired()
                         .HasConstraintName("Applicants_fk1");
 
                     b.Navigation("CityDistrict");
@@ -514,8 +502,7 @@ namespace CallCenterCRM.Migrations
                 {
                     b.HasOne("CallCenterCRM.Models.User", "Organization")
                         .WithMany("InverseOrganization")
-                        .HasForeignKey("OrganizationId")
-                        .HasConstraintName("Users_fk0");
+                        .HasForeignKey("OrganizationId");
 
                     b.Navigation("Organization");
                 });

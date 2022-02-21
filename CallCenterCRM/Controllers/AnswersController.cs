@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CallCenterCRM.Controllers
 {
@@ -21,6 +22,7 @@ namespace CallCenterCRM.Controllers
         }
 
         // GET: Answers
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var callcentercrmContext = _context.Answers.Include(a => a.Application).Include(a => a.Attachment).Include(a => a.Organization);
@@ -53,7 +55,7 @@ namespace CallCenterCRM.Controllers
         {
             ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment");
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension");
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City");
+            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City");
             return View();
         }
 
@@ -91,7 +93,7 @@ namespace CallCenterCRM.Controllers
             }
             ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment", answer.ApplicationId);
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", answer.AttachmentId);
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
+            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
             return View(answer);
         }
 
@@ -129,7 +131,7 @@ namespace CallCenterCRM.Controllers
             }
             ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment", answer.ApplicationId);
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", answer.AttachmentId);
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
+            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
             return View(answer);
         }
 

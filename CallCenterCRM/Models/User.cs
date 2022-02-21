@@ -25,14 +25,19 @@ namespace CallCenterCRM.Models
         [Key]
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
+
+        public Guid IdentityId { get; set; }
+
+        public string Username { get; set; } = null!;
         public string? Email { get; set; }
         [StringLength(255)]
         public string City { get; set; } = null!;
         [StringLength(255)]
         public string Contact { get; set; } = null!;
-        public string Username { get; set; } = null!;
         [StringLength(255)]
         public string Password { get; set; } = null!;
+        [StringLength(255)]
+        public string Role { get; set; } = null!;
         [StringLength(255)]
         public string? OrganizationName { get; set; }
         [Column(TypeName = "int(11)")]

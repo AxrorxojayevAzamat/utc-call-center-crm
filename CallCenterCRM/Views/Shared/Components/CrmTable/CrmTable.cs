@@ -8,7 +8,7 @@ namespace CallCenterCRM.ViewComponents
 {
     public class CrmTable<T> : ViewComponent
     {
-        List<T> _model;
+        readonly List<T> _model;
         public CrmTable(List<T> model)
         {
             _model = model;

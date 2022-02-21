@@ -18,22 +18,31 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
         [StringLength(255)]
+        [Display(Name = "Ответственное лицо")]
         public string ResponsiblePerson { get; set; } = null!;
         [StringLength(255)]
+        [Display(Name = "Исполнитель")]
         public string Executor { get; set; } = null!;
         [Column(TypeName = "text")]
+        [Display(Name = "Ответное письмо")]
         public string ResponseLetter { get; set; } = null!;
         [Column(TypeName = "int(11)")]
+        [Display(Name = "Вложение")]
         public int? AttachmentId { get; set; }
         [Column(TypeName = "int(11)")]
+        [Display(Name = "Регистрационный номер")]
         public int RegisterNumber { get; set; }
         [StringLength(255)]
+        [Display(Name = "Результат рассмотрения")]
         public string Result { get; set; } = null!;
         [Column(TypeName = "text")]
+        [Display(Name = "Вывод ")]
         public string Conclusion { get; set; } = null!;
         [Column(TypeName = "int(11)")]
+        [Display(Name = "Организация")]
         public int OrganizationId { get; set; }
         [Column(TypeName = "int(11)")]
+        [Display(Name = "Заявление")]
         public int ApplicationId { get; set; }
 
         [ForeignKey(nameof(ApplicationId))]
