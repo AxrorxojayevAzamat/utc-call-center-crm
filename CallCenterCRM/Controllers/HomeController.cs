@@ -34,7 +34,7 @@ namespace CallCenterCRM.Controllers
         }
 
         [Route("action")]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
             return SignOut("Cookies","oidc");
         }

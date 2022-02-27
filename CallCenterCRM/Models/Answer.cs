@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CallCenterCRM.Models
 {
     [Table("answers")]
-    [Index(nameof(OrganizationId), Name = "Answers_fk1")]
+    [Index(nameof(AuthorId), Name = "Answers_fk1")]
     [Index(nameof(ApplicationId), Name = "ApplicationId", IsUnique = true)]
     [Index(nameof(AttachmentId), Name = "AttachmentId", IsUnique = true)]
     public partial class Answer : BaseModel
@@ -40,7 +40,7 @@ namespace CallCenterCRM.Models
         public string Conclusion { get; set; } = null!;
         [Column(TypeName = "int(11)")]
         [Display(Name = "Организация")]
-        public int OrganizationId { get; set; }
+        public int AuthorId { get; set; }
         [Column(TypeName = "int(11)")]
         [Display(Name = "Заявление")]
         public int ApplicationId { get; set; }
@@ -51,9 +51,9 @@ namespace CallCenterCRM.Models
         [ForeignKey(nameof(AttachmentId))]
         [InverseProperty("Answer")]
         public virtual Attachment? Attachment { get; set; } = null!;
-        [ForeignKey(nameof(OrganizationId))]
+        [ForeignKey(nameof(AuthorId))]
         [InverseProperty(nameof(User.Answers))]
-        public virtual User Organization { get; set; } = null!;
+        public virtual User Author { get; set; } = null!;
 
     }
 }

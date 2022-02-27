@@ -55,12 +55,12 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Direction,Value,CreatedDate,UpdatedDate")] Classification classification)
+        public IActionResult Create([Bind] Classification classification)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(classification);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(classification);
@@ -87,7 +87,7 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Direction,Value,CreatedDate,UpdatedDate")] Classification classification)
+        public IActionResult Edit(int id, [Bind] Classification classification)
         {
             if (id != classification.Id)
             {
@@ -99,7 +99,7 @@ namespace CallCenterCRM.Controllers
                 try
                 {
                     _context.Update(classification);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -7,6 +7,8 @@ namespace CallCenterCRM.Models
         [Display(Name = "Телефон доверия")] helpline = 0,
 
     }
+    
+
     public enum Genders
     { 
         [Display(Name = "мужчина")] Male = 0,
@@ -18,7 +20,12 @@ namespace CallCenterCRM.Models
         [Display(Name = "Юрик. лиц.")] Business = 0,
         [Display(Name = "Физ. лиц.")] Individual = 1
     }
-
+    public enum Roles
+    {
+        [Display(Name = "Оператор")] Operator = 1,
+        [Display(Name = "Модератор")] Moderator = 2,
+        [Display(Name = "Организация")] Organization = 3
+    }
     public enum Employments
     {
         [Display(Name = "Безработный")] Unemployed = 0,

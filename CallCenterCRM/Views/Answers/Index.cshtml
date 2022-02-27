@@ -37,7 +37,7 @@
 					@Html.DisplayNameFor(model => model.Attachment)
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Organization)
+					@Html.DisplayNameFor(model => model.Application.Recipient)
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.UpdatedDate)
@@ -71,13 +71,13 @@
 						@Html.DisplayFor(modelItem => item.Conclusion)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Application.Comment)
+						@Html.DisplayFor(modelItem => item.Application.Classification.Title)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Attachment.Extension)
+						@Html.DisplayFor(modelItem => $"{item.Attachment.OriginName}.{item.Attachment.Extension}")
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Organization.City)
+						@Html.DisplayFor(modelItem => item.Application.Recipient.Title)
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.UpdatedDate)

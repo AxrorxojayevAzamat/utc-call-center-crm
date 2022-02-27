@@ -94,15 +94,13 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     City = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Contact = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Role = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    Contact = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    OrganizationName = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
+                    Title = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    OrganizationId = table.Column<int>(type: "int(11)", nullable: true),
                     Surname = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Firstname = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
@@ -115,6 +113,7 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Type = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    ModeratorId = table.Column<int>(type: "int(11)", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
@@ -122,8 +121,8 @@ namespace CallCenterCRM.Migrations
                 {
                     table.PrimaryKey("PK_users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_users_users_OrganizationId",
-                        column: x => x.OrganizationId,
+                        name: "Users_fk0",
+                        column: x => x.ModeratorId,
                         principalTable: "users",
                         principalColumn: "Id");
                 })
@@ -154,7 +153,7 @@ namespace CallCenterCRM.Migrations
                     Address = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 2, 21, 15, 24, 42, 308, DateTimeKind.Local).AddTicks(5883)),
+                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 2, 27, 14, 36, 31, 192, DateTimeKind.Local).AddTicks(7337)),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Employment = table.Column<int>(type: "int", nullable: false),
                     Confidentiality = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -190,8 +189,6 @@ namespace CallCenterCRM.Migrations
                     Id = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ClassificationId = table.Column<int>(type: "int(11)", nullable: false),
-                    Recipient = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     ExpireTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     RelevantApplications = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -200,8 +197,8 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsSelected = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Status = table.Column<int>(type: "int(11)", nullable: false),
-                    UserId = table.Column<int>(type: "int(11)", nullable: false),
-                    AttachmentId = table.Column<int>(type: "int(11)", nullable: false),
+                    RecipientId = table.Column<int>(type: "int(11)", nullable: false),
+                    AttachmentId = table.Column<int>(type: "int(11)", nullable: true),
                     ApplicantId = table.Column<int>(type: "int(11)", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
@@ -216,7 +213,7 @@ namespace CallCenterCRM.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "Application_fk1",
-                        column: x => x.UserId,
+                        column: x => x.RecipientId,
                         principalTable: "users",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -251,7 +248,7 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Conclusion = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    OrganizationId = table.Column<int>(type: "int(11)", nullable: false),
+                    AuthorId = table.Column<int>(type: "int(11)", nullable: false),
                     ApplicationId = table.Column<int>(type: "int(11)", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
@@ -265,15 +262,16 @@ namespace CallCenterCRM.Migrations
                         principalTable: "attachments",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "Answers_fk1",
-                        column: x => x.OrganizationId,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "Answers_fk2",
                         column: x => x.ApplicationId,
                         principalTable: "application",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_answers_users_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_unicode_ci");
@@ -281,7 +279,7 @@ namespace CallCenterCRM.Migrations
             migrationBuilder.CreateIndex(
                 name: "Answers_fk1",
                 table: "answers",
-                column: "OrganizationId");
+                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
                 name: "ApplicationId",
@@ -313,7 +311,7 @@ namespace CallCenterCRM.Migrations
             migrationBuilder.CreateIndex(
                 name: "Application_fk1",
                 table: "application",
-                column: "UserId");
+                column: "RecipientId");
 
             migrationBuilder.CreateIndex(
                 name: "Application_fk3",
@@ -341,7 +339,7 @@ namespace CallCenterCRM.Migrations
             migrationBuilder.CreateIndex(
                 name: "Users_fk0",
                 table: "users",
-                column: "OrganizationId");
+                column: "ModeratorId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

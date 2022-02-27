@@ -63,7 +63,7 @@ namespace CallCenterCRM
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,ReferenceSource,Surname,Firstname,Middlename,Contact,ExtraContact,Region,CityDistrictId,Maxalla,Address,Gender,BirthDate,Type,Employment,NumberOfApplication,Confidentiality,MeaningOfApplication,AdditionalNote,OrganizationId")] Applicant applicant)
+        public IActionResult Create([Bind] Applicant applicant)
         {
             if (ModelState.IsValid)
             {
@@ -99,7 +99,7 @@ namespace CallCenterCRM
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ReferenceSource,Surname,Firstname,Middlename,Contact,ExtraContact,Region,CityDistrictId,Maxalla,Address,Gender,BirthDate,Type,Employment,NumberOfApplication,Confidentiality,MeaningOfApplication,AdditionalNote,OrganizationId,CreatedDate,UpdatedDate")] Applicant applicant)
+        public IActionResult Edit(int id, [Bind] Applicant applicant)
         {
             if (id != applicant.Id)
             {
@@ -111,7 +111,7 @@ namespace CallCenterCRM
                 try
                 {
                     _context.Update(applicant);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

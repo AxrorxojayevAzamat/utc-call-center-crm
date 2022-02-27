@@ -25,7 +25,11 @@ namespace CallCenterCRM.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            var callcentercrmContext = _context.Answers.Include(a => a.Application).Include(a => a.Attachment).Include(a => a.Organization);
+            var callcentercrmContext = _context.Answers
+                .Include(a => a.Application)
+                    .ThenInclude(a => a.Recipient)
+                .Include(a => a.Attachment)
+                .Include(a => a.Author);
             return View(await callcentercrmContext.ToListAsync());
         }
 
@@ -40,7 +44,7 @@ namespace CallCenterCRM.Controllers
             var answer = await _context.Answers
                 .Include(a => a.Application)
                 .Include(a => a.Attachment)
-                .Include(a => a.Organization)
+                .Include(a => a.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (answer == null)
             {
@@ -114,7 +118,7 @@ namespace CallCenterCRM.Controllers
                 try
                 {
                     _context.Update(answer);
-                   _context.SaveChanges();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,7 +150,7 @@ namespace CallCenterCRM.Controllers
             var answer = await _context.Answers
                 .Include(a => a.Application)
                 .Include(a => a.Attachment)
-                .Include(a => a.Organization)
+                .Include(a => a.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (answer == null)
             {

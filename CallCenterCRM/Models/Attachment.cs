@@ -29,11 +29,9 @@ namespace CallCenterCRM.Models
         [StringLength(255)]
         [Display(Name = "Расширение")]
         public string Extension { get; set; } = null!;
-
         [InverseProperty("Attachment")]
-        public virtual Answer Answer { get; set; } = null!;
+        public virtual Answer? Answer { get; set; }
         [InverseProperty("Attachment")]
-        public virtual Application Application { get; set; } = null!;
-
+        public virtual Application? Application { get; set; }
     }
 }

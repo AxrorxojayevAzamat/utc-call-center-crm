@@ -4,13 +4,15 @@
 	ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Создать</h1>
 
 <h4>Applicant</h4>
 <hr />
 <form asp-action="Create">
 	<div class="row">
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<input type="hidden" asp-for="Id" />
+		<input type="hidden" asp-for="CreatedDate" />
 		<div class="form-group col-md-4">
 			<label asp-for="ReferenceSource" class="control-label"></label>
 			<select asp-for="ReferenceSource" class="form-control" asp-items="Model.ReferenceSourcesList"></select>
@@ -80,15 +82,19 @@
 			<select asp-for="Employment" class="form-control" asp-items="Model.EmploymentsList"></select>
 			<span asp-validation-for="Employment" class="text-danger"></span>
 		</div>
-
-		<div class="form-group col-md-4">
+		<div class="form-group form-check col-md-4">
+			<label class="form-check-label mt-4 mx-2">
+				<input class="form-check-input" asp-for="Confidentiality" /> @Html.DisplayNameFor(model => model.Confidentiality)
+			</label>
+		</div>
+		<div class="form-group col-md-6">
 			<label asp-for="MeaningOfApplication" class="control-label"></label>
-			<input asp-for="MeaningOfApplication" class="form-control" />
+			<textarea asp-for="MeaningOfApplication" class="form-control"></textarea>
 			<span asp-validation-for="MeaningOfApplication" class="text-danger"></span>
 		</div>
-		<div class="form-group col-md-4">
+		<div class="form-group col-md-6">
 			<label asp-for="AdditionalNote" class="control-label"></label>
-			<input asp-for="AdditionalNote" class="form-control" />
+			<textarea asp-for="AdditionalNote" class="form-control"></textarea>
 			<span asp-validation-for="AdditionalNote" class="text-danger"></span>
 		</div>
 		@*<div class="form-group col-md-4">
@@ -97,23 +103,9 @@
 			<option value=1 selected>First</option>
 			</select>
 			</div>*@
-		@*<div class="form-group col-md-4">
-			<label asp-for="CreatedDate" class="control-label"></label>
-			<input asp-for="CreatedDate" class="form-control" />
-			<span asp-validation-for="CreatedDate" class="text-danger"></span>
-			</div>
-			<div class="form-group col-md-4">
-			<label asp-for="UpdatedDate" class="control-label"></label>
-			<input asp-for="UpdatedDate" class="form-control" />
-			<span asp-validation-for="UpdatedDate" class="text-danger"></span>
-			</div>*@
-		<div class="form-group form-check col-md-4">
-			<label class="form-check-label mt-4 mx-2">
-				<input class="form-check-input" asp-for="Confidentiality" /> @Html.DisplayNameFor(model => model.Confidentiality)
-			</label>
-		</div>
+		
 		<div class="form-group col-md-2 mt-3">
-			<input type="submit" value="Создать" class="btn btn-success btn-rounded" />
+			<input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
 			<a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
 		</div>
 	</div>
@@ -123,6 +115,9 @@
 
 @section Scripts {
     @{
-	await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
+		await Html.RenderPartialAsync("Scripts/_ValidationScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_InputMaskScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/CityScriptsPartial");
+	}
 }

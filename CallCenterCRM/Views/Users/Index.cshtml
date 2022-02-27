@@ -28,7 +28,7 @@
 				@Html.DisplayNameFor(model => model.Password)
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.OrganizationName)
+				@Html.DisplayNameFor(model => model.Title)
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.Surname)
@@ -49,7 +49,7 @@
 				@Html.DisplayNameFor(model => model.Type)
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.Organization)
+				@Html.DisplayNameFor(model => model.Moderator)
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.CreatedDate)
@@ -80,7 +80,7 @@
 					@Html.DisplayFor(modelItem => item.Password)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.OrganizationName)
+					@Html.DisplayFor(modelItem => item.Title)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.Surname)
@@ -101,7 +101,7 @@
 					@Html.DisplayFor(modelItem => item.Type)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Organization.City)
+					@Html.DisplayFor(modelItem => item.Moderator.Title)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.CreatedDate)

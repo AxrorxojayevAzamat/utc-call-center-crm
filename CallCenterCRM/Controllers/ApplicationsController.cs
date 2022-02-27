@@ -23,7 +23,7 @@ namespace CallCenterCRM
         // GET: Applications
         public async Task<IActionResult> Index()
         {
-            var callcentercrmContext = _context.Applications.Include(a => a.Applicant).Include(a => a.Attachment).Include(a => a.Classification).Include(a => a.User);
+            var callcentercrmContext = _context.Applications.Include(a => a.Applicant).Include(a => a.Attachment).Include(a => a.Classification).Include(a => a.Recipient);
             return View(await callcentercrmContext.ToListAsync());
         }
 
@@ -39,7 +39,7 @@ namespace CallCenterCRM
                 .Include(a => a.Applicant)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.User)
+                .Include(a => a.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (application == null)
             {
@@ -64,18 +64,18 @@ namespace CallCenterCRM
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Direction,Value,ClassificationId,Recipient,ExpireTime,RelevantApplications,Type,Comment,UserId,AttachmentId,ApplicantId,CreatedDate,UpdatedDate")] Application application)
+        public IActionResult Create([Bind] Application application)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(application);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "AdditionalNote", application.ApplicantId);
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", application.AttachmentId);
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Direction", application.ClassificationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.RecipientId);
             return View(application);
         }
 
@@ -95,7 +95,7 @@ namespace CallCenterCRM
             ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "AdditionalNote", application.ApplicantId);
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", application.AttachmentId);
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Direction", application.ClassificationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.RecipientId);
             return View(application);
         }
 
@@ -104,7 +104,7 @@ namespace CallCenterCRM
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Direction,Value,ClassificationId,Recipient,ExpireTime,RelevantApplications,Type,Comment,UserId,AttachmentId,ApplicantId,CreatedDate,UpdatedDate")] Application application)
+        public IActionResult Edit(int id, [Bind] Application application)
         {
             if (id != application.Id)
             {
@@ -116,7 +116,7 @@ namespace CallCenterCRM
                 try
                 {
                     _context.Update(application);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -134,7 +134,7 @@ namespace CallCenterCRM
             ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "AdditionalNote", application.ApplicantId);
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", application.AttachmentId);
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Direction", application.ClassificationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.RecipientId);
             return View(application);
         }
 
@@ -150,7 +150,7 @@ namespace CallCenterCRM
                 .Include(a => a.Applicant)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.User)
+                .Include(a => a.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (application == null)
             {

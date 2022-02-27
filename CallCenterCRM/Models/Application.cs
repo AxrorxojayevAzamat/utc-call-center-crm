@@ -12,7 +12,7 @@ namespace CallCenterCRM.Models
 {
     [Table("application")]
     [Index(nameof(ClassificationId), Name = "Application_fk0")]
-    [Index(nameof(UserId), Name = "Application_fk1")]
+    [Index(nameof(RecipientId), Name = "Application_fk1")]
     [Index(nameof(ApplicantId), Name = "Application_fk3")]
     [Index(nameof(AttachmentId), Name = "AttachmentId", IsUnique = true)]
     public partial class Application : BaseModel
@@ -29,11 +29,8 @@ namespace CallCenterCRM.Models
         public int Id { get; set; }
         
         [Column(TypeName = "int(11)")]
-        [Display(Name = "Классификация ")]
+        [Display(Name = "Классификация")]
         public int ClassificationId { get; set; }
-        [StringLength(255)]
-        [Display(Name = "Получатель")]
-        public string Recipient { get; set; } = null!;
         [Column(TypeName = "datetime")]
         [Display(Name = "Срок")]
         public DateTime ExpireTime { get; set; }
@@ -51,10 +48,11 @@ namespace CallCenterCRM.Models
         [Display(Name = "Статус")]
         public int Status { get; set; }
         [Column(TypeName = "int(11)")]
-        public int UserId { get; set; }
+        [Display(Name = "Получатель")]
+        public int RecipientId { get; set; }
         [Column(TypeName = "int(11)")]
         [Display(Name = "Вложение ")]
-        public int AttachmentId { get; set; }
+        public int? AttachmentId { get; set; }
         [Column(TypeName = "int(11)")]
         public int ApplicantId { get; set; }
 
@@ -63,13 +61,13 @@ namespace CallCenterCRM.Models
         public virtual Applicant Applicant { get; set; } = null!;
         [ForeignKey(nameof(AttachmentId))]
         [InverseProperty("Application")]
-        public virtual Attachment Attachment { get; set; } = null!;
+        public virtual Attachment? Attachment { get; set; } = null!;
         [ForeignKey(nameof(ClassificationId))]
         [InverseProperty("Applications")]
         public virtual Classification Classification { get; set; } = null!;
-        [ForeignKey(nameof(UserId))]
+        [ForeignKey(nameof(RecipientId))]
         [InverseProperty("Applications")]
-        public virtual User User { get; set; } = null!;
+        public virtual User Recipient { get; set; } = null!;
         [InverseProperty("Application")]
         public virtual Answer Answer { get; set; } = null!;
 

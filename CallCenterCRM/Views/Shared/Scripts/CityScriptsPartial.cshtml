@@ -1,0 +1,35 @@
+﻿<script>
+	let city_district = $("#CityDistrictId")
+
+	$(document).ready(() => {
+		requestToCity()
+	})
+
+	$('#Region').on("select2:select", function(e) {
+		let id = e.params.data.id
+		requestToCity(id)
+	})
+
+	function requestToCity(regionId) {
+		$.ajax({
+			url: location.origin + `/api/cities/${regionId}`,
+			method: "GET",
+			dataType: 'json',
+			contentType: false,
+			cache: false,
+			processData: false,
+			success: function(data) {
+				city_district.empty();
+
+				for(let i in data) {
+					city_district.append(new Option(data[i].title, data[i].id))
+				}
+
+				city_district.trigger('change')
+			},
+			error: function(error) {
+				console.error("Error !!!")
+			}
+		})
+	}
+</script>

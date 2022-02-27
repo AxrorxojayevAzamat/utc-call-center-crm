@@ -55,12 +55,6 @@ namespace CallCenterCRM.Data
                     .HasForeignKey<Answer>(d => d.AttachmentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Answers_fk0");
-
-                entity.HasOne(d => d.Organization)
-                    .WithMany(p => p.Answers)
-                    .HasForeignKey(d => d.OrganizationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Answers_fk1");
             });
 
             modelBuilder.Entity<Applicant>(entity =>
@@ -103,9 +97,9 @@ namespace CallCenterCRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Application_fk0");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Recipient)
                     .WithMany(p => p.Applications)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.RecipientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Application_fk1");
                 entity.Property(c => c.Type).HasConversion<int>();
@@ -114,11 +108,11 @@ namespace CallCenterCRM.Data
 
             modelBuilder.Entity<User>(entity =>
             {
-                //entity.HasOne(d => d.Organization)
-                //    .WithMany(p => p.InverseOrganization)
-                //    .HasForeignKey(d => d.OrganizationId)
-                //    .HasConstraintName("Users_fk0");
-
+                entity.HasOne(d => d.Moderator)
+                    .WithMany(p => p.Organizations)
+                    .HasForeignKey(d => d.ModeratorId)
+                    .HasConstraintName("Users_fk0");
+                entity.Property(d => d.Role).HasConversion<int>();
             });
 
             modelBuilder.Entity<Citydistrict>(

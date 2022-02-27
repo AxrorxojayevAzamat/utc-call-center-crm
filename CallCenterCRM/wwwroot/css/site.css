@@ -2469,3 +2469,7 @@ body {
     border-radius: 4px;
     height: 2rem;
 }
+
+textarea.form-control {
+    height: auto;
+}

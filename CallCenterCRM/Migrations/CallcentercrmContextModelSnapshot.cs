@@ -34,6 +34,9 @@ namespace CallCenterCRM.Migrations
                     b.Property<int?>("AttachmentId")
                         .HasColumnType("int(11)");
 
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int(11)");
+
                     b.Property<string>("Conclusion")
                         .IsRequired()
                         .HasColumnType("text");
@@ -45,9 +48,6 @@ namespace CallCenterCRM.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int(11)");
 
                     b.Property<int>("RegisterNumber")
                         .HasColumnType("int(11)");
@@ -71,7 +71,7 @@ namespace CallCenterCRM.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "OrganizationId" }, "Answers_fk1");
+                    b.HasIndex(new[] { "AuthorId" }, "Answers_fk1");
 
                     b.HasIndex(new[] { "ApplicationId" }, "ApplicationId")
                         .IsUnique();
@@ -99,7 +99,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTime>("BirthDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2022, 2, 21, 15, 24, 42, 308, DateTimeKind.Local).AddTicks(5883));
+                        .HasDefaultValue(new DateTime(2022, 2, 27, 14, 36, 31, 192, DateTimeKind.Local).AddTicks(7337));
 
                     b.Property<int?>("CityDistrictId")
                         .HasColumnType("int(11)");
@@ -180,7 +180,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<int>("ApplicantId")
                         .HasColumnType("int(11)");
 
-                    b.Property<int>("AttachmentId")
+                    b.Property<int?>("AttachmentId")
                         .HasColumnType("int(11)");
 
                     b.Property<int>("ClassificationId")
@@ -199,10 +199,8 @@ namespace CallCenterCRM.Migrations
                     b.Property<bool>("IsSelected")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Recipient")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("RecipientId")
+                        .HasColumnType("int(11)");
 
                     b.Property<string>("RelevantApplications")
                         .IsRequired()
@@ -218,14 +216,11 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int(11)");
-
                     b.HasKey("Id");
 
                     b.HasIndex(new[] { "ClassificationId" }, "Application_fk0");
 
-                    b.HasIndex(new[] { "UserId" }, "Application_fk1");
+                    b.HasIndex(new[] { "RecipientId" }, "Application_fk1");
 
                     b.HasIndex(new[] { "ApplicantId" }, "Application_fk3");
 
@@ -351,7 +346,6 @@ namespace CallCenterCRM.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Contact")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -372,12 +366,8 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("OrganizationId")
+                    b.Property<int?>("ModeratorId")
                         .HasColumnType("int(11)");
-
-                    b.Property<string>("OrganizationName")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -387,12 +377,15 @@ namespace CallCenterCRM.Migrations
                     b.Property<string>("PasswordData")
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Surname")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Surname")
+                    b.Property<string>("Title")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -415,7 +408,7 @@ namespace CallCenterCRM.Migrations
                     b.HasIndex(new[] { "Username" }, "Username")
                         .IsUnique();
 
-                    b.HasIndex(new[] { "OrganizationId" }, "Users_fk0");
+                    b.HasIndex(new[] { "ModeratorId" }, "Users_fk0");
 
                     b.ToTable("users");
                 });
@@ -433,17 +426,17 @@ namespace CallCenterCRM.Migrations
                         .HasForeignKey("CallCenterCRM.Models.Answer", "AttachmentId")
                         .HasConstraintName("Answers_fk0");
 
-                    b.HasOne("CallCenterCRM.Models.User", "Organization")
+                    b.HasOne("CallCenterCRM.Models.User", "Author")
                         .WithMany("Answers")
-                        .HasForeignKey("OrganizationId")
-                        .IsRequired()
-                        .HasConstraintName("Answers_fk1");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Application");
 
                     b.Navigation("Attachment");
 
-                    b.Navigation("Organization");
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("CallCenterCRM.Models.Applicant", b =>
@@ -474,7 +467,6 @@ namespace CallCenterCRM.Migrations
                     b.HasOne("CallCenterCRM.Models.Attachment", "Attachment")
                         .WithOne("Application")
                         .HasForeignKey("CallCenterCRM.Models.Application", "AttachmentId")
-                        .IsRequired()
                         .HasConstraintName("Application_fk2");
 
                     b.HasOne("CallCenterCRM.Models.Classification", "Classification")
@@ -483,9 +475,9 @@ namespace CallCenterCRM.Migrations
                         .IsRequired()
                         .HasConstraintName("Application_fk0");
 
-                    b.HasOne("CallCenterCRM.Models.User", "User")
+                    b.HasOne("CallCenterCRM.Models.User", "Recipient")
                         .WithMany("Applications")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("RecipientId")
                         .IsRequired()
                         .HasConstraintName("Application_fk1");
 
@@ -495,16 +487,17 @@ namespace CallCenterCRM.Migrations
 
                     b.Navigation("Classification");
 
-                    b.Navigation("User");
+                    b.Navigation("Recipient");
                 });
 
             modelBuilder.Entity("CallCenterCRM.Models.User", b =>
                 {
-                    b.HasOne("CallCenterCRM.Models.User", "Organization")
-                        .WithMany("InverseOrganization")
-                        .HasForeignKey("OrganizationId");
+                    b.HasOne("CallCenterCRM.Models.User", "Moderator")
+                        .WithMany("Organizations")
+                        .HasForeignKey("ModeratorId")
+                        .HasConstraintName("Users_fk0");
 
-                    b.Navigation("Organization");
+                    b.Navigation("Moderator");
                 });
 
             modelBuilder.Entity("CallCenterCRM.Models.Applicant", b =>
@@ -520,11 +513,9 @@ namespace CallCenterCRM.Migrations
 
             modelBuilder.Entity("CallCenterCRM.Models.Attachment", b =>
                 {
-                    b.Navigation("Answer")
-                        .IsRequired();
+                    b.Navigation("Answer");
 
-                    b.Navigation("Application")
-                        .IsRequired();
+                    b.Navigation("Application");
                 });
 
             modelBuilder.Entity("CallCenterCRM.Models.Citydistrict", b =>
@@ -545,7 +536,7 @@ namespace CallCenterCRM.Migrations
 
                     b.Navigation("Applications");
 
-                    b.Navigation("InverseOrganization");
+                    b.Navigation("Organizations");
                 });
 #pragma warning restore 612, 618
         }

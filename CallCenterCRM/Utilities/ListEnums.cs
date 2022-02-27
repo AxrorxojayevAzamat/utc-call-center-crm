@@ -10,7 +10,7 @@ namespace CallCenterCRM.Utilities
             {
                 selectList.Add(new SelectListItem
                 {
-                    Value = (item).ToString(),
+                    Value = (item.GetHashCode()).ToString(),
                     Text = item.GetDisplayName()
                 });
             }

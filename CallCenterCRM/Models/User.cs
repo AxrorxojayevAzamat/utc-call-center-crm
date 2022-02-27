@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CallCenterCRM.Utilities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CallCenterCRM.Models
@@ -11,7 +13,7 @@ namespace CallCenterCRM.Models
     [Table("users")]
     [Index(nameof(Email), Name = "Email", IsUnique = true)]
     [Index(nameof(Username), Name = "Username", IsUnique = true)]
-    [Index(nameof(OrganizationId), Name = "Users_fk0")]
+    [Index(nameof(ModeratorId), Name = "Users_fk0")]
     public partial class User : BaseModel
     {
         public User()
@@ -19,29 +21,28 @@ namespace CallCenterCRM.Models
             Answers = new HashSet<Answer>();
             Applicants = new HashSet<Applicant>();
             Applications = new HashSet<Application>();
-            InverseOrganization = new HashSet<User>();
+            Organizations = new HashSet<User>();
+
+            RolesList = new List<SelectListItem>();
+
+            RolesList = ListEnums.GetEnumList<Roles>(RolesList);
         }
 
         [Key]
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
-
-        public Guid IdentityId { get; set; }
-
+        public Guid IdentityId { get; set; } = Guid.NewGuid();
         public string Username { get; set; } = null!;
         public string? Email { get; set; }
         [StringLength(255)]
         public string City { get; set; } = null!;
         [StringLength(255)]
-        public string Contact { get; set; } = null!;
-        [StringLength(255)]
         public string Password { get; set; } = null!;
+        public Roles Role { get; set; }
         [StringLength(255)]
-        public string Role { get; set; } = null!;
+        public string? Contact { get; set; } = null!; 
         [StringLength(255)]
-        public string? OrganizationName { get; set; }
-        [Column(TypeName = "int(11)")]
-        public int? OrganizationId { get; set; }
+        public string Title { get; set; }
         [StringLength(255)]
         public string? Surname { get; set; }
         [StringLength(255)]
@@ -54,17 +55,24 @@ namespace CallCenterCRM.Models
         public string? Address { get; set; }
         [StringLength(255)]
         public string? Type { get; set; }
-
-        [ForeignKey(nameof(OrganizationId))]
-        [InverseProperty(nameof(User.InverseOrganization))]
-        public virtual User? Organization { get; set; }
-        [InverseProperty(nameof(Answer.Organization))]
+        [Column(TypeName = "int(11)")]
+        public int? ModeratorId { get; set; }
+        [ForeignKey(nameof(ModeratorId))]
+        [InverseProperty(nameof(User.Organizations))]
+        public virtual User? Moderator { get; set; }
+        [InverseProperty(nameof(Answer.Author))]
         public virtual ICollection<Answer> Answers { get; set; }
         [InverseProperty(nameof(Applicant.Organization))]
         public virtual ICollection<Applicant> Applicants { get; set; }
-        [InverseProperty(nameof(Application.User))]
+        [InverseProperty(nameof(Application.Recipient))]
         public virtual ICollection<Application> Applications { get; set; }
-        [InverseProperty(nameof(User.Organization))]
-        public virtual ICollection<User> InverseOrganization { get; set; }
+        [InverseProperty(nameof(User.Moderator))]
+        public virtual ICollection<User> Organizations { get; set; }
+
+        /*notmapped*/
+        [NotMapped]
+        public List<SelectListItem> RolesList { get; set; }
+        /* / notmapped*/
+
     }
 }

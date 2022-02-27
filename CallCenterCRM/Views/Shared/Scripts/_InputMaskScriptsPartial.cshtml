@@ -1,0 +1,13 @@
+﻿<script src="~/lib/jquery.inputmask.bundle.min.js"></script>
+<script src="~/lib/jquery.masked-input.min.js"></script>
+<script>
+	let inputMaskFields = ["Contact", "ExtraContact"];
+
+	for(let x of inputMaskFields) {
+		$(`#${x}`).inputmask({
+			mask: "(99) 999-99-99",
+			clearIncomplete: true,
+		})
+	}
+	
+</script>

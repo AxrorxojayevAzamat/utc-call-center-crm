@@ -23,7 +23,7 @@ namespace CallCenterCRM.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var callcentercrmContext = _context.Users.Include(u => u.Organization);
+            var callcentercrmContext = _context.Users.Include(u => u.Moderator);
             return View(await callcentercrmContext.ToListAsync());
         }
 
@@ -36,7 +36,7 @@ namespace CallCenterCRM.Controllers
             }
 
             var user = await _context.Users
-                .Include(u => u.Organization)
+                .Include(u => u.Moderator)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
@@ -58,15 +58,15 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Email,City,Contact,Username,Password,OrganizationName,OrganizationId,Surname,Firstname,Middlename,PasswordData,Address,Type,CreatedDate,UpdatedDate")] User user)
+        public IActionResult Create([Bind("Id,Email,City,Contact,Username,Password,OrganizationName,OrganizationId,Surname,Firstname,Middlename,PasswordData,Address,Type,CreatedDate,UpdatedDate")] User user)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(user);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.OrganizationId);
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.ModeratorId);
             return View(user);
         }
 
@@ -83,7 +83,7 @@ namespace CallCenterCRM.Controllers
             {
                 return NotFound();
             }
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.OrganizationId);
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.ModeratorId);
             return View(user);
         }
 
@@ -92,7 +92,7 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Email,City,Contact,Username,Password,OrganizationName,OrganizationId,Surname,Firstname,Middlename,PasswordData,Address,Type,CreatedDate,UpdatedDate")] User user)
+        public IActionResult Edit(int id, [Bind("Id,Email,City,Contact,Username,Password,OrganizationName,OrganizationId,Surname,Firstname,Middlename,PasswordData,Address,Type,CreatedDate,UpdatedDate")] User user)
         {
             if (id != user.Id)
             {
@@ -104,7 +104,7 @@ namespace CallCenterCRM.Controllers
                 try
                 {
                     _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -119,7 +119,7 @@ namespace CallCenterCRM.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.OrganizationId);
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.ModeratorId);
             return View(user);
         }
 
@@ -132,7 +132,7 @@ namespace CallCenterCRM.Controllers
             }
 
             var user = await _context.Users
-                .Include(u => u.Organization)
+                .Include(u => u.Moderator)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {

@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Создать</h1>
 
 <h4>Citydistrict</h4>
 <hr />
@@ -22,17 +22,14 @@
 			<span asp-validation-for="Region" class="text-danger"></span>
 		</div>
 		<div class="form-group col-md-12 ">
-			<input type="submit" value="Создать" class="btn btn-success btn-rounded" />
+			<input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
 			<a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
 		</div>
 	</div>
 </form>
 
-<div>
-</div>
-
 @section Scripts {
     @{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_ValidationScriptsPartial");
 	}
 }
