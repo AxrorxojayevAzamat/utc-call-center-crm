@@ -53,18 +53,22 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "int(11)")]
         [Display(Name = "Вложение ")]
         public int? AttachmentId { get; set; }
+        [Display(Name = "Заявител")]
         [Column(TypeName = "int(11)")]
         public int ApplicantId { get; set; }
-
+        [Display(Name = "Заявител")]
         [ForeignKey(nameof(ApplicantId))]
         [InverseProperty("Applications")]
         public virtual Applicant Applicant { get; set; } = null!;
+        [Display(Name = "Вложение ")]
         [ForeignKey(nameof(AttachmentId))]
         [InverseProperty("Application")]
         public virtual Attachment? Attachment { get; set; } = null!;
+        [Display(Name = "Классификация")]
         [ForeignKey(nameof(ClassificationId))]
         [InverseProperty("Applications")]
         public virtual Classification Classification { get; set; } = null!;
+        [Display(Name = "Получатель")]
         [ForeignKey(nameof(RecipientId))]
         [InverseProperty("Applications")]
         public virtual User Recipient { get; set; } = null!;

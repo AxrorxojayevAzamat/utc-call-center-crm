@@ -55,12 +55,12 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind] Attachment attachment)
+        public IActionResult Create([Bind] Attachment attachment)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(attachment);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(attachment);
@@ -87,7 +87,7 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,HashName,Path,OriginName,Extension,CreatedDate,UpdatedDate")] Attachment attachment)
+        public IActionResult Edit(int id, [Bind] Attachment attachment)
         {
             if (id != attachment.Id)
             {
@@ -99,7 +99,7 @@ namespace CallCenterCRM.Controllers
                 try
                 {
                     _context.Update(attachment);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

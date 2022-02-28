@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
+using CallCenterCRM.Features.Identity;
 
 namespace CallCenterCRM.Controllers
 {
     public class UsersController : Controller
     {
         private readonly CallcentercrmContext _context;
+        private readonly IdentityService identityService;
 
-        public UsersController(CallcentercrmContext context)
+        public UsersController(CallcentercrmContext context, IdentityService identityService)
         {
             _context = context;
+            this.identityService = identityService;
         }
 
         // GET: Users
@@ -49,8 +52,9 @@ namespace CallCenterCRM.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
+            User user = new User();
             ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City");
-            return View();
+            return View(user);
         }
 
         // POST: Users/Create
@@ -58,12 +62,18 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Email,City,Contact,Username,Password,OrganizationName,OrganizationId,Surname,Firstname,Middlename,PasswordData,Address,Type,CreatedDate,UpdatedDate")] User user)
+        public async Task<IActionResult> Create([Bind] User user)
         {
             if (ModelState.IsValid)
             {
+                string roleName = Enum.GetName(typeof(Roles), user.Role);
+                User userResponse = await identityService.Register(user, roleName);
+                user.IdentityId = userResponse.IdentityId;
+                user.Role = userResponse.Role;
+               
                 _context.Add(user);
                 _context.SaveChanges();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.ModeratorId);
@@ -92,7 +102,7 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Email,City,Contact,Username,Password,OrganizationName,OrganizationId,Surname,Firstname,Middlename,PasswordData,Address,Type,CreatedDate,UpdatedDate")] User user)
+        public IActionResult Edit(int id, [Bind] User user)
         {
             if (id != user.Id)
             {

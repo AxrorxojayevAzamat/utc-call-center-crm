@@ -52,11 +52,11 @@ namespace CallCenterCRM
         // GET: Applications/Create
         public IActionResult Create()
         {
-            ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "AdditionalNote");
-            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension");
-            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Direction");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City");
-            return View();
+            Application application = new Application();
+            ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "Firstname");
+            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "OriginName");
+            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
+            return View(application);
         }
 
         // POST: Applications/Create
@@ -75,7 +75,6 @@ namespace CallCenterCRM
             ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "AdditionalNote", application.ApplicantId);
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", application.AttachmentId);
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Direction", application.ClassificationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.RecipientId);
             return View(application);
         }
 

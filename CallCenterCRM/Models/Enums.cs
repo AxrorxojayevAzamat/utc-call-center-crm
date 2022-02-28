@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace CallCenterCRM.Models
 {
@@ -7,10 +8,10 @@ namespace CallCenterCRM.Models
         [Display(Name = "Телефон доверия")] helpline = 0,
 
     }
-    
+
 
     public enum Genders
-    { 
+    {
         [Display(Name = "мужчина")] Male = 0,
         [Display(Name = "женщина")] Female = 1
     }
@@ -22,9 +23,9 @@ namespace CallCenterCRM.Models
     }
     public enum Roles
     {
-        [Display(Name = "Оператор")] Operator = 1,
-        [Display(Name = "Модератор")] Moderator = 2,
-        [Display(Name = "Организация")] Organization = 3
+        [Display(Name = "Оператор")] CrmOperator = 1,
+        [Display(Name = "Модератор")] CrmModerator = 2,
+        [Display(Name = "Организация")] CrmOrganization = 3
     }
     public enum Employments
     {

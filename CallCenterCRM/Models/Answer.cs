@@ -48,9 +48,11 @@ namespace CallCenterCRM.Models
         [ForeignKey(nameof(ApplicationId))]
         [InverseProperty("Answer")]
         public virtual Application Application { get; set; } = null!;
+        [Display(Name = "Вложение")]
         [ForeignKey(nameof(AttachmentId))]
         [InverseProperty("Answer")]
         public virtual Attachment? Attachment { get; set; } = null!;
+        [Display(Name = "Организация")]
         [ForeignKey(nameof(AuthorId))]
         [InverseProperty(nameof(User.Answers))]
         public virtual User Author { get; set; } = null!;

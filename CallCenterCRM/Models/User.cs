@@ -32,31 +32,46 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
         public Guid IdentityId { get; set; } = Guid.NewGuid();
+        [Display(Name = "Ввод логина")]
         public string Username { get; set; } = null!;
+        [Display(Name = "e-mail")]
         public string? Email { get; set; }
         [StringLength(255)]
+        [Display(Name = "Город")]
         public string City { get; set; } = null!;
         [StringLength(255)]
+        [Display(Name = "Ввод пароля")]
         public string Password { get; set; } = null!;
+        [Display(Name = "Роль")]
         public Roles Role { get; set; }
         [StringLength(255)]
+        [Display(Name = "Номер телефона")]
         public string? Contact { get; set; } = null!; 
         [StringLength(255)]
+        [Display(Name = "Наименование организации")]
         public string Title { get; set; }
         [StringLength(255)]
+        [Display(Name = "Фамилия")]
         public string? Surname { get; set; }
         [StringLength(255)]
+        [Display(Name = "Имя")]
         public string? Firstname { get; set; }
         [StringLength(255)]
+        [Display(Name = "Отчество")]
         public string? Middlename { get; set; }
         [Column(TypeName = "text")]
+        [Display(Name = "Паспортные данные")]
         public string? PasswordData { get; set; }
         [Column(TypeName = "text")]
+        [Display(Name = "Адрес проживания")]
         public string? Address { get; set; }
         [StringLength(255)]
+        [Display(Name = "Тип")]
         public string? Type { get; set; }
         [Column(TypeName = "int(11)")]
+        [Display(Name = "Связка с организацией")]
         public int? ModeratorId { get; set; }
+        [Display(Name = "Связка с организацией")]
         [ForeignKey(nameof(ModeratorId))]
         [InverseProperty(nameof(User.Organizations))]
         public virtual User? Moderator { get; set; }

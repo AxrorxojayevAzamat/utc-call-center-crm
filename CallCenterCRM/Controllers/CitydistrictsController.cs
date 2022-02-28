@@ -61,7 +61,6 @@ namespace CallCenterCRM.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind] Citydistrict citydistrict)
-        
         {
             if (ModelState.IsValid)
             {

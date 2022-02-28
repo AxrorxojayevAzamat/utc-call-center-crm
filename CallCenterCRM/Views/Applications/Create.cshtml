@@ -11,7 +11,6 @@
 <form asp-action="Create">
 	<div class="row">
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
 		<div class="form-group col-md-4">
 			<label asp-for="ClassificationId" class="control-label"></label>
 			<select asp-for="ClassificationId" class="form-control" asp-items="ViewBag.ClassificationId">
@@ -27,13 +26,8 @@
 			<input type="text" id="Value" class="form-control" value="" disabled />
 		</div>
 		<div class="form-group col-md-4">
-			<label asp-for="Recipient" class="control-label"></label>
-			<input asp-for="Recipient" class="form-control" />
-			<span asp-validation-for="Recipient" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-4">
 			<label asp-for="ExpireTime" class="control-label"></label>
-			<input asp-for="ExpireTime" class="form-control" />
+			<input asp-for="ExpireTime" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control" value="@DateTime.Today.ToString("0:dd/MM/yyyy HH:mm")" />
 			<span asp-validation-for="ExpireTime" class="text-danger"></span>
 		</div>
 		<div class="form-group col-md-4">
@@ -43,7 +37,7 @@
 		</div>
 		<div class="form-group col-md-4">
 			<label asp-for="Type" class="control-label"></label>
-			<input asp-for="Type" class="form-control" />
+			<select asp-for="Type" class="form-control" asp-items="Model.TypesList"></select>
 			<span asp-validation-for="Type" class="text-danger"></span>
 		</div>
 		<div class="form-group col-md-4">
@@ -54,17 +48,20 @@
 		<div class="form-group col-md-4">
 			<label asp-for="RecipientId" class="control-label"></label>
 			<select asp-for="RecipientId" class="form-control" asp-items="ViewBag.RecipientId"></select>
+			<span asp-validation-for="RecipientId" class="text-danger"></span>
 		</div>
 		<div class="form-group col-md-4">
 			<label asp-for="AttachmentId" class="control-label"></label>
 			<select asp-for="AttachmentId" class="form-control" asp-items="ViewBag.AttachmentId"></select>
+			<span asp-validation-for="AttachmentId" class="text-danger"></span>
 		</div>
 		<div class="form-group col-md-4">
 			<label asp-for="ApplicantId" class="control-label"></label>
 			<select asp-for="ApplicantId" class="form-control" asp-items="ViewBag.ApplicantId"></select>
+			<span asp-validation-for="ApplicantId" class="text-danger"></span>
 		</div>
-		<div class="form-group col-md-2 mt-3">
-			<input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
+		<div class="form-group col-md-12 mt-3">
+			<input type="submit" value="Сохранить" asp-action="Create" class="btn btn-success btn-rounded" />
 			<a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
 		</div>
 	</div>

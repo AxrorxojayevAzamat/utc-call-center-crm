@@ -14,9 +14,6 @@
 		<thead>
 			<tr>
 				<th>
-					@Html.DisplayNameFor(model => model.Recipient)
-				</th>
-				<th>
 					@Html.DisplayNameFor(model => model.ExpireTime)
 				</th>
 				<th>
@@ -53,9 +50,6 @@
 			@foreach (var item in Model)
 			{
 				<tr>
-					<td>
-						@Html.DisplayFor(modelItem => item.Recipient)
-					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.ExpireTime)
 					</td>

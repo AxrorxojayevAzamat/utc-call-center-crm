@@ -1,11 +1,28 @@
 using CallCenterCRM.Data;
+using CallCenterCRM.Features.Identity;
+using CallCenterCRM.HttpHandlers;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
+
+//Http client
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<AuthenticationDelegatingHandler>();
+builder.Services.AddHttpClient("IdentityAPI", client =>
+{
+    client.BaseAddress = new Uri(configuration.GetValue<string>("Identity:ApiUrl")); // API GATEWAY URL
+    client.DefaultRequestHeaders.Clear();
+    client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+}).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+
+//Add UTC Identity Service
+builder.Services.AddSingleton<IdentityService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -28,6 +45,7 @@ builder.Services.AddAuthentication(options =>
         //options.ClientSecret = configuration.GetValue<string>("Identity:ClientSecret");
         options.Scope.Add("roles");
         options.Scope.Add("openid");
+        options.Scope.Add("Auth_api");
         options.ClaimActions.MapJsonKey("role", "role", "role");
         options.TokenValidationParameters.RoleClaimType = "role";
         options.ResponseType = "code";
@@ -66,6 +84,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}")
+    .RequireAuthorization();
 
 app.Run();
