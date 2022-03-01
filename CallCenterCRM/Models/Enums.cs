@@ -9,7 +9,6 @@ namespace CallCenterCRM.Models
 
     }
 
-
     public enum Genders
     {
         [Display(Name = "мужчина")] Male = 0,
@@ -41,6 +40,25 @@ namespace CallCenterCRM.Models
         [Display(Name = "Жалобы")] Complaint = 1,
         [Display(Name = "Предложения")] Offer = 2,
         [Display(Name = "Письмо")] Letter = 3,
+    }
+
+    public enum ApplicationStatus
+    {
+        [Display(Name = "Заявления")] SendMod = 1,
+        [Display(Name = "Заявления")] RejectMod = -1,
+        [Display(Name = "в процессе работы")] SendOrg = 2,
+        [Display(Name = "Заявления")] RejectOrg = -2,
+        [Display(Name = "Отредактирован")] Edit = 3,
+        [Display(Name = "Заявления")] GotMod = 0,
+    }
+
+    public enum AnswerStatus
+    {
+        [Display(Name = "Отправить")] Send = 1,
+        [Display(Name = "Заявления")] Reject = -1,
+        [Display(Name = "Заявления")] Delay = 2,
+        [Display(Name = "Отредактирован")] Edit = 3,
+        [Display(Name = "обработан")] Confirm = 0,
     }
 
     public enum Regions

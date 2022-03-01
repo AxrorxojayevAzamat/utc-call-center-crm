@@ -71,6 +71,7 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
@@ -110,8 +111,6 @@ namespace CallCenterCRM.Migrations
                     PasswordData = table.Column<string>(type: "text", nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Address = table.Column<string>(type: "text", nullable: true, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Type = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ModeratorId = table.Column<int>(type: "int(11)", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
@@ -153,7 +152,7 @@ namespace CallCenterCRM.Migrations
                     Address = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 2, 27, 14, 36, 31, 192, DateTimeKind.Local).AddTicks(7337)),
+                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 3, 1, 10, 20, 5, 617, DateTimeKind.Local).AddTicks(5684)),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Employment = table.Column<int>(type: "int", nullable: false),
                     Confidentiality = table.Column<bool>(type: "tinyint(1)", nullable: false),

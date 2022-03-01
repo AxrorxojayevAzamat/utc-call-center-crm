@@ -40,8 +40,10 @@ namespace CallCenterCRM.Models
         [Display(Name = "Город")]
         public string City { get; set; } = null!;
         [StringLength(255)]
+        [DataType(DataType.Password)]
         [Display(Name = "Ввод пароля")]
         public string Password { get; set; } = null!;
+
         [Display(Name = "Роль")]
         public Roles Role { get; set; }
         [StringLength(255)]
@@ -65,9 +67,7 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "text")]
         [Display(Name = "Адрес проживания")]
         public string? Address { get; set; }
-        [StringLength(255)]
-        [Display(Name = "Тип")]
-        public string? Type { get; set; }
+
         [Column(TypeName = "int(11)")]
         [Display(Name = "Связка с организацией")]
         public int? ModeratorId { get; set; }

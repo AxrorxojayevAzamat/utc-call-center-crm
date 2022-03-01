@@ -121,6 +121,12 @@ namespace CallCenterCRM.Data
                     entity.Property(c => c.Region).HasConversion<int>();
                 });
 
+            //modelBuilder.Entity<Classification>(
+            //    entity =>
+            //    {
+            //        entity.Property(d => d.IsActive).HasDefaultValue(true);
+            //    });
+
             //var allEntities = modelBuilder.Model.GetEntityTypes();
 
             //foreach (var entity in allEntities)

@@ -19,18 +19,25 @@ namespace CallCenterCRM.Models
         [Key]
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
+
         [StringLength(255)]
         [Display(Name = "Название")]
         public string Title { get; set; } = null!;
-        [Column(TypeName = "text")] 
-        [Display(Name = "Описание")]
-        public string? Description { get; set; }
+
         [StringLength(255)]
         [Display(Name = "Направление")]
         public string Direction { get; set; }= null!;
+
         [StringLength(255)]
         [Display(Name = "Значение")]
         public string Value { get; set; } = null!;
+
+        [Display(Name = "Актив")]
+        public bool IsActive { get; set; }
+
+        [Column(TypeName = "text")]
+        [Display(Name = "Описание")]
+        public string? Description { get; set; }
 
         [InverseProperty(nameof(Application.Classification))]
         public virtual ICollection<Application> Applications { get; set; }

@@ -22,9 +22,6 @@
 				<th>
 					@Html.DisplayNameFor(model => model.UpdatedDate)
 				</th>
-				@*<th>
-					@Html.DisplayNameFor(model => model.CreatedOn)
-					</th>*@
 				<th></th>
 			</tr>
 		</thead>
@@ -41,9 +38,6 @@
 					<td>
 						@Html.DisplayFor(modelItem => item.UpdatedDate)
 					</td>
-					@*<td>
-						@Html.DisplayFor(modelItem =>item.CreatedOn)
-						</td>*@
 					<td>
 						<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
 						<a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>

@@ -99,7 +99,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTime>("BirthDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2022, 2, 27, 14, 36, 31, 192, DateTimeKind.Local).AddTicks(7337));
+                        .HasDefaultValue(new DateTime(2022, 3, 1, 10, 20, 5, 617, DateTimeKind.Local).AddTicks(5684));
 
                     b.Property<int?>("CityDistrictId")
                         .HasColumnType("int(11)");
@@ -313,6 +313,9 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -386,10 +389,6 @@ namespace CallCenterCRM.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Type")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 

@@ -9,9 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
 using CallCenterCRM.Features.Identity;
+using System.ComponentModel.DataAnnotations;
+using CallCenterCRM.Forms;
 
 namespace CallCenterCRM.Controllers
 {
+
     public class UsersController : Controller
     {
         private readonly CallcentercrmContext _context;
@@ -52,7 +55,7 @@ namespace CallCenterCRM.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            User user = new User();
+            RegisterUserInput user = new RegisterUserInput();
             ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City");
             return View(user);
         }
@@ -62,21 +65,39 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind] User user)
+        public async Task<IActionResult> Create([Bind] RegisterUserInput userInput)
         {
+            User user = new User()
+            {
+                Title = userInput.Title,
+                Username = userInput.Username,
+                Email = userInput.Email,
+                Contact = userInput.Contact,
+                Password = userInput.Password,
+                Role = userInput.Role,
+                City = userInput.City,
+            };
+
             if (ModelState.IsValid)
             {
-                string roleName = Enum.GetName(typeof(Roles), user.Role);
-                User userResponse = await identityService.Register(user, roleName);
-                user.IdentityId = userResponse.IdentityId;
-                user.Role = userResponse.Role;
-               
-                _context.Add(user);
-                _context.SaveChanges();
+                string roleName = Enum.GetName(typeof(Roles), userInput.Role);
+                try
+                {
+                    User userResponse = await identityService.Register(userInput, roleName);
+                    user.IdentityId = userResponse.IdentityId;
+                    user.Role = userResponse.Role;
+
+                    _context.Add(user);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Something wrong with server!!!");
+                }
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.ModeratorId);
+            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.ModeratorId);
             return View(user);
         }
 

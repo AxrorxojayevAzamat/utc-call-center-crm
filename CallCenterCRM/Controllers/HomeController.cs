@@ -1,4 +1,5 @@
-﻿using CallCenterCRM.Models;
+﻿using CallCenterCRM.Data;
+using CallCenterCRM.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,14 +12,24 @@ namespace CallCenterCRM.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly CallcentercrmContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, CallcentercrmContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
+            Guid valueIdentityId = Guid.Empty;
+            string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+            
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+            valueIdentityId = new Guid(userIdentity);
+            int userId = _context.Users.FirstOrDefault(d => d.IdentityId == valueIdentityId).Id;
+            ViewData["userId"] = userId;
+
             return View();
         }
 

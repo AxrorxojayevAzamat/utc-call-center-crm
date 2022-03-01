@@ -1,4 +1,5 @@
-﻿using CallCenterCRM.Models;
+﻿using CallCenterCRM.Forms;
+using CallCenterCRM.Models;
 using System.Runtime.Serialization;
 using UTC.Auth.Client;
 
@@ -14,7 +15,7 @@ namespace CallCenterCRM.Features.Identity
         {
             this.HttpClient = httpClient;
         }
-        public async Task<User> Register(User _user, string roleName)
+        public async Task<User> Register(RegisterUserInput _user, string roleName)
         {
 
             var client = HttpClient.CreateClient("IdentityAPI");
