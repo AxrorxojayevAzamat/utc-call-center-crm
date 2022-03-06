@@ -20,8 +20,10 @@ namespace CallCenterCRM.Models
         public Application()
         {
             TypesList = new List<SelectListItem>();
+            StatusList = new List<SelectListItem>();
 
             TypesList = ListEnums.GetEnumList<AppTypes>(TypesList);
+            StatusList = ListEnums.GetEnumList<ApplicationStatus>(StatusList);
         }
 
         [Key]
@@ -45,9 +47,6 @@ namespace CallCenterCRM.Models
         [Display(Name = "Избранный")]
         public bool IsSelected { get; set; }
         [Column(TypeName = "int(11)")]
-        [Display(Name = "Статус")]
-        public int Status { get; set; }
-        [Column(TypeName = "int(11)")]
         [Display(Name = "Получатель")]
         public int RecipientId { get; set; }
         [Column(TypeName = "int(11)")]
@@ -56,10 +55,12 @@ namespace CallCenterCRM.Models
         [Display(Name = "Заявител")]
         [Column(TypeName = "int(11)")]
         public int ApplicantId { get; set; }
+        [Display(Name = "Статус")]
+        public ApplicationStatus Status { get; set; }
         [Display(Name = "Заявител")]
         [ForeignKey(nameof(ApplicantId))]
         [InverseProperty("Applications")]
-        public virtual Applicant Applicant { get; set; } = null!;
+        public virtual Applicant? Applicant { get; set; } = null!;
         [Display(Name = "Вложение ")]
         [ForeignKey(nameof(AttachmentId))]
         [InverseProperty("Application")]
@@ -67,17 +68,19 @@ namespace CallCenterCRM.Models
         [Display(Name = "Классификация")]
         [ForeignKey(nameof(ClassificationId))]
         [InverseProperty("Applications")]
-        public virtual Classification Classification { get; set; } = null!;
+        public virtual Classification? Classification { get; set; } = null!;
         [Display(Name = "Получатель")]
         [ForeignKey(nameof(RecipientId))]
         [InverseProperty("Applications")]
-        public virtual User Recipient { get; set; } = null!;
+        public virtual User? Recipient { get; set; } = null!;
         [InverseProperty("Application")]
-        public virtual Answer Answer { get; set; } = null!;
+        public virtual Answer? Answer { get; set; } = null!;
 
         /*notmapped*/
         [NotMapped]
         public List<SelectListItem> TypesList { get; set; }
+        [NotMapped]
+        public List<SelectListItem> StatusList { get; set; }
 
         /* / notmapped*/
     }

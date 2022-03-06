@@ -44,21 +44,21 @@ namespace CallCenterCRM.Models
 
     public enum ApplicationStatus
     {
-        [Display(Name = "Заявления")] SendMod = 1,
-        [Display(Name = "Заявления")] RejectMod = -1,
-        [Display(Name = "в процессе работы")] SendOrg = 2,
-        [Display(Name = "Заявления")] RejectOrg = -2,
+        [Display(Name = "Отправлено модератору")] SendMod = 1,
+        [Display(Name = "Отклонить от модификатора")] RejectMod = -1,
+        [Display(Name = "В процессе работы")] SendOrg = 2,
+        [Display(Name = "Отказ от организации")] RejectOrg = -2,
         [Display(Name = "Отредактирован")] Edit = 3,
-        [Display(Name = "Заявления")] GotMod = 0,
+        [Display(Name = "Взял модератор")] GotMod = 0,
     }
 
     public enum AnswerStatus
     {
         [Display(Name = "Отправить")] Send = 1,
-        [Display(Name = "Заявления")] Reject = -1,
-        [Display(Name = "Заявления")] Delay = 2,
+        [Display(Name = "Отклоненный")] Reject = -1,
+        [Display(Name = "Задерживать")] Delay = 2,
         [Display(Name = "Отредактирован")] Edit = 3,
-        [Display(Name = "обработан")] Confirm = 0,
+        [Display(Name = "Обработан")] Confirm = 0,
     }
 
     public enum Regions

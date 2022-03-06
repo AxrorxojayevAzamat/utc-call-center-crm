@@ -9,16 +9,19 @@ using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
 using Microsoft.AspNetCore.Authorization;
+using CallCenterCRM.Interfaces;
 
 namespace CallCenterCRM.Controllers
 {
     public class AnswersController : Controller
     {
         private readonly CallcentercrmContext _context;
+        private readonly IAttachmentService _attachmentService;
 
-        public AnswersController(CallcentercrmContext context)
+        public AnswersController(CallcentercrmContext context, IAttachmentService attachmentService)
         {
             _context = context;
+            _attachmentService = attachmentService;
         }
 
         // GET: Answers
@@ -57,8 +60,10 @@ namespace CallCenterCRM.Controllers
         // GET: Answers/Create
         public IActionResult Create()
         {
+            Answer answer = new Answer();
             ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment");
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension");
+            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Username", answer.AuthorId);
             //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City");
             return View();
         }
@@ -68,12 +73,33 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,ResponsiblePerson,Executor,ResponseLetter,AttachmentId,RegisterNumber,Result,Conclusion,OrganizationId,ApplicationId")] Answer answer)
+        public async Task<IActionResult> Create([Bind] Answer answer, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(answer);
-                _context.SaveChanges();
+                try
+                {
+                    int attachmentId = -1;
+
+                    if (file != null)
+                    {
+                        attachmentId = await _attachmentService.UploadFileToStorage(file);
+                    }
+
+                    if (attachmentId > -1)
+                    {
+                        answer.AttachmentId = attachmentId;
+                    }
+
+                    _context.Answers.Add(answer);
+                    _context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment", answer.ApplicationId);

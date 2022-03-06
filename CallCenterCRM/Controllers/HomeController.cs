@@ -1,5 +1,7 @@
 ﻿using CallCenterCRM.Data;
+using CallCenterCRM.Interfaces;
 using CallCenterCRM.Models;
+using CallCenterCRM.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,13 +24,12 @@ namespace CallCenterCRM.Controllers
 
         public IActionResult Index()
         {
-            Guid valueIdentityId = Guid.Empty;
-            string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
-            
-            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
-            valueIdentityId = new Guid(userIdentity);
-            int userId = _context.Users.FirstOrDefault(d => d.IdentityId == valueIdentityId).Id;
-            ViewData["userId"] = userId;
+            //Guid valueIdentityId = Guid.Empty;
+            //string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+
+            //var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+            //valueIdentityId = new Guid(userIdentity);
+            //int userId = _context.Users.FirstOrDefault(d => d.IdentityId == valueIdentityId).Id;
 
             return View();
         }
@@ -47,7 +48,7 @@ namespace CallCenterCRM.Controllers
         [Route("action")]
         public IActionResult Logout()
         {
-            return SignOut("Cookies","oidc");
+            return SignOut("Cookies", "oidc");
         }
     }
 }

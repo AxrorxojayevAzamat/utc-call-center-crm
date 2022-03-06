@@ -1,9 +1,19 @@
-﻿@*
+﻿@using CallCenterCRM.Interfaces
+@inject IUserService userService
+
+@*
 	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-	var user = User.Identities.First().Claims.First( c => c.Type == "name" );
+	string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+	string userIdentityId = GetUserClaim(typeIdentityId);
+
 	var isAuthenticated = User.Identity.IsAuthenticated;
+
+	string GetUserClaim(string type)
+	{
+		return User.Identities.First().Claims.First(c => c.Type == type).Value;
+	}
 }
 <nav class="navbar default-layout col-lg-12 col-12 p-0 d-flex align-items-top flex-row">
 	<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
@@ -19,9 +29,9 @@
 	<div class="navbar-menu-wrapper d-flex align-items-top">
 		<ul class="navbar-nav">
 			<li class="nav-item font-weight-semibold d-lg-block ms-0">
-				@*<h1 class="welcome-text"><span class="text-black fw-bold"></span></h1>
-				<h3 class="welcome-sub-text">@user.Type</h3>
-				<h3 class="welcome-sub-text">@isAuthenticated</h3>*@
+				<h1 class="welcome-text"><span class="text-black fw-bold">@userService.GetUserTitle(userIdentityId)</span></h1>
+					<h3 class="welcome-sub-text">@userService.GetUserRole(userIdentityId)</h3>
+					@*<h3 class="welcome-sub-text">@isAuthenticated</h3>*@
 			</li>
 		</ul>
 		<ul class="navbar-nav ms-auto">
@@ -29,11 +39,13 @@
 				<a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
 					<h6>
 						<i class="menu-icon mdi mdi-account-circle-outline"></i>
-						@user.Value
+						@GetUserClaim("name")
 					</h6>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
-					<a asp-controller="Users" asp-action="Edit" asp-route-id=@ViewData["userId"] class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> Профиль <span class="badge badge-pill badge-danger"></span></a>
+					<a asp-controller="Users" asp-action="Edit" asp-route-id=@userService.GetUserId(userIdentityId) class="dropdown-item">
+						<i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> Профиль <span class="badge badge-pill badge-danger"></span>
+					</a>
 					<a asp-area="" asp-controller="Home" asp-action="Logout" class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Выход</a>
 				</div>
 			</li>

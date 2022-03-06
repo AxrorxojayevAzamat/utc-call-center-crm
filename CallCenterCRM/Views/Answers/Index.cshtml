@@ -71,7 +71,7 @@
 						@Html.DisplayFor(modelItem => item.Application.Classification.Title)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => $"{item.Attachment.OriginName}.{item.Attachment.Extension}")
+						@Html.DisplayFor(modelItem => item.Attachment.Path)
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.Application.Recipient.Title)

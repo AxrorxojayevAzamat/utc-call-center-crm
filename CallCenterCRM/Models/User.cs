@@ -63,7 +63,7 @@ namespace CallCenterCRM.Models
         public string? Middlename { get; set; }
         [Column(TypeName = "text")]
         [Display(Name = "Паспортные данные")]
-        public string? PasswordData { get; set; }
+        public string? PassportData { get; set; }
         [Column(TypeName = "text")]
         [Display(Name = "Адрес проживания")]
         public string? Address { get; set; }
@@ -71,9 +71,9 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "int(11)")]
         [Display(Name = "Связка с организацией")]
         public int? ModeratorId { get; set; }
-        [Display(Name = "Связка с организацией")]
         [ForeignKey(nameof(ModeratorId))]
         [InverseProperty(nameof(User.Organizations))]
+        [Display(Name = "Связка с организацией")]
         public virtual User? Moderator { get; set; }
         [InverseProperty(nameof(Answer.Author))]
         public virtual ICollection<Answer> Answers { get; set; }

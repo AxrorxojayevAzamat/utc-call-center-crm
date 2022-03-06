@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CallCenterCRM.Utilities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CallCenterCRM.Models
@@ -14,6 +16,13 @@ namespace CallCenterCRM.Models
     [Index(nameof(AttachmentId), Name = "AttachmentId", IsUnique = true)]
     public partial class Answer : BaseModel
     {
+        public Answer()
+		{
+            StatusList = new List<SelectListItem>();
+
+            StatusList = ListEnums.GetEnumList<AnswerStatus>(StatusList);
+        }
+
         [Key]
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
@@ -41,13 +50,15 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "int(11)")]
         [Display(Name = "Организация")]
         public int AuthorId { get; set; }
+        [Display(Name = "Статус")]
+        public AnswerStatus Status { get; set; }
         [Column(TypeName = "int(11)")]
         [Display(Name = "Заявление")]
         public int ApplicationId { get; set; }
 
         [ForeignKey(nameof(ApplicationId))]
         [InverseProperty("Answer")]
-        public virtual Application Application { get; set; } = null!;
+        public virtual Application? Application { get; set; } = null!;
         [Display(Name = "Вложение")]
         [ForeignKey(nameof(AttachmentId))]
         [InverseProperty("Answer")]
@@ -55,7 +66,11 @@ namespace CallCenterCRM.Models
         [Display(Name = "Организация")]
         [ForeignKey(nameof(AuthorId))]
         [InverseProperty(nameof(User.Answers))]
-        public virtual User Author { get; set; } = null!;
+        public virtual User? Author { get; set; } = null!;
 
+        /*notmapped*/
+        [NotMapped]
+        public List<SelectListItem> StatusList { get; set; }
+        /* / notmapped*/
     }
 }

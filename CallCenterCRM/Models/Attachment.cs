@@ -14,9 +14,6 @@ namespace CallCenterCRM.Models
         [Key]
         [Column(TypeName = "int(11)")]
         public int Id { get; set; }
-        [Column(TypeName = "int(11)")]
-        [Display(Name = "Тип")]
-        public int Type { get; set; }
         [StringLength(255)]
         [Display(Name = "Имя хеша")]
         public string HashName { get; set; } = null!;

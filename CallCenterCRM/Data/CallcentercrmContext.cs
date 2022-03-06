@@ -55,6 +55,7 @@ namespace CallCenterCRM.Data
                     .HasForeignKey<Answer>(d => d.AttachmentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Answers_fk0");
+                entity.Property(c => c.Status).HasConversion<int>().HasDefaultValue(AnswerStatus.Send);
             });
 
             modelBuilder.Entity<Applicant>(entity =>
@@ -103,7 +104,7 @@ namespace CallCenterCRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Application_fk1");
                 entity.Property(c => c.Type).HasConversion<int>();
-
+                entity.Property(c => c.Status).HasConversion<int>().HasDefaultValue(ApplicationStatus.SendMod);
             });
 
             modelBuilder.Entity<User>(entity =>

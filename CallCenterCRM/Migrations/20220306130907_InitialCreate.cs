@@ -19,7 +19,6 @@ namespace CallCenterCRM.Migrations
                 {
                     Id = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Type = table.Column<int>(type: "int(11)", nullable: false),
                     HashName = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Path = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
@@ -65,13 +64,13 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "text", nullable: true, collation: "utf8mb4_unicode_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Direction = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true, collation: "utf8mb4_unicode_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
@@ -108,7 +107,7 @@ namespace CallCenterCRM.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Middlename = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PasswordData = table.Column<string>(type: "text", nullable: true, collation: "utf8mb4_unicode_ci")
+                    PassportData = table.Column<string>(type: "text", nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Address = table.Column<string>(type: "text", nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -152,7 +151,7 @@ namespace CallCenterCRM.Migrations
                     Address = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 3, 1, 10, 20, 5, 617, DateTimeKind.Local).AddTicks(5684)),
+                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 3, 6, 18, 9, 7, 95, DateTimeKind.Local).AddTicks(8586)),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Employment = table.Column<int>(type: "int", nullable: false),
                     Confidentiality = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -195,10 +194,10 @@ namespace CallCenterCRM.Migrations
                     Comment = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsSelected = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Status = table.Column<int>(type: "int(11)", nullable: false),
                     RecipientId = table.Column<int>(type: "int(11)", nullable: false),
                     AttachmentId = table.Column<int>(type: "int(11)", nullable: true),
                     ApplicantId = table.Column<int>(type: "int(11)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
@@ -248,6 +247,7 @@ namespace CallCenterCRM.Migrations
                     Conclusion = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AuthorId = table.Column<int>(type: "int(11)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     ApplicationId = table.Column<int>(type: "int(11)", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)

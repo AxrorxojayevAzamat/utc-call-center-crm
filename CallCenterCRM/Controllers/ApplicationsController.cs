@@ -8,16 +8,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
+using CallCenterCRM.Interfaces;
 
 namespace CallCenterCRM
 {
     public class ApplicationsController : Controller
     {
         private readonly CallcentercrmContext _context;
-
-        public ApplicationsController(CallcentercrmContext context)
+        private readonly IAttachmentService _attachmentService;
+        public ApplicationsController(CallcentercrmContext context, IAttachmentService attachmentService)
         {
             _context = context;
+            _attachmentService = attachmentService;
         }
 
         // GET: Applications
@@ -56,6 +58,7 @@ namespace CallCenterCRM
             ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "Firstname");
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "OriginName");
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
+            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Username", application.RecipientId);
             return View(application);
         }
 
@@ -64,17 +67,38 @@ namespace CallCenterCRM
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind] Application application)
+        public async Task<IActionResult> Create(Application application, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(application);
-                _context.SaveChanges();
+                try
+                {
+                    int attachmentId = -1;
+
+                    if (file != null)
+                    {
+                        attachmentId = await _attachmentService.UploadFileToStorage(file);
+                    }
+
+                    if (attachmentId > -1)
+                    {
+                        application.AttachmentId = attachmentId;
+                    }
+
+                    _context.Applications.Add(application);
+                    _context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "AdditionalNote", application.ApplicantId);
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", application.AttachmentId);
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Direction", application.ClassificationId);
+            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Username", application.RecipientId);
             return View(application);
         }
 

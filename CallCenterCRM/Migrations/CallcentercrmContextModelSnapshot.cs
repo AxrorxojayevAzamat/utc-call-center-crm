@@ -66,6 +66,11 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
                     b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
@@ -99,7 +104,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTime>("BirthDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2022, 3, 1, 10, 20, 5, 617, DateTimeKind.Local).AddTicks(5684));
+                        .HasDefaultValue(new DateTime(2022, 3, 6, 18, 9, 7, 95, DateTimeKind.Local).AddTicks(8586));
 
                     b.Property<int?>("CityDistrictId")
                         .HasColumnType("int(11)");
@@ -208,7 +213,9 @@ namespace CallCenterCRM.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int(11)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -259,9 +266,6 @@ namespace CallCenterCRM.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int(11)");
 
                     b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -372,13 +376,13 @@ namespace CallCenterCRM.Migrations
                     b.Property<int?>("ModeratorId")
                         .HasColumnType("int(11)");
 
+                    b.Property<string>("PassportData")
+                        .HasColumnType("text");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
-
-                    b.Property<string>("PasswordData")
-                        .HasColumnType("text");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
