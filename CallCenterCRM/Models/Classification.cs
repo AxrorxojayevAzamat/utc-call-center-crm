@@ -14,6 +14,7 @@ namespace CallCenterCRM.Models
         public Classification()
         {
             Applications = new HashSet<Application>();
+            Users = new HashSet<User>();
         }
 
         [Key]
@@ -41,5 +42,8 @@ namespace CallCenterCRM.Models
 
         [InverseProperty(nameof(Application.Classification))]
         public virtual ICollection<Application> Applications { get; set; }
+
+        [InverseProperty(nameof(User.Classification))]
+        public virtual ICollection<User> Users { get; set; }
     }
 }

@@ -104,7 +104,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTime>("BirthDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2022, 3, 6, 18, 9, 7, 95, DateTimeKind.Local).AddTicks(8586));
+                        .HasDefaultValue(new DateTime(2022, 3, 8, 18, 23, 28, 591, DateTimeKind.Local).AddTicks(1642));
 
                     b.Property<int?>("CityDistrictId")
                         .HasColumnType("int(11)");
@@ -352,6 +352,9 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<int?>("ClassificationId")
+                        .HasColumnType("int(11)");
+
                     b.Property<string>("Contact")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
@@ -412,6 +415,8 @@ namespace CallCenterCRM.Migrations
                         .IsUnique();
 
                     b.HasIndex(new[] { "ModeratorId" }, "Users_fk0");
+
+                    b.HasIndex(new[] { "ClassificationId" }, "Users_fk1");
 
                     b.ToTable("users");
                 });
@@ -495,10 +500,17 @@ namespace CallCenterCRM.Migrations
 
             modelBuilder.Entity("CallCenterCRM.Models.User", b =>
                 {
+                    b.HasOne("CallCenterCRM.Models.Classification", "Classification")
+                        .WithMany("Users")
+                        .HasForeignKey("ClassificationId")
+                        .HasConstraintName("Users_fk1");
+
                     b.HasOne("CallCenterCRM.Models.User", "Moderator")
                         .WithMany("Organizations")
                         .HasForeignKey("ModeratorId")
                         .HasConstraintName("Users_fk0");
+
+                    b.Navigation("Classification");
 
                     b.Navigation("Moderator");
                 });
@@ -510,8 +522,7 @@ namespace CallCenterCRM.Migrations
 
             modelBuilder.Entity("CallCenterCRM.Models.Application", b =>
                 {
-                    b.Navigation("Answer")
-                        .IsRequired();
+                    b.Navigation("Answer");
                 });
 
             modelBuilder.Entity("CallCenterCRM.Models.Attachment", b =>
@@ -529,6 +540,8 @@ namespace CallCenterCRM.Migrations
             modelBuilder.Entity("CallCenterCRM.Models.Classification", b =>
                 {
                     b.Navigation("Applications");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("CallCenterCRM.Models.User", b =>

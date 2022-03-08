@@ -114,7 +114,12 @@ namespace CallCenterCRM.Controllers
             {
                 return NotFound();
             }
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.ModeratorId);
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Username", user.ModeratorId);
+            ViewBag.Role = user.Role;
+            if (user.Role == Roles.CrmModerator)
+            {
+                ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title", user.ClassificationId);
+            }
             return View(user);
         }
 

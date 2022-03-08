@@ -112,6 +112,7 @@ namespace CallCenterCRM.Migrations
                     Address = table.Column<string>(type: "text", nullable: true, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ModeratorId = table.Column<int>(type: "int(11)", nullable: true),
+                    ClassificationId = table.Column<int>(type: "int(11)", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)
                 },
@@ -122,6 +123,11 @@ namespace CallCenterCRM.Migrations
                         name: "Users_fk0",
                         column: x => x.ModeratorId,
                         principalTable: "users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "Users_fk1",
+                        column: x => x.ClassificationId,
+                        principalTable: "classification",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
@@ -151,7 +157,7 @@ namespace CallCenterCRM.Migrations
                     Address = table.Column<string>(type: "text", nullable: false, collation: "utf8mb4_unicode_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 3, 6, 18, 9, 7, 95, DateTimeKind.Local).AddTicks(8586)),
+                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2022, 3, 8, 18, 23, 28, 591, DateTimeKind.Local).AddTicks(1642)),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Employment = table.Column<int>(type: "int", nullable: false),
                     Confidentiality = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -339,6 +345,11 @@ namespace CallCenterCRM.Migrations
                 name: "Users_fk0",
                 table: "users",
                 column: "ModeratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "Users_fk1",
+                table: "users",
+                column: "ClassificationId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -348,9 +359,6 @@ namespace CallCenterCRM.Migrations
 
             migrationBuilder.DropTable(
                 name: "application");
-
-            migrationBuilder.DropTable(
-                name: "classification");
 
             migrationBuilder.DropTable(
                 name: "attachments");
@@ -363,6 +371,9 @@ namespace CallCenterCRM.Migrations
 
             migrationBuilder.DropTable(
                 name: "users");
+
+            migrationBuilder.DropTable(
+                name: "classification");
         }
     }
 }

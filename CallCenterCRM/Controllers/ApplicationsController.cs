@@ -52,9 +52,12 @@ namespace CallCenterCRM
         }
 
         // GET: Applications/Create
-        public IActionResult Create()
+        public IActionResult Create(int applicantId)
         {
-            Application application = new Application();
+            Application application = new Application()
+            {
+                ApplicantId = applicantId
+            };
             ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "Firstname");
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "OriginName");
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
@@ -198,5 +201,11 @@ namespace CallCenterCRM
         {
             return _context.Applications.Any(e => e.Id == id);
         }
+
+        public IActionResult Save(int applicantId)
+        {
+            return View(nameof(Index));
+        }
+
     }
 }

@@ -112,7 +112,13 @@ namespace CallCenterCRM.Data
                 entity.HasOne(d => d.Moderator)
                     .WithMany(p => p.Organizations)
                     .HasForeignKey(d => d.ModeratorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Users_fk0");
+                entity.HasOne(d => d.Classification)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.ClassificationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Users_fk1");
                 entity.Property(d => d.Role).HasConversion<int>();
             });
 
