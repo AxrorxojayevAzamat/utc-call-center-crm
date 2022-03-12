@@ -14,61 +14,16 @@
 		<thead>
 			<tr>
 				<th>
-					@Html.DisplayNameFor(model => model.ReferenceSource)
+					Ф.И.О
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Surname)
+					Адрес
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Firstname)
+					Дополнительная информация
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Middlename)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Contact)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.ExtraContact)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Region)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Maxalla)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Address)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Gender)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.BirthDate)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Type)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Employment)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Confidentiality)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.MeaningOfApplication)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.AdditionalNote)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.CityDistrict)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Organization)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.UpdatedDate)
+					Количество обращений
 				</th>
 				<th></th>
 			</tr>
@@ -78,61 +33,46 @@
 			{
 				<tr>
 					<td>
-						@Html.DisplayFor(modelItem => item.ReferenceSource)
-					</td>
-					<td>
 						@Html.DisplayFor(modelItem => item.Surname)
-					</td>
-					<td>
 						@Html.DisplayFor(modelItem => item.Firstname)
-					</td>
-					<td>
 						@Html.DisplayFor(modelItem => item.Middlename)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Contact)
+						<b>Hudud: </b>@Html.DisplayFor(modelItem => item.Region)<br>
+						<b>Tuman/shahar: </b>@Html.DisplayFor(modelItem => item.CityDistrict.Title)<br>
+						<b>Hozirgi yashash manzili: </b>@Html.DisplayFor(modelItem => item.Address)<br>
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.ExtraContact)
+						@if (item.Contact != null)
+						{
+							<b>Telefon:</b>
+							@Html.DisplayFor(modelItem => item.Contact  ) <br>
+
+						}
+						@if (item.BirthDate != null)
+						{
+							<b>Tug'ilgan sana: </b>
+							@Html.DisplayFor(modelItem => item.BirthDate ) <br>
+
+						}
+						@if (item.ExtraContact != null)
+						{
+							<b>Qo'shimcha telefonlar:</b>
+							@Html.DisplayFor(modelItem => item.ExtraContact )
+							<br>
+						}
+						@if (item.Gender != null)
+						{
+							<b>Jinsi:</b>
+							@Html.DisplayFor(modelItem => item.Gender )
+							<br>
+						}
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Region)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Maxalla)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Address)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Gender)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.BirthDate)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Type)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Employment)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Confidentiality)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.MeaningOfApplication)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.AdditionalNote)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.CityDistrict.Title)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Organization.City)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.UpdatedDate)
+						<a class="btn btn-rounded btn-info application-count">
+							@item.Applications.Count
+						</a>
+						<a asp-controller="Applications" asp-action="CreateByApplicant" asp-route-id=@item.Id class="btn btn-rounded btn-primary">Создать новый</a>
 					</td>
 					<td>
 						<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>

@@ -22,6 +22,7 @@ namespace CallCenterCRM.Models
     }
     public enum Roles
     {
+        [Display(Name = "Админ")] CrmAdmin= 0,
         [Display(Name = "Оператор")] CrmOperator = 1,
         [Display(Name = "Модератор")] CrmModerator = 2,
         [Display(Name = "Организация")] CrmOrganization = 3

@@ -42,7 +42,7 @@ namespace CallCenterCRM.Services
             valueIdentityId = new Guid(userIdentityId);
             User user = _context.Users.FirstOrDefault(d => d.IdentityId == valueIdentityId);
             
-            return user;
+            return user ?? new User();
         }
     }
 }

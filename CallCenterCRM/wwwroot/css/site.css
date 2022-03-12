@@ -2473,3 +2473,7 @@ body {
 textarea.form-control {
     height: auto;
 }
+.application-count {
+    width: 26px;
+    padding: 6px;
+}

@@ -25,7 +25,8 @@ namespace CallCenterCRM
         {
             var callcentercrmContext = _context.Applicants
                 .Include(a => a.CityDistrict)
-                .Include(a => a.Organization);
+                .Include(a => a.Organization)
+                .Include(a => a.Applications);
             return View(await callcentercrmContext.ToListAsync());
         }
 
