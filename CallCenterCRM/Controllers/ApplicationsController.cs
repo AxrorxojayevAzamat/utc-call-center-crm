@@ -139,6 +139,7 @@ namespace CallCenterCRM
             {
                 try
                 {
+                    application.Status = ApplicationStatus.Edit;
                     _context.Update(application);
                     _context.SaveChanges();
                 }
@@ -230,6 +231,17 @@ namespace CallCenterCRM
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
             ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Username", application.RecipientId);
             return View(application);
+        }
+
+        public IActionResult SetStatus(int id, ApplicationStatus status)
+        {
+            var application = _context.Applications.Find(id);
+            application.Status = status;
+            
+            _context.Update(application);
+            _context.SaveChanges();
+
+            return View("Details", id);
         }
 
     }

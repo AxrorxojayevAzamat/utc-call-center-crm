@@ -143,6 +143,7 @@ namespace CallCenterCRM.Controllers
             {
                 try
                 {
+                    answer.Status = AnswerStatus.Edit;
                     _context.Update(answer);
                     _context.SaveChanges();
                 }

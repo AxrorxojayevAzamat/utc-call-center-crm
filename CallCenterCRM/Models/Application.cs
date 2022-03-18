@@ -38,12 +38,15 @@ namespace CallCenterCRM.Models
         public DateTime ExpireTime { get; set; }
         [StringLength(255)]
         [Display(Name = "Соответствующие обращения")]
-        public string RelevantApplications { get; set; } = null!;
+        public string? RelevantApplications { get; set; } = null!;
         [Display(Name = "Тип обращения")]
         public AppTypes Type { get; set; }
         [Column(TypeName = "text")]
         [Display(Name = "Комментарий")]
-        public string Comment { get; set; } = null!;
+        public string? Comment { get; set; } = null!;
+        [Column(TypeName = "text")]
+        [Display(Name = "Причина")]
+        public string? Reason { get; set; } = null!;
         [Display(Name = "Избранный")]
         public bool IsSelected { get; set; }
         [Column(TypeName = "int(11)")]

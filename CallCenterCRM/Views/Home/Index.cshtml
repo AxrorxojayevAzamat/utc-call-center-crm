@@ -5,7 +5,7 @@
     var name = User.Identities.First().Claims.First( c => c.Type == "name" ).Value;
     
 }
-<h2>Claims</h2>
+@*<h2>Claims</h2>
 <h1>@name</h1>
 <dl>
     @foreach (var claim in User.Claims)
@@ -22,7 +22,7 @@
         <dt>@prop.Key</dt>
         <dd>@prop.Value</dd>
     }
-</dl>
+</dl>*@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

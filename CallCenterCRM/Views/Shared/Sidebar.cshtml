@@ -1,35 +1,115 @@
-﻿
-@using CallCenterCRM.Utilities
+﻿@using CallCenterCRM.Utilities
+@using CallCenterCRM.Interfaces
+@inject IUserService userService
+
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+	string userIdentityId = GetUserClaim(typeIdentityId);
+
+	var isAuthenticated = User.Identity.IsAuthenticated;
+
+	string GetUserClaim(string type)
+	{
+		return User.Identities.First().Claims.First(c => c.Type == type).Value;
+	}
+}
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
 	<ul class="nav">
 		<li class="nav-item @Html.IsActive(action: "Index", controller: "Home")">
 			<a class="nav-link" href="/">
-				<i class="mdi mdi-view-dashboard menu-icon"></i>
-				<span class="menu-title">Dashboard</span>
+				<i class="mdi mdi-home menu-icon"></i>
+				<span class="menu-title">Домашняя страница</span>
 			</a>
 		</li>
-		<li class="nav-item @Html.IsActive(action: "Index", controller: "Users")">
-			<a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">
-				<i class="menu-icon mdi mdi-account-box-outline"></i>
-				<span class="menu-title">Пользователи</span>
-			</a>
-		</li>
+
+		if(@userService.GetUserRole(userIdentityId) == "Оператор")
+		{
 		<li class="nav-item @Html.IsActive(action: "Index", controller: "Applicants")">
 			<a class="nav-link" asp-area="" asp-controller="Applicants" asp-action="Index">
 				<i class="menu-icon mdi mdi-account-card-details"></i>
 				<span class="menu-title">Заявители</span>
 			</a>
 		</li>
+		}
+		else if(@userService.GetUserRole(userIdentityId) == "Модератор")
+		{
+		<li class="nav-item @Html.IsActive(action: "BranchesList", controller: "Users")">
+			<a class="nav-link" asp-area="" asp-controller="Users" asp-action="BranchesList" asp-route-id=@userService.GetUserId(userIdentityId)>
+				<i class="menu-icon mdi mdi-source-branch"></i>
+				<span class="menu-title">Филиалы</span>
+			</a>
+		</li>
+		}
+
+		if(@userService.GetUserRole(userIdentityId) in {"Оператор", "Модератор", "Организация"})
+		{
 		<li class="nav-item @Html.IsActive(action: "Index", controller: "Applications")">
 			<a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Index">
 				<i class="menu-icon mdi mdi-file-document-box"></i>
 				<span class="menu-title">Заявление</span>
 			</a>
 		</li>
+		<li class="nav-item @Html.IsActive(action: "Index", controller: "Applications")">
+			<a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Index">
+				<i class="menu-icon mdi mdi-star-outline"></i>
+				<span class="menu-title">Выбранные приложения</span>
+			</a>
+		</li>
+		<li class="nav-item @Html.IsActive(action: "Index", controller: "Applications")">
+			<a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Index">
+				<i class="menu-icon mdi mdi-lead-pencil"></i>
+				<span class="menu-title">Переработанные приложения</span>
+			</a>
+		</li>
+		<li class="nav-item @Html.IsActive(action: "Index", controller: "Applications")">
+			<a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Index">
+				<i class="menu-icon mdi mdi-clock-end"></i>
+				<span class="menu-title">Отложенные заявки</span>
+			</a>
+		</li>
+		<li class="nav-item @Html.IsActive(action: "Index", controller: "Applications")">
+			<a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Index">
+				<i class="menu-icon mdi mdi-close-circle-outline"></i>
+				<span class="menu-title">Отклоненные заявки</span>
+			</a>
+		</li>
+		}
+
+		if(@userService.GetUserRole(userIdentityId) in {"Модератор", "Организация"})
+		{
 		<li class="nav-item @Html.IsActive(action: "Index", controller: "Answers")">
 			<a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Index">
 				<i class="menu-icon mdi mdi-card-text-outline"></i>
 				<span class="menu-title">Ответы</span>
+			</a>
+		</li>
+		<li class="nav-item @Html.IsActive(action: "Index", controller: "Answers")">
+			<a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Index">
+				<i class="menu-icon mdi mdi-pencil"></i>
+				<span class="menu-title">Переработанные ответы</span>
+			</a>
+		</li>
+		}
+
+		if(@userService.GetUserRole(userIdentityId) in {"Админ", "Оператор"})
+		{
+		<li class="nav-item @Html.IsActive(action: "Index", controller: "Home")">
+			<a class="nav-link" href="/">
+				<i class="mdi menu-icon mdi-chart-line"></i>
+				<span class="menu-title">Статистика</span>
+			</a>
+		</li>
+		}
+
+		if(@userService.GetUserRole(userIdentityId) == "Админ")
+		{
+		<li class="nav-item @Html.IsActive(action: "Index", controller: "Users")">
+			<a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">
+				<i class="menu-icon mdi mdi-account-box-outline"></i>
+				<span class="menu-title">Пользователи</span>
 			</a>
 		</li>
 		<li class="nav-item @Html.IsActive(action: "Index", controller: "Citydistricts")">
@@ -50,5 +130,6 @@
 				<span class="menu-title">Вложения</span>
 			</a>
 		</li>
+		}
 	</ul>
 </nav>

@@ -128,7 +128,7 @@ namespace CallCenterCRM
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title", applicant.CityDistrictId);
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", applicant.OrganizationId);
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Title", applicant.OrganizationId);
             return View(applicant);
         }
 
@@ -166,6 +166,11 @@ namespace CallCenterCRM
         private bool ApplicantExists(int id)
         {
             return _context.Applicants.Any(e => e.Id == id);
+        }
+
+        public IActionResult SetStatus(ApplicationStatus status)
+        {
+            return View("Index");
         }
     }
 }

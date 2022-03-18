@@ -46,7 +46,7 @@ namespace CallCenterCRM.Models
     public enum ApplicationStatus
     {
         [Display(Name = "Отправлено модератору")] SendMod = 1,
-        [Display(Name = "Отклонить от модификатора")] RejectMod = -1,
+        [Display(Name = "Отклонено модератором")] RejectMod = -1,
         [Display(Name = "В процессе работы")] SendOrg = 2,
         [Display(Name = "Отказ от организации")] RejectOrg = -2,
         [Display(Name = "Отредактирован")] Edit = 3,

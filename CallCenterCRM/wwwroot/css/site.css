@@ -1394,7 +1394,7 @@ body {
                 display: flex;
                 -webkit-align-items: center;
                 align-items: center;
-                white-space: nowrap;
+                white-space: pre-wrap;
                 padding: 10px 35px 10px 35px;
                 color: #484848;
                 border-radius: 0px 20px 20px 0px;
