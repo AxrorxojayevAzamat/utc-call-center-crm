@@ -2,45 +2,34 @@
 
 @{
 	ViewData["Title"] = "Index";
+
+	string GetAppNumber(Application item)
+	{
+		int Id = item.Id;
+		int RefSrcCode = item.Applicant.ReferenceSource.GetHashCode();
+		string Year = item.CreatedDate.GetValueOrDefault().Year.ToString().Substring(2);
+
+		return $"{Id}-{RefSrcCode}/{Year}";
+	}
 }
 
 <h1>Заявление</h1>
 
-<p>
-	<a asp-action="Create" class="btn btn-success btn-rounded">Создать новое</a>
-</p>
 <div class="table-responsive">
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th>
-					@Html.DisplayNameFor(model => model.ExpireTime)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.RelevantApplications)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Type)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Comment)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Applicant)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Attachment)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Classification)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Recipient)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.UpdatedDate)
-				</th>
-				<th></th>
+				<th>Номер обращения</th>
+				<th>Источник обращения</th>
+				<th>Дата поступления</th>
+				<th>Имя</th>
+				<th>Фамилия</th>
+				<th>Отчество</th>
+				<th>Регион</th>
+				<th>Район/город</th>
+				<th>Телефон</th>
+				<th>Тип заявителя</th>
+				<th>Автор</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -48,36 +37,37 @@
 			{
 				<tr>
 					<td>
-						@Html.DisplayFor(modelItem => item.ExpireTime)
+						<a asp-action="Details" asp-route-id="@item.Id">@GetAppNumber(item)</a>
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.RelevantApplications)
+						@Html.DisplayFor(modelItem => item.Applicant.ReferenceSource)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Type)
+						@Html.DisplayFor(modelItem => item.Applicant.CreatedDate)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Comment)
+						@Html.DisplayFor(modelItem => item.Applicant.Firstname)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.AdditionalNote)
+						@Html.DisplayFor(modelItem => item.Applicant.Surname)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Attachment.Extension)
+						@Html.DisplayFor(modelItem => item.Applicant.Middlename)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Classification.Direction)
+						@Html.DisplayFor(modelItem => item.Applicant.Region)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Recipient.Title)
+						@Html.DisplayFor(modelItem => item.Applicant.CityDistrict.Title)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.UpdatedDate)
+						@Html.DisplayFor(modelItem => item.Applicant.Contact)
 					</td>
 					<td>
-						<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
-						<a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
-						<a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>
+						@Html.DisplayFor(modelItem => item.Applicant.Type)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Recipient.Username)
 					</td>
 				</tr>
 			}

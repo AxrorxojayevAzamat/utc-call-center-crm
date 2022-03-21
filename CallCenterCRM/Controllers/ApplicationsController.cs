@@ -25,7 +25,13 @@ namespace CallCenterCRM
         // GET: Applications
         public async Task<IActionResult> Index()
         {
-            var callcentercrmContext = _context.Applications.Include(a => a.Applicant).Include(a => a.Attachment).Include(a => a.Classification).Include(a => a.Recipient);
+            var callcentercrmContext = _context.Applications
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient);
+
             return View(await callcentercrmContext.ToListAsync());
         }
 
@@ -39,6 +45,7 @@ namespace CallCenterCRM
 
             var application = await _context.Applications
                 .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
@@ -52,11 +59,13 @@ namespace CallCenterCRM
         }
 
         // GET: Applications/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            Application application = new Application();
+            Application application = new Application()
+            {
+                ApplicantId = id
+            };
 
-            ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "Firstname");
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "OriginName");
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
             ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Username", application.RecipientId);
@@ -85,7 +94,6 @@ namespace CallCenterCRM
                     {
                         application.AttachmentId = attachmentId;
                     }
-
                     _context.Applications.Add(application);
                     _context.SaveChanges();
 
@@ -173,10 +181,12 @@ namespace CallCenterCRM
 
             var application = await _context.Applications
                 .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            application.Status = ApplicationStatus.GotMod;
             if (application == null)
             {
                 return NotFound();
@@ -237,12 +247,60 @@ namespace CallCenterCRM
         {
             var application = _context.Applications.Find(id);
             application.Status = status;
-            
+
             _context.Update(application);
             _context.SaveChanges();
 
             return View("Details", id);
         }
 
+        public IActionResult Selected()
+        {
+            var applications = _context.Applications.Where(a => a.IsSelected == true)
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient).ToList();
+
+            return View("Index", applications);
+        }
+
+        public IActionResult Edited()
+        {
+            var applications = _context.Applications.Where(a => a.Status == ApplicationStatus.Edit)
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient).ToList();
+
+            return View("Index", applications);
+        }
+
+        public IActionResult Delayed()
+        {
+            var applications = _context.Applications.Where(a => a.Status == ApplicationStatus.Delay)
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient).ToList();
+
+            return View("Index", applications);
+        }
+
+        public IActionResult Rejected()
+        {
+            var applications = _context.Applications
+                .Where(a => (a.Status == ApplicationStatus.RejectMod || a.Status == ApplicationStatus.RejectOrg))
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient).ToList();
+
+            return View("Index", applications);
+        }
     }
 }

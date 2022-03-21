@@ -16,9 +16,7 @@ namespace CallCenterCRM.Utilities
                 || routeAction == "Details" 
                 || routeAction == "Edit"
                 || routeAction == "Delete"
-                || routeAction == "Create"
-                || routeAction == "BranchesList"
-                || routeAction == "Delete"));
+                || routeAction == "Create"));
 
             return returnActive ? "active" : "";
         }

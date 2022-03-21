@@ -50,6 +50,7 @@ namespace CallCenterCRM.Models
         [Display(Name = "В процессе работы")] SendOrg = 2,
         [Display(Name = "Отказ от организации")] RejectOrg = -2,
         [Display(Name = "Отредактирован")] Edit = 3,
+        [Display(Name = "Отложено")] Delay = 4,
         [Display(Name = "Взял модератор")] GotMod = 0,
     }
 
@@ -57,9 +58,9 @@ namespace CallCenterCRM.Models
     {
         [Display(Name = "Отправить")] Send = 1,
         [Display(Name = "Отклоненный")] Reject = -1,
-        [Display(Name = "Задерживать")] Delay = 2,
         [Display(Name = "Отредактирован")] Edit = 3,
-        [Display(Name = "Обработан")] Confirm = 0,
+        [Display(Name = "Обработан")] Confirm = 2,
+        [Display(Name = "Взял модератор")] GotMod = 0,
     }
 
     public enum Regions

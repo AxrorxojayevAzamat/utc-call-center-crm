@@ -50,5 +50,9 @@ namespace CallCenterCRM.Controllers
         {
             return SignOut("Cookies", "oidc");
         }
+        public IActionResult Statistics()
+        {
+            return View();
+        }
     }
 }
