@@ -32,6 +32,7 @@ builder.Services.AddDbContext<CallcentercrmContext>(options =>
               options.UseMySql("server=localhost;port=3306;database=callcentercrm;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"), x => x.UseNetTopologySuite()));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>(); 
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 //builder.Services.AddDbContext<CallcentercrmContext>();
 builder.Services.AddAuthentication(options =>
 {

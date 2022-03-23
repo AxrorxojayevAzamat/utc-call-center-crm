@@ -1,16 +1,9 @@
-﻿@model IEnumerable<CallCenterCRM.Models.Application>
+﻿@using CallCenterCRM.Interfaces
+@model IEnumerable<CallCenterCRM.Models.Application>
+@inject IApplicationService applicationService
 
 @{
 	ViewData["Title"] = "Index";
-
-	string GetAppNumber(Application item)
-	{
-		int Id = item.Id;
-		int RefSrcCode = item.Applicant.ReferenceSource.GetHashCode();
-		string Year = item.CreatedDate.GetValueOrDefault().Year.ToString().Substring(2);
-
-		return $"{Id}-{RefSrcCode}/{Year}";
-	}
 }
 
 <h1>Заявление</h1>
@@ -30,46 +23,55 @@
 				<th>Телефон</th>
 				<th>Тип заявителя</th>
 				<th>Автор</th>
+				<th>Статус</th>
 			</tr>
 		</thead>
 		<tbody>
 			@foreach (var item in Model)
 			{
-				<tr>
+				@*<a asp-controller="Applications" asp-action="Details" asp-route-id=@item.Id >*@
+				<tr class="table-row-item">
 					<td>
-						<a asp-action="Details" asp-route-id="@item.Id">@GetAppNumber(item)</a>
+						<a asp-action="Details" asp-route-id="@item.Id">@applicationService.GetAppNumber(item)</a>
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.ReferenceSource)
+							@Html.DisplayFor(modelItem => item.Applicant.ReferenceSource)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.CreatedDate)
+							@Html.DisplayFor(modelItem => item.Applicant.CreatedDate)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.Firstname)
+							@Html.DisplayFor(modelItem => item.Applicant.Firstname)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.Surname)
+							@Html.DisplayFor(modelItem => item.Applicant.Surname)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.Middlename)
+							@Html.DisplayFor(modelItem => item.Applicant.Middlename)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.Region)
+							@Html.DisplayFor(modelItem => item.Applicant.Region)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.CityDistrict.Title)
+							@Html.DisplayFor(modelItem => item.Applicant.CityDistrict.Title)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.Contact)
+							@Html.DisplayFor(modelItem => item.Applicant.Contact)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Applicant.Type)
+							@Html.DisplayFor(modelItem => item.Applicant.Type)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Recipient.Username)
+							@Html.DisplayFor(modelItem => item.Recipient.Username)
+					</td>
+					<td>
+						<span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
+								<i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
+								@item.Status.GetDisplayName()
+						</span>
 					</td>
 				</tr>
+				@*</a>*@
 			}
 		</tbody>
 	</table>

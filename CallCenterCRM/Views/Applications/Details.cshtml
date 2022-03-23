@@ -1,78 +1,92 @@
 ﻿@model CallCenterCRM.Models.Application
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details";
 }
 
 <h1>Details</h1>
 
 <div>
-    <h4>Application</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ExpireTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ExpireTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RelevantApplications)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RelevantApplications)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Comment)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Comment)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Applicant)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Applicant.AdditionalNote)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Attachment)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Attachment.Extension)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Classification)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Classification.Direction)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Recipient)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Recipient.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedDate)
-        </dd>
-    </dl>
+	<h4>Application</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ExpireTime)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ExpireTime)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.RelevantApplications)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.RelevantApplications)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Type)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Type)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Comment)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Comment)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Applicant)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Applicant.AdditionalNote)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Attachment)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Attachment.Extension)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Classification)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Classification.Direction)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Recipient)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Recipient.Title)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.CreatedDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.CreatedDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.UpdatedDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.UpdatedDate)
+		</dd>
+	</dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a> |
-    <a asp-action="Index"  class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+	@if (@Model.Status == ApplicationStatus.SendMod || @Model.Status == ApplicationStatus.RejectMod)
+	{
+		<a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
+	}
+	else if (@Model.Status == ApplicationStatus.GotMod)
+	{
+		<a asp-action="SendOrg" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a> 
+		<a asp-action="RejectMod" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+	}
+	else if (@Model.Status == ApplicationStatus.SendOrg)
+	{
+		<a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" class="btn btn-success btn-rounded btn-fw">Отправить организацию</a> 
+		<a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+	}
+	<a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
 </div>
+

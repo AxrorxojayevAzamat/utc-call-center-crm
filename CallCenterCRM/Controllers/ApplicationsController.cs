@@ -50,6 +50,14 @@ namespace CallCenterCRM
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (application.Status == ApplicationStatus.SendMod)
+            {
+                application.Status = ApplicationStatus.GotMod;
+                _context.Update(application);
+                _context.SaveChanges();
+            }
+
             if (application == null)
             {
                 return NotFound();
@@ -186,7 +194,8 @@ namespace CallCenterCRM
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            application.Status = ApplicationStatus.GotMod;
+            
+
             if (application == null)
             {
                 return NotFound();
@@ -302,5 +311,41 @@ namespace CallCenterCRM
 
             return View("Index", applications);
         }
+
+        // GET: Applications/Delete/5
+        //public async Task<IActionResult> SendOrg(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var application = await _context.Applications
+        //        .Include(a => a.Applicant)
+        //            .ThenInclude(a => a.CityDistrict)
+        //        .Include(a => a.Attachment)
+        //        .Include(a => a.Classification)
+        //        .Include(a => a.Recipient)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+
+
+        //    if (application == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(application);
+        //}
+
+        //// POST: Applications/Delete/5
+        //[HttpPost, ActionName("SendOrg")]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult SendOrg(int id)
+        //{
+        //    var application = _context.Applications.Find(id);
+        //    _context.Applications.Remove(application);
+        //    _context.SaveChanges();
+        //    return RedirectToAction(nameof(Index));
+        //}
     }
 }
