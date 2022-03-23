@@ -189,6 +189,13 @@ namespace CallCenterCRM.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Branches(int? moderatorId)
+        {
+            var branches = _context.Users.Where(u => u.ModeratorId == moderatorId).ToList();
+
+            return View("Index", branches);
+        }
+
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);

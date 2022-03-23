@@ -15,7 +15,7 @@ namespace CallCenterCRM.Controllers
         public JsonResult Cities(int Id)
         {
             var citiesOrDistricts = _context.Citydistricts
-                .Where(c => c.Region == (Regions) Id)
+                .Where(c => c.Region == (Regions)Id)
                 .Select(c => new
                 {
                     Id = c.Id,
@@ -26,11 +26,19 @@ namespace CallCenterCRM.Controllers
             return Json(citiesOrDistricts);
         }
 
-        public JsonResult Classifications(int Id)
+        public JsonResult Classification(int Id)
         {
-            var classifications = _context.Classifications.Find(Id);
+            var classification = _context.Classifications.Find(Id);
+            var moderators = _context.Users.Where(u => u.ClassificationId == Id).Select(c => new
+            {
+                Id = c.Id,
+                Title = c.Title
+            }).ToList();
 
-            return Json(classifications);
+            return Json(new  {
+                classification = classification,
+                moderators = moderators
+            });
         }
     }
 }

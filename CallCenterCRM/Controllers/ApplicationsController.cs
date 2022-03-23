@@ -229,29 +229,6 @@ namespace CallCenterCRM
             return View(nameof(Index));
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Save(int applicantId, [Bind] Application application)
-        //{
-        //    application.ApplicantId = applicantId;
-
-        //    _context.Applications.Add(application);
-        //    _context.SaveChanges();
-        //    return View(nameof(Index));
-        //}
-        public IActionResult CreateByApplicant(int id)
-        {
-            Application application = new Application()
-            {
-                ApplicantId = id
-            };
-
-            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "OriginName");
-            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
-            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Username", application.RecipientId);
-            return View(application);
-        }
-
         public IActionResult SetStatus(int id, ApplicationStatus status)
         {
             var application = _context.Applications.Find(id);

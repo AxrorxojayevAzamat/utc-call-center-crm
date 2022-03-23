@@ -1,34 +1,40 @@
 ﻿<script>
-	let directionInput = $("#Direction")
-	let valueInput = $("#Value")
+    let directionInput = $("#Direction")
+    let valueInput = $("#Value")
 
-	$("#ClassificationId").on("select2:select", function(e) {
-		let id = e.params.data.id
-		console.log(id)
-		requestToClassification(id)
-	})
+    let moderatorsSelect = $("#RecipientId")
+    moderatorsSelect.empty()
 
-	function requestToClassification(classificationId) {
-		console.log(classificationId)
-		if(classificationId !== "-") {
-			$.ajax({
-				url: location.origin + `/api/classifications/${classificationId}`,
-				method: "GET",
-				dataType: 'json',
-				contentType: false,
-				cache: false,
-				processData: false,
-				success: function(data) {
-					$("#Direction").val(data.direction) 
-					$("#Value").val(data.value) 
-				},
-				error: function(error) {
-					console.error("Error !!!")
-				}
-			})
-		} else {
-			$("#Direction").val("") 
-			$("#Value").val("")
-		} 
-	}
+    $("#ClassificationId").on("select2:select", function(e) {
+        let id = e.params.data.id
+        requestToClassification(id)
+    })
+
+    function requestToClassification(classificationId) {
+        moderatorsSelect.empty()
+        if(classificationId !== "-") {
+            $.ajax({
+                url: location.origin + `/api/classification/${classificationId}`,
+                method: "GET",
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    $("#Direction").val(data.classification.direction)
+                    $("#Value").val(data.classification.value)
+
+                    for(let moderator of data.moderators) {
+                        moderatorsSelect.append(new Option(moderator.title, moderator.id))
+                    }
+                },
+                error: function(error) {
+                    console.error("Error !!!")
+                }
+            })
+        } else {
+            $("#Direction").val("")
+            $("#Value").val("")
+        }
+    }
 </script>

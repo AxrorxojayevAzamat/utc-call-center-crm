@@ -36,8 +36,8 @@
 		}
 		else if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
 		{
-			<li class="nav-item @Html.IsActive(controller: "Users", action: "BranchesList")">
-				<a class="nav-link" asp-area="" asp-controller="Users" asp-action="BranchesList" asp-route-id=@userService.GetUserId(userIdentityId)>
+			<li class="nav-item @Html.IsActive(controller: "Users", action: "Branches")">
+				<a class="nav-link" asp-area="" asp-controller="Users" asp-action="Branches" asp-route-moderatorId=@userService.GetUserId(userIdentityId)>
 					<i class="menu-icon mdi mdi-source-branch"></i>
 					<span class="menu-title">Филиалы</span>
 				</a>
