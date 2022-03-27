@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
 using CallCenterCRM.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CallCenterCRM
 {
@@ -23,6 +24,7 @@ namespace CallCenterCRM
         }
 
         // GET: Applications
+        [Authorize(Roles="CrmOperator")]
         public async Task<IActionResult> Index()
         {
             var callcentercrmContext = _context.Applications
@@ -33,6 +35,19 @@ namespace CallCenterCRM
                 .Include(a => a.Recipient);
 
             return View(await callcentercrmContext.ToListAsync());
+        }
+
+        [Authorize(Roles = "CrmModerator, CrmOrganization")]
+        public async Task<IActionResult> AppsList(int? recipientId)
+        {
+            var callcentercrmContext = _context.Applications.Where(a => a.RecipientId == recipientId)
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient);
+
+            return View("Index", await callcentercrmContext.ToListAsync());
         }
 
         // GET: Applications/Details/5
@@ -240,6 +255,18 @@ namespace CallCenterCRM
             return View("Details", id);
         }
 
+        [Authorize(Roles = "CrmOperator")]
+        public IActionResult ToggleSelected(int Id)
+        {
+            var application = _context.Applications.Find(Id);
+            application.IsSelected = !application.IsSelected;
+
+            _context.Update(application);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Details), new { Id });
+        }
+
         public IActionResult Selected()
         {
             var applications = _context.Applications.Where(a => a.IsSelected == true)
@@ -252,9 +279,21 @@ namespace CallCenterCRM
             return View("Index", applications);
         }
 
-        public IActionResult Edited()
+        public IActionResult RejectedMod()
         {
-            var applications = _context.Applications.Where(a => a.Status == ApplicationStatus.Edit)
+            var applications = _context.Applications.Where(a => a.Status == ApplicationStatus.RejectMod)
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient).ToList();
+
+            return View("Index", applications);
+        }
+        public IActionResult RejectedOrg()
+        {
+            var applications = _context.Applications
+                .Where(a => (a.Status == ApplicationStatus.RejectOrg))
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
@@ -276,18 +315,7 @@ namespace CallCenterCRM
             return View("Index", applications);
         }
 
-        public IActionResult Rejected()
-        {
-            var applications = _context.Applications
-                .Where(a => (a.Status == ApplicationStatus.RejectMod || a.Status == ApplicationStatus.RejectOrg))
-                .Include(a => a.Applicant)
-                    .ThenInclude(a => a.CityDistrict)
-                .Include(a => a.Attachment)
-                .Include(a => a.Classification)
-                .Include(a => a.Recipient).ToList();
-
-            return View("Index", applications);
-        }
+       
 
         // GET: Applications/Delete/5
         //public async Task<IActionResult> SendOrg(int? id)
