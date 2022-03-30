@@ -14,7 +14,7 @@ namespace CallCenterCRM.Services
         {
             _context = context;
         }
-        public async Task<int> UploadFileToStorage(IFormFile file)
+        public int UploadFileToStorage(IFormFile file)
         {
             if (file != null && file.Length > 0)
             {

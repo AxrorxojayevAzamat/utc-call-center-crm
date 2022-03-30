@@ -1,40 +1,50 @@
 ﻿<script>
-    let directionInput = $("#Direction")
-    let valueInput = $("#Value")
+    $(document).ready(function() {
+        let directionInput = $("#Direction")
+        let valueInput = $("#Value")
 
-    let moderatorsSelect = $("#RecipientId")
-    moderatorsSelect.empty()
-
-    $("#ClassificationId").on("select2:select", function(e) {
-        let id = e.params.data.id
-        requestToClassification(id)
-    })
-
-    function requestToClassification(classificationId) {
+        let moderatorsSelect = $("#RecipientId")
         moderatorsSelect.empty()
-        if(classificationId !== "-") {
-            $.ajax({
-                url: location.origin + `/api/classification/${classificationId}`,
-                method: "GET",
-                dataType: 'json',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function(data) {
-                    $("#Direction").val(data.classification.direction)
-                    $("#Value").val(data.classification.value)
 
-                    for(let moderator of data.moderators) {
-                        moderatorsSelect.append(new Option(moderator.title, moderator.id))
+        $("#ClassificationId").on("select2:select", function(e) {
+            let id = e.params.data.id
+            requestToClassification(id)
+
+        })
+
+        requestToClassification($("#ClassificationId").val())
+        //setTimeout(
+            //()=> {
+            //}, 500)
+
+        function requestToClassification(classificationId) {
+            moderatorsSelect.empty()
+            if(classificationId !== "-") {
+                $.ajax({
+                    url: location.origin + `/api/classification/${classificationId}`,
+                    method: "GET",
+                    dataType: 'json',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function(data) {
+                        $("#Direction").val(data.classification.direction)
+                        $("#Value").val(data.classification.value)
+
+                        for(let moderator of data.moderators) {
+                            moderatorsSelect.append(new Option(moderator.title, moderator.id))
+                        }
+                    },
+                    error: function(error) {
+                        console.error("Error !!!")
                     }
-                },
-                error: function(error) {
-                    console.error("Error !!!")
-                }
-            })
+                })
         } else {
             $("#Direction").val("")
             $("#Value").val("")
         }
     }
+    })
+
+
 </script>

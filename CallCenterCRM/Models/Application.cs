@@ -36,9 +36,7 @@ namespace CallCenterCRM.Models
         [Column(TypeName = "datetime")]
         [Display(Name = "Срок")]
         public DateTime ExpireTime { get; set; }
-        [StringLength(255)]
-        [Display(Name = "Соответствующие обращения")]
-        public string? RelevantApplications { get; set; } = null!;
+        
         [Display(Name = "Тип обращения")]
         public AppTypes Type { get; set; }
         [Column(TypeName = "text")]
@@ -78,6 +76,11 @@ namespace CallCenterCRM.Models
         public virtual User? Recipient { get; set; } = null!;
         [InverseProperty("Application")]
         public virtual Answer? Answer { get; set; } = null!;
+
+
+        //[StringLength(255)]
+        //[Display(Name = "Соответствующие обращения")]
+        //public string? RelevantApplications { get; set; } = null!;
 
         /*notmapped*/
         [NotMapped]

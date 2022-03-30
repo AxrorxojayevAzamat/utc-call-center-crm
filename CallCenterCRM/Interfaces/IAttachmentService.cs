@@ -2,6 +2,6 @@
 {
 	public interface IAttachmentService
 	{
-		public Task<int> UploadFileToStorage(IFormFile AttachmentId);
+		public int UploadFileToStorage(IFormFile AttachmentId);
 	}
 }

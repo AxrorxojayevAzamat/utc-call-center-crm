@@ -51,7 +51,7 @@ namespace CallCenterCRM
         }
 
         // GET: Applications/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? userId)
         {
             if (id == null)
             {
@@ -66,7 +66,7 @@ namespace CallCenterCRM
                 .Include(a => a.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (application.Status == ApplicationStatus.SendMod)
+            if (application.Status == ApplicationStatus.SendMod && application.RecipientId == userId)
             {
                 application.Status = ApplicationStatus.GotMod;
                 _context.Update(application);
@@ -82,12 +82,10 @@ namespace CallCenterCRM
         }
 
         // GET: Applications/Create
-        public IActionResult Create(int id)
+        public IActionResult Create(int applicantId)
         {
-            Application application = new Application()
-            {
-                ApplicantId = id
-            };
+            Application application = new Application();
+            application.ApplicantId = applicantId;
 
             ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "OriginName");
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
@@ -110,7 +108,7 @@ namespace CallCenterCRM
 
                     if (file != null)
                     {
-                        attachmentId = await _attachmentService.UploadFileToStorage(file);
+                        attachmentId = _attachmentService.UploadFileToStorage(file);
                     }
 
                     if (attachmentId > -1)
@@ -147,10 +145,9 @@ namespace CallCenterCRM
             {
                 return NotFound();
             }
-            ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "AdditionalNote", application.ApplicantId);
-            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", application.AttachmentId);
-            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Direction", application.ClassificationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.RecipientId);
+            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title", application.ClassificationId);
+            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Username", application.RecipientId);
+
             return View(application);
         }
 
@@ -159,7 +156,7 @@ namespace CallCenterCRM
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind] Application application)
+        public IActionResult Edit(int id, [Bind] Application application, IFormFile file)
         {
             if (id != application.Id)
             {
@@ -171,6 +168,19 @@ namespace CallCenterCRM
                 try
                 {
                     application.Status = ApplicationStatus.Edit;
+
+                    int attachmentId = -1;
+
+                    if (file != null)
+                    {
+                        attachmentId = _attachmentService.UploadFileToStorage(file);
+                    }
+
+                    if (attachmentId > -1)
+                    {
+                        application.AttachmentId = attachmentId;
+                    }
+
                     _context.Update(application);
                     _context.SaveChanges();
                 }

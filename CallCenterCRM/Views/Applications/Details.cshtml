@@ -1,4 +1,5 @@
 ﻿@model CallCenterCRM.Models.Application
+@inject IApplicationService applicationService
 @using CallCenterCRM.Interfaces
 @inject IUserService userService
 
@@ -33,12 +34,6 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ExpireTime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RelevantApplications)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RelevantApplications)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Type)
@@ -77,6 +72,15 @@
             @Html.DisplayFor(model => model.Recipient.Title)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(Model.Status).color btn-fw">
+								<i class="mdi mdi-@applicationService.GetAppStatusParams(Model.Status).icon"></i>
+								@Model.Status.GetDisplayName()
+						</span>
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedDate)
         </dt>
         <dd class="col-sm-10">
@@ -89,22 +93,25 @@
             @Html.DisplayFor(model => model.UpdatedDate)
         </dd>
     </dl>
-    
+
 </div>
 
 <div>
-    @if (@Model.Status == ApplicationStatus.SendMod || @Model.Status == ApplicationStatus.RejectMod)
+    @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName()
+        && (@Model.Status == ApplicationStatus.SendMod || @Model.Status == ApplicationStatus.RejectMod))
     {
         <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
     }
-    else if (@Model.Status == ApplicationStatus.GotMod)
+    else if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName()
+        && (@Model.Status == ApplicationStatus.GotMod))
     {
         <a asp-action="SendOrg" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a>
         <a asp-action="RejectMod" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
     }
-    else if (@Model.Status == ApplicationStatus.SendOrg)
+    else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName()
+        && (@Model.Status == ApplicationStatus.SendOrg))
     {
-        <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" class="btn btn-success btn-rounded btn-fw">Отправить организацию</a>
+        <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
         <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
     }
 

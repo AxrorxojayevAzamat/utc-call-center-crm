@@ -1,9 +1,19 @@
 ﻿@using CallCenterCRM.Interfaces
 @model IEnumerable<CallCenterCRM.Models.Application>
 @inject IApplicationService applicationService
+@using CallCenterCRM.Interfaces
+@inject IUserService userService
 
 @{
-	ViewData["Title"] = "Index";
+    string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    string userIdentityId = GetUserClaim(typeIdentityId);
+
+    var isAuthenticated = User.Identity.IsAuthenticated;
+
+    string GetUserClaim(string type)
+    {
+        return User.Identities.First().Claims.First(c => c.Type == type).Value;
+    }
 }
 
 <h1>Заявление</h1>
@@ -32,7 +42,7 @@
 				@*<a asp-controller="Applications" asp-action="Details" asp-route-id=@item.Id >*@
 				<tr class="table-row-item">
 					<td>
-						<a asp-action="Details" asp-route-id="@item.Id">@applicationService.GetAppNumber(item)</a>
+						<a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>@applicationService.GetAppNumber(item)</a>
 					</td>
 					<td>
 							@Html.DisplayFor(modelItem => item.Applicant.ReferenceSource)
@@ -62,12 +72,12 @@
 							@Html.DisplayFor(modelItem => item.Applicant.Type)
 					</td>
 					<td>
-							@Html.DisplayFor(modelItem => item.Recipient.Username)
+							@Html.DisplayFor(modelItem => item.Recipient.Title)
 					</td>
 					<td>
 						<span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
 								<i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
-								@item.Status.GetDisplayName()
+								@*@item.Status.GetDisplayName()*@
 						</span>
 					</td>
 				</tr>

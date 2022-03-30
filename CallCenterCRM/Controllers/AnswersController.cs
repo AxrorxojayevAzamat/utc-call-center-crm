@@ -83,7 +83,7 @@ namespace CallCenterCRM.Controllers
 
                     if (file != null)
                     {
-                        attachmentId = await _attachmentService.UploadFileToStorage(file);
+                        attachmentId = _attachmentService.UploadFileToStorage(file);
                     }
 
                     if (attachmentId > -1)
