@@ -76,7 +76,15 @@ namespace CallCenterCRM.Models
         public virtual User? Recipient { get; set; } = null!;
         [InverseProperty("Application")]
         public virtual Answer? Answer { get; set; } = null!;
+        [Column(TypeName = "text")]
+        [Display(Name = "Суть обращения")]
+        public string MeaningOfApplication { get; set; } = null!;
+        [Column(TypeName = "text")]
+        [Display(Name = "Дополнительное примечание к заявлении")]
+        public string? AdditionalNote { get; set; }
 
+        public bool IsChanged { get; set; }
+        public bool IsDelayed { get; set; }
 
         //[StringLength(255)]
         //[Display(Name = "Соответствующие обращения")]

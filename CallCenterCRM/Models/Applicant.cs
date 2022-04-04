@@ -75,12 +75,7 @@ namespace CallCenterCRM.Models
         public Employments Employment { get; set; }
         [Display(Name = "Конфиденциальность обращение")]
         public bool Confidentiality { get; set; }
-        [Column(TypeName = "text")]
-        [Display(Name = "Суть обращения")]
-        public string MeaningOfApplication { get; set; } = null!;
-        [Column(TypeName = "text")]
-        [Display(Name = "Дополнительное примечание к заявлении")]
-        public string AdditionalNote { get; set; } = null!;
+        
         [NotMapped]
         //[Display(Name = "Заявление")]
         public int? OrganizationId { get; set; }

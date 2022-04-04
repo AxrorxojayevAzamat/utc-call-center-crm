@@ -198,9 +198,9 @@ namespace CallCenterCRM
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ApplicantId"] = new SelectList(_context.Applicants, "Id", "AdditionalNote", application.ApplicantId);
-            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", application.AttachmentId);
+            //ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", application.AttachmentId);
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Direction", application.ClassificationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "City", application.RecipientId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Title", application.RecipientId);
             return View(application);
         }
 
@@ -325,7 +325,50 @@ namespace CallCenterCRM
             return View("Index", applications);
         }
 
-       
+        [HttpGet]
+        public IActionResult SendOrg(int id, int moderatorId)
+        {
+            var branches = _context.Users.Where(u => u.ModeratorId == moderatorId).ToList();
+            var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            ViewData["RecipientId"] = new SelectList(branches, "Id", "Title", 0);
+
+            return View(application);
+        }
+
+
+        [Authorize(Roles = "CrmModerator")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SendOrg(int id, Application app)
+        {
+            var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+
+            if (id != app.Id)
+            {
+                return NotFound();
+            }
+            try
+            {
+                application.Status = ApplicationStatus.SendOrg;
+                application.RecipientId = app.RecipientId;
+                _context.Update(application);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ApplicationExists(app.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(AppsList), new { recipientId = app.RecipientId } );
+        }
+
 
         // GET: Applications/Delete/5
         //public async Task<IActionResult> SendOrg(int? id)

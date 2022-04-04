@@ -3,6 +3,7 @@ using System;
 using CallCenterCRM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CallCenterCRM.Migrations
 {
     [DbContext(typeof(CallcentercrmContext))]
-    partial class CallcentercrmContextModelSnapshot : ModelSnapshot
+    [Migration("20220403123301_Replace-coloumns")]
+    partial class Replacecoloumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,7 +102,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTime>("BirthDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2022, 4, 3, 18, 46, 23, 410, DateTimeKind.Local).AddTicks(9516));
+                        .HasDefaultValue(new DateTime(2022, 4, 3, 17, 33, 1, 418, DateTimeKind.Local).AddTicks(6648));
 
                     b.Property<int?>("CityDistrictId")
                         .HasColumnType("int(11)");
@@ -175,6 +177,7 @@ namespace CallCenterCRM.Migrations
                         .HasColumnType("int(11)");
 
                     b.Property<string>("AdditionalNote")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("ApplicantId")
@@ -194,12 +197,6 @@ namespace CallCenterCRM.Migrations
 
                     b.Property<DateTime>("ExpireTime")
                         .HasColumnType("datetime");
-
-                    b.Property<bool>("IsChanged")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsDelayed")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsSelected")
                         .HasColumnType("tinyint(1)");

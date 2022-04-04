@@ -1,0 +1,64 @@
+﻿@model IEnumerable<CallCenterCRM.Models.User>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Пользователи</h1>
+
+<p>
+	<a asp-action="Create" class="btn btn-success btn-rounded">Создать новое</a>
+</p>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Title)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Email)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.City)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Contact)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Username)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.UpdatedDate)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Title)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Email)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.City)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Contact)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Username)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.UpdatedDate)
+				</td>
+				<td>
+					<a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

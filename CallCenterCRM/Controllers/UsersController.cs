@@ -193,7 +193,7 @@ namespace CallCenterCRM.Controllers
         {
             var branches = _context.Users.Where(u => u.ModeratorId == moderatorId).ToList();
 
-            return View("Index", branches);
+            return View("Branches", branches);
         }
 
         private bool UserExists(int id)
