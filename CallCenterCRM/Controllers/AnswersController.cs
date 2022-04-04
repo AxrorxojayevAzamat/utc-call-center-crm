@@ -58,14 +58,19 @@ namespace CallCenterCRM.Controllers
         }
 
         // GET: Answers/Create
-        public IActionResult Create()
+        public IActionResult Create(int applicationId, int authorId)
         {
-            Answer answer = new Answer();
-            ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment");
-            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension");
-            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Username", answer.AuthorId);
-            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City");
-            return View();
+            var application = _context.Applications.Where(a => a.Id == applicationId).Include(a => a.Classification).First();
+
+            ViewData["AppType"] = application.Type;
+            ViewData["AppMeaning"] = application.MeaningOfApplication;
+            ViewData["AppClassification"] = application.Classification.Title;
+
+            Answer answer = new Answer() {
+                ApplicationId = applicationId,
+                AuthorId = authorId
+            };
+            return View(answer);
         }
 
         // POST: Answers/Create
@@ -73,7 +78,7 @@ namespace CallCenterCRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind] Answer answer, IFormFile file)
+        public async Task<IActionResult> Create(Answer answer, IFormFile file)
         {
             if (ModelState.IsValid)
             {
@@ -102,9 +107,7 @@ namespace CallCenterCRM.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment", answer.ApplicationId);
-            //ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", answer.AttachmentId);
-            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
+
             return View(answer);
         }
 

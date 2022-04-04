@@ -22,13 +22,13 @@ namespace CallCenterCRM.Services
             switch (status)
             {
                 case ApplicationStatus.SendMod:
-                    return new StatusParam() { color = "info", icon = "send" };
+                    return new StatusParam() { color = "info", icon = "check" };
                     break;
                 case ApplicationStatus.RejectMod:
                     return new StatusParam() { color = "danger", icon = "close" };
                     break;
                 case ApplicationStatus.SendOrg:
-                    return new StatusParam() { color = "success", icon = "check-all" };
+                    return new StatusParam() { color = "success", icon = "send" };
                     break;
                 case ApplicationStatus.RejectOrg:
                     return new StatusParam() { color = "danger", icon = "close" };
@@ -40,7 +40,7 @@ namespace CallCenterCRM.Services
                     return new StatusParam() { color = "warning", icon = "timer" };
                     break;
                 case ApplicationStatus.GotMod:
-                    return new StatusParam() { color = "info", icon = "check" };
+                    return new StatusParam() { color = "info", icon = "check-all" };
                 default:
                     return new StatusParam() { color = "", icon = "" };
                     break;

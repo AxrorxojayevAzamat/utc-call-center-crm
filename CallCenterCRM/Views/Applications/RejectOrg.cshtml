@@ -1,0 +1,32 @@
+﻿@model CallCenterCRM.Models.Application
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<h1>Send to organization</h1>
+
+<h4>Application</h4>
+<hr />
+<form asp-action="RejectOrg">
+	<div class="row">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<input type="hidden" asp-for="Id" />
+		<input type="hidden" asp-for="CreatedDate" />
+		<div class="form-group col-md-6">
+			<label asp-for="Reason" class="control-label"></label>
+			<textarea asp-for="Reason" class="form-control" required></textarea>
+			<span asp-validation-for="Reason" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-12 mt-3">
+			<input type="submit" value="Отклонять" asp-action="RejectOrg" asp-route-id=@Model.Id class="btn btn-danger btn-rounded" />
+			<a asp-action="Details" asp-route-id=@Model.Id class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+    @{
+		await Html.RenderPartialAsync("Scripts/_ValidationScriptsPartial");
+	}
+}

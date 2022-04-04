@@ -24,7 +24,7 @@ namespace CallCenterCRM
         }
 
         // GET: Applications
-        [Authorize(Roles="CrmOperator")]
+        [Authorize(Roles = "CrmOperator")]
         public async Task<IActionResult> Index()
         {
             var callcentercrmContext = _context.Applications
@@ -32,7 +32,7 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient);
+                .Include(a => a.Recipient).OrderByDescending(a => a.Id);
 
             return View(await callcentercrmContext.ToListAsync());
         }
@@ -40,7 +40,8 @@ namespace CallCenterCRM
         [Authorize(Roles = "CrmModerator, CrmOrganization")]
         public async Task<IActionResult> AppsList(int? recipientId)
         {
-            var callcentercrmContext = _context.Applications.Where(a => a.RecipientId == recipientId)
+            var callcentercrmContext = _context.Applications.Include(a => a.Recipient)
+                .Where(a => a.RecipientId == recipientId || a.Recipient.ModeratorId == recipientId)
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
@@ -64,6 +65,7 @@ namespace CallCenterCRM
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
+                .Include(a => a.Answer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (application.Status == ApplicationStatus.SendMod && application.RecipientId == userId)
@@ -167,6 +169,7 @@ namespace CallCenterCRM
             {
                 try
                 {
+                    application.IsChanged = true;
                     application.Status = ApplicationStatus.Edit;
 
                     int attachmentId = -1;
@@ -219,7 +222,7 @@ namespace CallCenterCRM
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            
+
 
             if (application == null)
             {
@@ -300,10 +303,24 @@ namespace CallCenterCRM
 
             return View("Index", applications);
         }
-        public IActionResult RejectedOrg()
+        public IActionResult RejectedOrg(int recipientId)
         {
-            var applications = _context.Applications
-                .Where(a => (a.Status == ApplicationStatus.RejectOrg))
+            var applications = _context.Applications.Include(a => a.Recipient)
+                .Where(a => (a.Status == ApplicationStatus.RejectOrg || a.Status == ApplicationStatus.RejectMod)
+                && (a.Recipient.ModeratorId == recipientId || a.Recipient.Id == recipientId))
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .ToList();
+
+            return View("Index", applications);
+        }
+
+        public IActionResult Delayed(int recipientId)
+        {
+            var applications = _context.Applications.Include(a => a.Recipient)
+                .Where(a => a.Status == ApplicationStatus.Delay && (a.Recipient.ModeratorId == recipientId || a.Recipient.Id == recipientId))
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
@@ -313,16 +330,42 @@ namespace CallCenterCRM
             return View("Index", applications);
         }
 
-        public IActionResult Delayed()
+        [HttpGet]
+        public async Task<IActionResult> RejectMod(int? id)
         {
-            var applications = _context.Applications.Where(a => a.Status == ApplicationStatus.Delay)
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var application = await _context.Applications
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).ToList();
+                .Include(a => a.Recipient)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            return View("Index", applications);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return View(application);
+        }
+
+        [Authorize(Roles = "CrmModerator")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RejectMod(int id)
+        {
+            var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            application.Status = ApplicationStatus.RejectMod;
+            _context.Update(application);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
         }
 
         [HttpGet]
@@ -342,6 +385,7 @@ namespace CallCenterCRM
         public IActionResult SendOrg(int id, Application app)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            int recipientId = application.RecipientId;
 
             if (id != app.Id)
             {
@@ -366,10 +410,96 @@ namespace CallCenterCRM
                 }
             }
 
-            return RedirectToAction(nameof(AppsList), new { recipientId = app.RecipientId } );
+            return RedirectToAction(nameof(AppsList), new { recipientId });
         }
 
+        [HttpGet]
+        public IActionResult RejectOrg(int id)
+        {
+            var application = _context.Applications.FirstOrDefault(a => a.Id == id);
 
+            return View(application);
+        }
+
+        [Authorize(Roles = "CrmOrganization")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RejectOrg(int id, Application app)
+        {
+            var application = _context.Applications.Include(a => a.Recipient).FirstOrDefault(a => a.Id == id);
+            int recipientId = application.RecipientId;
+
+            if (id != app.Id)
+            {
+                return NotFound();
+            }
+            try
+            {
+                application.Status = ApplicationStatus.RejectOrg;
+                application.Reason = app.Reason;
+                //application.RecipientId = (int) application.Recipient.ModeratorId;
+                _context.Update(application);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ApplicationExists(app.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(AppsList), new { recipientId });
+        }
+
+        [HttpGet]
+        public IActionResult Delay(int id)
+        {
+            var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+
+            return View(application);
+        }
+
+        [Authorize(Roles = "CrmOrganization")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delay(int id, Application app)
+        {
+            var application = _context.Applications.Include(a => a.Recipient).FirstOrDefault(a => a.Id == id);
+            int recipientId = application.RecipientId;
+
+            if (id != app.Id)
+            {
+                return NotFound();
+            }
+            try
+            {
+                if (app.ExpireTime > application.ExpireTime)
+                {
+                    application.Status = ApplicationStatus.Delay;
+                    application.IsDelayed = true;
+                    _context.Update(application);
+                    _context.SaveChanges();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ApplicationExists(app.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(AppsList), new { recipientId });
+        }
         // GET: Applications/Delete/5
         //public async Task<IActionResult> SendOrg(int? id)
         //{
