@@ -56,7 +56,7 @@ namespace CallCenterCRM.Models
 
     public enum AnswerStatus
     {
-        [Display(Name = "Отправить")] Send = 1,
+        [Display(Name = "отправлено модератору")] Send = 1,
         [Display(Name = "Отклоненный")] Reject = -1,
         [Display(Name = "Отредактирован")] Edit = 3,
         [Display(Name = "Обработан")] Confirm = 2,

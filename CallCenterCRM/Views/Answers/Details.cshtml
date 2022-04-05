@@ -1,7 +1,18 @@
 ﻿@model CallCenterCRM.Models.Answer
+@inject IApplicationService applicationService
+@using CallCenterCRM.Interfaces
+@inject IUserService userService
 
 @{
-    ViewData["Title"] = "Details";
+    string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    string userIdentityId = GetUserClaim(typeIdentityId);
+
+    var isAuthenticated = User.Identity.IsAuthenticated;
+
+    string GetUserClaim(string type)
+    {
+        return User.Identities.First().Claims.First(c => c.Type == type).Value;
+    }
 }
 
 <h1>Details</h1>
@@ -10,63 +21,78 @@
     <h4>Answer</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.ResponsiblePerson)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.ResponsiblePerson)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Executor)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Executor)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.ResponseLetter)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.ResponseLetter)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.RegisterNumber)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.RegisterNumber)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Result)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Result)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Conclusion)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Conclusion)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Application)
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Status)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Application.Classification.Title)
+        <dd class="col-sm-8">
+            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(Model.Status).color btn-fw">
+                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(Model.Status).icon"></i>
+                @Model.Status.GetDisplayName()
+            </span>
         </dd>
-       @* <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Attachment)
+        @if (Model.Attachment != null)
+        {
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Attachment)
+            </dt>
+            <dd class="col-sm-8">
+                <a href="~/uploads/@Model.Attachment.Path" target="_blank">@Model.Attachment.OriginName</a>
+            </dd>
+        }
+
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Author)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => $"{model.Attachment.OriginName}.{model.Attachment.Extension}")
-        </dd>*@
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Application.Recipient)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Application.Recipient.Title)
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Author.Title)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a> |
-    <a asp-action="Index"  class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+    {
+        <a asp-action="Confirm" asp-route-id="@Model?.Id" class="btn btn-success btn-rounded btn-fw">Подтверждать</a>
+        <a asp-controller="Answers" asp-action="Reject" asp-route-answerId="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+    }
+    else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName() && Model.Status == AnswerStatus.Reject)
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
+    }
+    <a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
 </div>

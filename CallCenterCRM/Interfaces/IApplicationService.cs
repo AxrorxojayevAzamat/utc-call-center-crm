@@ -7,5 +7,6 @@ namespace CallCenterCRM.Interfaces
         public string GetAppNumber(Application item);
 
         public StatusParam GetAppStatusParams(ApplicationStatus status);
+        public StatusParam GetAnswerStatusParams(AnswerStatus status);
     }
 }

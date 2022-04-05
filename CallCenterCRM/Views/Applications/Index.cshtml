@@ -19,70 +19,78 @@
 <h1>Заявление</h1>
 
 <div class="table-responsive">
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>Номер обращения</th>
-				<th>Источник обращения</th>
-				<th>Дата поступления</th>
-				<th>Имя</th>
-				<th>Фамилия</th>
-				<th>Отчество</th>
-				<th>Регион</th>
-				<th>Район/город</th>
-				<th>Телефон</th>
-				<th>Тип заявителя</th>
-				<th>Автор</th>
-				<th>Статус</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model)
-			{
-				@*<a asp-controller="Applications" asp-action="Details" asp-route-id=@item.Id >*@
-				<tr class="table-row-item">
-					<td>
-						<a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>@applicationService.GetAppNumber(item)</a>
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.ReferenceSource)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.CreatedDate)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.Firstname)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.Surname)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.Middlename)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.Region)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.CityDistrict.Title)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.Contact)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Applicant.Type)
-					</td>
-					<td>
-							@Html.DisplayFor(modelItem => item.Recipient.Title)
-					</td>
-					<td>
-						<span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
-								<i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
-								@*@item.Status.GetDisplayName()*@
-						</span>
-					</td>
-				</tr>
-				@*</a>*@
-			}
-		</tbody>
-	</table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Номер обращения</th>
+                <th>Источник обращения</th>
+                <th>Дата поступления</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Отчество</th>
+                <th>Регион</th>
+                <th>Район/город</th>
+                <th>Телефон</th>
+                <th>Тип заявителя</th>
+                <th>Автор</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @*<a asp-controller="Applications" asp-action="Details" asp-route-id=@item.Id >*@
+                <tr class="table-row-item">
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>
+                            @applicationService.GetAppNumber(item)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.ReferenceSource)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.CreatedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Firstname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Middlename)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Region)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.CityDistrict.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Contact)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Recipient.Title)
+                    </td>
+                    <td>
+                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
+                            <i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
+                            @*@item.Status.GetDisplayName()*@
+                        </span>
+                        @if (item.Answer != null)
+                        {
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Answer.Status).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Answer.Status).icon"></i>
+                            </span>
+                        }
+                    </td>
+                </tr>
+                @*</a>*@
+            }
+        </tbody>
+    </table>
 </div>

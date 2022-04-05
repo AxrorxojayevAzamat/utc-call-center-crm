@@ -42,7 +42,7 @@
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Type)
             </dd>
-            @if (Model.Comment != null)
+            @if (Model.Comment != null && Model.Comment != "")
             {
                 <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Comment)
@@ -57,7 +57,7 @@
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.MeaningOfApplication)
             </dd>
-            @if (Model.AdditionalNote != null)
+            @if (Model.AdditionalNote != null && Model.AdditionalNote != "")
             {
                 <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.AdditionalNote)
@@ -152,18 +152,18 @@
                 @if (Model.Answer.Attachment != null)
                 {
                     <dt class="col-sm-4">
-                        @Html.DisplayNameFor(model => model.Attachment)
+                        @Html.DisplayNameFor(model => model.Answer.Attachment)
                     </dt>
                     <dd class="col-sm-8">
-                        @Html.DisplayFor(model => $"{model.Attachment.OriginName}.{model.Attachment.Extension}")
+                        <a href="~/uploads/@Model.Answer.Attachment.Path" target="_blank">@Model.Answer.Attachment.OriginName</a>
                     </dd>
                 }
 
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.Recipient)
+                    @Html.DisplayNameFor(model => model.Answer.Author)
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.Recipient.Title)
+                    @Html.DisplayFor(model => model.Answer.Author.Title)
                 </dd>
             </dl>
         </div>
@@ -175,18 +175,18 @@
     @if (Model.Answer == null)
     {
         @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName()
-       && (@Model.Status == ApplicationStatus.SendMod || @Model.Status == ApplicationStatus.RejectMod))
+       && (Model.Status == ApplicationStatus.SendMod || Model.Status == ApplicationStatus.RejectMod))
         {
             <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
         }
         else if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName()
-        && (@Model.Status == ApplicationStatus.GotMod))
+        && (Model.Status == ApplicationStatus.GotMod || Model.Status == ApplicationStatus.Edit))
         {
             <a asp-action="SendOrg" asp-route-id="@Model?.Id" asp-route-moderatorId=@userService.GetUserId(userIdentityId) class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a>
             <a asp-action="RejectMod" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
         }
         else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName()
-        && (@Model.Status == ApplicationStatus.SendOrg))
+        && (Model.Status == ApplicationStatus.SendOrg))
         {
             <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" asp-route-authorId=@userService.GetUserId(userIdentityId) class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
             <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отложить</a>
@@ -195,7 +195,9 @@
     }
     else if (Model.Answer != null && Model.Answer.Status != AnswerStatus.Confirm)
     {
-        <a asp-controller="Answers" asp-action="Details" asp-route-id="@Model.Answer.Id">Ответ</a>
+        <a asp-controller="Answers" asp-action="Details" asp-route-id="@Model.Answer.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>
+            Ответ
+        </a>
     }
 
 

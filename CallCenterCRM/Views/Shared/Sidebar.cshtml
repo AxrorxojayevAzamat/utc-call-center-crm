@@ -14,6 +14,7 @@
     }
 }
 
+
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item @Html.IsActive(controller: "Home", action: "Index")">
@@ -132,18 +133,30 @@
                     <span class="menu-title">Отклоненные заявки</span>
                 </a>
             </li>
-            <li class="nav-item @Html.IsActive(controller: "Answers", action: "Index")">
-                <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Index">
+            <li class="nav-item @Html.IsActive(controller: "Answers", action: "AnswersList")">
+                <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="AnswersList" asp-route-authorId=@userService.GetUserId(userIdentityId)>
                     <i class="menu-icon mdi mdi-card-text-outline"></i>
                     <span class="menu-title">Ответы</span>
                 </a>
             </li>
-            <li class="nav-item @Html.IsActive(controller: "Answers", action: "Edited")">
-                <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Edited">
-                    <i class="menu-icon mdi mdi-pencil"></i>
-                    <span class="menu-title">Переработанные ответы</span>
-                </a>
-            </li>
+            @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+            {
+                <li class="nav-item @Html.IsActive(controller: "Answers", action: "Edited")">
+                    <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Edited">
+                        <i class="menu-icon mdi mdi-pencil"></i>
+                        <span class="menu-title">Переработанные ответы</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item @Html.IsActive(controller: "Answers", action: "Edited")">
+                    <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Rejected">
+                        <i class="menu-icon mdi mdi-close-circle"></i>
+                        <span class="menu-title">Отклоненные ответы</span>
+                    </a>
+                </li>
+            }
         }
 
         @if (userService.GetUserRole(userIdentityId) == Roles.CrmAdmin.GetDisplayName()

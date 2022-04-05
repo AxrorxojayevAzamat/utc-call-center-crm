@@ -31,6 +31,7 @@ namespace CallCenterCRM
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
+                .Include(a => a.Answer)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient).OrderByDescending(a => a.Id);
 

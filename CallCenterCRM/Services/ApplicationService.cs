@@ -1,6 +1,5 @@
 ﻿
 
-using CallCenterCRM.Data;
 using CallCenterCRM.Interfaces;
 using CallCenterCRM.Models;
 
@@ -41,6 +40,31 @@ namespace CallCenterCRM.Services
                     break;
                 case ApplicationStatus.GotMod:
                     return new StatusParam() { color = "info", icon = "check-all" };
+                default:
+                    return new StatusParam() { color = "", icon = "" };
+                    break;
+            }
+        }
+
+        public StatusParam GetAnswerStatusParams(AnswerStatus status)
+        {
+            switch (status)
+            {
+                case AnswerStatus.Send:
+                    return new StatusParam() { color = "info", icon = "check" };
+                    break;
+                case AnswerStatus.Reject:
+                    return new StatusParam() { color = "danger", icon = "close" };
+                    break;
+                case AnswerStatus.Edit:
+                    return new StatusParam() { color = "primary", icon = "pencil" };
+                    break;
+                case AnswerStatus.Confirm:
+                    return new StatusParam() { color = "success", icon = "checkbox-marked-circle-outline" };
+                    break;
+                case AnswerStatus.GotMod:
+                    return new StatusParam() { color = "primary", icon = "check-all" }; 
+                    break;
                 default:
                     return new StatusParam() { color = "", icon = "" };
                     break;

@@ -36,8 +36,18 @@ namespace CallCenterCRM.Controllers
             return View(await callcentercrmContext.ToListAsync());
         }
 
+        [Authorize(Roles = "CrmModerator, CrmOrganization")]
+        public async Task<IActionResult> AnswersList(int? authorId)
+        {
+            var callcentercrmContext = _context.Answers.Include(a => a.Author)
+                .Where(a => a.AuthorId == authorId || a.Author.ModeratorId == authorId)
+                .Include(a => a.Attachment);
+
+            return View("Index", await callcentercrmContext.ToListAsync());
+        }
+
         // GET: Answers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? userId)
         {
             if (id == null)
             {
@@ -49,6 +59,14 @@ namespace CallCenterCRM.Controllers
                 .Include(a => a.Attachment)
                 .Include(a => a.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (answer.Status == AnswerStatus.Send && answer.Author.ModeratorId == userId)
+            {
+                answer.Status = AnswerStatus.GotMod;
+                _context.Update(answer);
+                _context.SaveChanges();
+            }
+
             if (answer == null)
             {
                 return NotFound();
@@ -62,7 +80,7 @@ namespace CallCenterCRM.Controllers
         {
             var application = _context.Applications.Where(a => a.Id == applicationId).Include(a => a.Classification).First();
 
-            ViewData["AppType"] = application.Type;
+            ViewData["AppType"] = application.Type.GetDisplayName();
             ViewData["AppMeaning"] = application.MeaningOfApplication;
             ViewData["AppClassification"] = application.Classification.Title;
 
@@ -199,6 +217,51 @@ namespace CallCenterCRM.Controllers
             _context.Answers.Remove(answer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "CrmOrganization")]
+        [HttpGet]
+        public IActionResult Rejected(int authorId)
+        {
+            var answers = _context.Answers.Where(a => a.AuthorId == authorId && a.Status == AnswerStatus.Reject);
+
+            return View("Index", answers);
+        }
+
+        [Authorize(Roles = "CrmModerator")]
+        [HttpGet]
+        public IActionResult Edited(int authorId)
+        {
+            var answers = _context.Answers.Include(a => a.Author)
+                .Where(a => a.Author.ModeratorId == authorId && a.Status == AnswerStatus.Edit);
+
+            return View("Index", answers);
+        }
+
+        [Authorize(Roles = "CrmModerator")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Reject(int answerId)
+        {
+            var answer = _context.Answers.FirstOrDefault(a => a.Id == answerId);
+            answer.Status = AnswerStatus.Reject;
+            _context.Update(answer);
+            _context.SaveChanges();
+
+            return View(nameof(AnswersList), new { authorId = answer.Author.ModeratorId });
+        }
+
+        [Authorize(Roles = "CrmModerator")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Confirm(int id)
+        {
+            var answer = _context.Answers.FirstOrDefault(a => a.Id == id);
+            answer.Status = AnswerStatus.Confirm;
+            _context.Update(answer);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(AnswersList), new { authorId = answer.Author.ModeratorId });
         }
 
         private bool AnswerExists(int id)
