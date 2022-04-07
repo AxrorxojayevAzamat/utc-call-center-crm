@@ -1,14 +1,14 @@
-﻿@model CallCenterCRM.Models.Application
+﻿@model CallCenterCRM.Models.Answer
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Reject";
 }
 
 <h1>Reject</h1>
 
 <p>Are you sure you want to reject this?</p>
 <div>
-    <form asp-action="RejectMod">
+    <form asp-action="Reject">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Да" class="btn btn-danger btn-rounded btn-fw" /> 
         <a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>

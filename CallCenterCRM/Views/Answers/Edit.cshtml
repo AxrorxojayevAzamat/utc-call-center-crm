@@ -1,63 +1,82 @@
 ﻿@model CallCenterCRM.Models.Answer
 
 @{
-	ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Редактировать</h1>
+<h1>Создать</h1>
 
-<h4>Answer</h4>
+<h4>Заявление</h4>
 <hr />
-<form asp-action="Edit">
-	<div class="row">
-		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-		<input type="hidden" asp-for="Id" />
-		<input type="hidden" asp-for="CreatedDate" />
-		<div class="form-group col-md-4">
-			<label asp-for="ResponsiblePerson" class="control-label"></label>
-			<input asp-for="ResponsiblePerson" class="form-control" />
-			<span asp-validation-for="ResponsiblePerson" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-4">
-			<label asp-for="Executor" class="control-label"></label>
-			<input asp-for="Executor" class="form-control" />
-			<span asp-validation-for="Executor" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-4">
-			<label asp-for="ResponseLetter" class="control-label"></label>
-			<input asp-for="ResponseLetter" class="form-control" />
-			<span asp-validation-for="ResponseLetter" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-4">
-			<label asp-for="AttachmentId" class="control-label"></label>
-			<select asp-for="AttachmentId" class="form-control" asp-items="ViewBag.AttachmentId"></select>
-			<span asp-validation-for="AttachmentId" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-4">
-			<label asp-for="RegisterNumber" class="control-label"></label>
-			<input asp-for="RegisterNumber" class="form-control" />
-			<span asp-validation-for="RegisterNumber" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-4">
-			<label asp-for="Result" class="control-label"></label>
-			<input asp-for="Result" class="form-control" />
-			<span asp-validation-for="Result" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-4">
-			<label asp-for="Conclusion" class="control-label"></label>
-			<input asp-for="Conclusion" class="form-control" />
-			<span asp-validation-for="Conclusion" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-4">
-			<label asp-for="ApplicationId" class="control-label"></label>
-			<select asp-for="ApplicationId" class="form-control" asp-items="ViewBag.ApplicationId"></select>
-			<span asp-validation-for="ApplicationId" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-12 mt-3">
-			<input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
-			<a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
-		</div>
-	</div>
+<dl class="row">
+    <dt class="col-sm-2">
+        Тип обращения
+    </dt>
+    <dd class="col-sm-10">
+        @ViewBag.AppType
+    </dd>
+    <dt class="col-sm-2">
+        Суть обращения
+    </dt>
+    <dd class="col-sm-10">
+        @ViewBag.AppMeaning
+    </dd>
+    <dt class="col-sm-2">
+        Классификация
+    </dt>
+    <dd class="col-sm-10">
+        @ViewBag.AppClassification
+    </dd>
+</dl>
+<h4>Ответ</h4>
+<hr />
+<form asp-action="Edit" enctype="multipart/form-data">
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CreatedDate" />
+        <input type="hidden" asp-for="ApplicationId" />
+        <input type="hidden" asp-for="AuthorId" />
+        <input type="hidden" asp-for="AttachmentId" />
+        <div class="form-group col-md-4">
+            <label asp-for="ResponsiblePerson" class="control-label"></label>
+            <input asp-for="ResponsiblePerson" class="form-control" />
+            <span asp-validation-for="ResponsiblePerson" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Executor" class="control-label"></label>
+            <input asp-for="Executor" class="form-control" />
+            <span asp-validation-for="Executor" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ResponseLetter" class="control-label"></label>
+            <input asp-for="ResponseLetter" class="form-control" />
+            <span asp-validation-for="ResponseLetter" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="AttachmentId" class="control-label"></label>
+            <input type="file" name="file" id="file" class="form-control" />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="RegisterNumber" class="control-label"></label>
+            <input asp-for="RegisterNumber" class="form-control" />
+            <span asp-validation-for="RegisterNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Result" class="control-label"></label>
+            <input asp-for="Result" class="form-control" />
+            <span asp-validation-for="Result" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Conclusion" class="control-label"></label>
+            <input asp-for="Conclusion" class="form-control" />
+            <span asp-validation-for="Conclusion" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-12 mt-3">
+            <input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
+            <a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
+        </div>
+    </div>
 </form>
 
 @section Scripts {

@@ -142,7 +142,7 @@
             @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
             {
                 <li class="nav-item @Html.IsActive(controller: "Answers", action: "Edited")">
-                    <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Edited">
+                    <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Edited" asp-route-authorId=@userService.GetUserId(userIdentityId)>
                         <i class="menu-icon mdi mdi-pencil"></i>
                         <span class="menu-title">Переработанные ответы</span>
                     </a>
@@ -150,8 +150,8 @@
             }
             else
             {
-                <li class="nav-item @Html.IsActive(controller: "Answers", action: "Edited")">
-                    <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Rejected">
+                <li class="nav-item @Html.IsActive(controller: "Answers", action: "Rejected")">
+                    <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Rejected" asp-route-authorId=@userService.GetUserId(userIdentityId)>
                         <i class="menu-icon mdi mdi-close-circle"></i>
                         <span class="menu-title">Отклоненные ответы</span>
                     </a>

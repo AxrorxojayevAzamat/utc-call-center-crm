@@ -12,7 +12,7 @@ namespace CallCenterCRM.Utilities
             var routeController = routeData.Values["controller"].ToString();
 
             var returnActive = (routeAction == "Details" || routeAction == "Edit" || routeAction == "Delete" || routeAction == "Create")
-                ? controller == routeController && (action == "Index" || action == "AppsList" || action == "SendOrg")
+                ? controller == routeController && (action == "Index" || action == "AppsList" || action == "SendOrg" )
                 : controller == routeController && action == routeAction;
 
             return returnActive ? "active" : "";

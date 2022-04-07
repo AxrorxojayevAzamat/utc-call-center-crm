@@ -19,7 +19,7 @@
 
 <div class="row">
     <div class="col-6">
-        <h4>Application</h4>
+        <h4>Заявление</h4>
         @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
         {
             <div class="toggle-selected">
@@ -88,16 +88,31 @@
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Recipient.Title)
             </dd>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Status)
-            </dt>
-            <dd class="col-sm-8">
-                <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(Model.Status).color btn-fw">
-                    <i class="mdi mdi-@applicationService.GetAppStatusParams(Model.Status).icon"></i>
-                    @Model.Status.GetDisplayName()
-                </span>
-            </dd>
-            
+            @if (Model.Answer != null && Model.Answer.Status == AnswerStatus.Confirm)
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Answer.Status)
+                </dt>
+                <dd class="col-sm-8">
+                    <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(Model.Answer.Status).color btn-fw">
+                        <i class="mdi mdi-@applicationService.GetAnswerStatusParams(Model.Answer.Status).icon"></i>
+                        @Model.Answer.Status.GetDisplayName()
+                    </span>
+                </dd>
+            }
+            else
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Status)
+                </dt>
+                <dd class="col-sm-8">
+                    <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(Model.Status).color btn-fw">
+                        <i class="mdi mdi-@applicationService.GetAppStatusParams(Model.Status).icon"></i>
+                        @Model.Status.GetDisplayName()
+                    </span>
+                </dd>
+
+            }
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.UpdatedDate)
             </dt>
@@ -110,7 +125,7 @@
     @if (Model.Answer != null && Model.Answer.Status == AnswerStatus.Confirm)
     {
         <div class="col-6">
-            <h4>Answer</h4>
+            <h4>Ответ</h4>
             <hr />
             <dl class="row">
                 <dt class="col-sm-4">
@@ -165,6 +180,13 @@
                 <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.Answer.Author.Title)
                 </dd>
+
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Answer.UpdatedDate)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Answer.UpdatedDate)
+                </dd>
             </dl>
         </div>
     }
@@ -200,18 +222,19 @@
         </a>
     }
 
+    <a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
 
-    @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName()
-    || userService.GetUserRole(userIdentityId) == Roles.CrmAdmin.GetDisplayName())
-    {
+    @* @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName()
+        || userService.GetUserRole(userIdentityId) == Roles.CrmAdmin.GetDisplayName())
+        {
         <a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
-    }
-    else
-    {
+        }
+        else
+        {
         <a class="btn btn-secondary btn-rounded btn-fw" asp-area="" asp-controller="Applications" asp-action="AppsList"
-       asp-route-recipientId=@userService.GetUserId(userIdentityId)>
-            Назад
+        asp-route-recipientId=@userService.GetUserId(userIdentityId)>
+        Назад
         </a>
-    }
+        }*@
 </div>
 

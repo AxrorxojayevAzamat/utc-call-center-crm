@@ -63,7 +63,7 @@ namespace CallCenterCRM.Services
                     return new StatusParam() { color = "success", icon = "checkbox-marked-circle-outline" };
                     break;
                 case AnswerStatus.GotMod:
-                    return new StatusParam() { color = "primary", icon = "check-all" }; 
+                    return new StatusParam() { color = "info", icon = "check-all" }; 
                     break;
                 default:
                     return new StatusParam() { color = "", icon = "" };

@@ -18,7 +18,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Answer</h4>
+    <h4>Ответ</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-4">
@@ -85,14 +85,15 @@
     </dl>
 </div>
 <div>
-    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName() 
+    && (Model.Status == AnswerStatus.GotMod || Model.Status == AnswerStatus.Edit))
     {
         <a asp-action="Confirm" asp-route-id="@Model?.Id" class="btn btn-success btn-rounded btn-fw">Подтверждать</a>
-        <a asp-controller="Answers" asp-action="Reject" asp-route-answerId="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+        <a asp-action="Reject" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
     }
     else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName() && Model.Status == AnswerStatus.Reject)
     {
         <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
     }
-    <a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    <a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
 </div>

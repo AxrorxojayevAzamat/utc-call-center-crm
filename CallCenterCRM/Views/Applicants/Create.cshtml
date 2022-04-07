@@ -85,14 +85,6 @@
 				<input class="form-check-input" asp-for="Confidentiality" /> @Html.DisplayNameFor(model => model.Confidentiality)
 			</label>
 		</div>
-		
-		@*<div class="form-group col-md-4">
-			<label asp-for="OrganizationId" class="control-label"></label>
-			<select asp-for="OrganizationId" class ="form-control" asp-items="ViewBag.OrganizationId">
-			<option value=1 selected>First</option>
-			</select>
-			</div>*@
-		
 		<div class="form-group col-md-12 mt-3">
 			<input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
 			<a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>

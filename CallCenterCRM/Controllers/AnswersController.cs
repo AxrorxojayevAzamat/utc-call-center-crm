@@ -24,8 +24,6 @@ namespace CallCenterCRM.Controllers
             _attachmentService = attachmentService;
         }
 
-        // GET: Answers
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var callcentercrmContext = _context.Answers
@@ -46,7 +44,6 @@ namespace CallCenterCRM.Controllers
             return View("Index", await callcentercrmContext.ToListAsync());
         }
 
-        // GET: Answers/Details/5
         public async Task<IActionResult> Details(int? id, int? userId)
         {
             if (id == null)
@@ -75,7 +72,6 @@ namespace CallCenterCRM.Controllers
             return View(answer);
         }
 
-        // GET: Answers/Create
         public IActionResult Create(int applicationId, int authorId)
         {
             var application = _context.Applications.Where(a => a.Id == applicationId).Include(a => a.Classification).First();
@@ -91,9 +87,6 @@ namespace CallCenterCRM.Controllers
             return View(answer);
         }
 
-        // POST: Answers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Answer answer, IFormFile file)
@@ -123,13 +116,12 @@ namespace CallCenterCRM.Controllers
                     throw ex;
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AnswersList), new { authorId = answer.AuthorId });
             }
 
             return View(answer);
         }
 
-        // GET: Answers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -137,23 +129,23 @@ namespace CallCenterCRM.Controllers
                 return NotFound();
             }
 
-            var answer = await _context.Answers.FindAsync(id);
+            var answer = _context.Answers.Include(a => a.Application)
+                .ThenInclude(a => a.Classification).Where(a => a.Id == id).FirstOrDefault();
+
             if (answer == null)
             {
                 return NotFound();
             }
-            ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment", answer.ApplicationId);
-            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", answer.AttachmentId);
-            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
+            ViewData["AppType"] = answer.Application.Type.GetDisplayName();
+            ViewData["AppMeaning"] = answer.Application.MeaningOfApplication;
+            ViewData["AppClassification"] = answer.Application.Classification.Title;
+
             return View(answer);
         }
 
-        // POST: Answers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,ResponsiblePerson,Executor,ResponseLetter,AttachmentId,RegisterNumber,Result,Conclusion,OrganizationId,ApplicationId")] Answer answer)
+        public IActionResult Edit(int id, [Bind] Answer answer, IFormFile file)
         {
             if (id != answer.Id)
             {
@@ -164,6 +156,18 @@ namespace CallCenterCRM.Controllers
             {
                 try
                 {
+                    int attachmentId = -1;
+
+                    if (file != null)
+                    {
+                        attachmentId = _attachmentService.UploadFileToStorage(file);
+                    }
+
+                    if (attachmentId > -1)
+                    {
+                        answer.AttachmentId = attachmentId;
+                    }
+
                     answer.Status = AnswerStatus.Edit;
                     _context.Update(answer);
                     _context.SaveChanges();
@@ -179,15 +183,12 @@ namespace CallCenterCRM.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AnswersList), new { authorId = answer.AuthorId });
             }
-            ViewData["ApplicationId"] = new SelectList(_context.Applications, "Id", "Comment", answer.ApplicationId);
-            ViewData["AttachmentId"] = new SelectList(_context.Attachments, "Id", "Extension", answer.AttachmentId);
-            //ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", answer.OrganizationId);
+            
             return View(answer);
         }
 
-        // GET: Answers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -208,7 +209,6 @@ namespace CallCenterCRM.Controllers
             return View(answer);
         }
 
-        // POST: Answers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -223,7 +223,8 @@ namespace CallCenterCRM.Controllers
         [HttpGet]
         public IActionResult Rejected(int authorId)
         {
-            var answers = _context.Answers.Where(a => a.AuthorId == authorId && a.Status == AnswerStatus.Reject);
+            var answers = _context.Answers.Include(a => a.Author)
+                .Where(a => a.AuthorId == authorId && a.Status == AnswerStatus.Reject).ToList();
 
             return View("Index", answers);
         }
@@ -233,22 +234,68 @@ namespace CallCenterCRM.Controllers
         public IActionResult Edited(int authorId)
         {
             var answers = _context.Answers.Include(a => a.Author)
-                .Where(a => a.Author.ModeratorId == authorId && a.Status == AnswerStatus.Edit);
+                .Where(a => a.Author.ModeratorId == authorId && a.Status == AnswerStatus.Edit).ToList();
 
             return View("Index", answers);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Reject(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var answer = await _context.Answers
+                .Include(a => a.Application)
+                .Include(a => a.Attachment)
+                .Include(a => a.Author)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+
+            if (answer == null)
+            {
+                return NotFound();
+            }
+
+            return View(answer);
         }
 
         [Authorize(Roles = "CrmModerator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Reject(int answerId)
+        public IActionResult Reject(int id) 
         {
-            var answer = _context.Answers.FirstOrDefault(a => a.Id == answerId);
+            var answer = _context.Answers.Include(a => a.Author).FirstOrDefault(a => a.Id == id);
             answer.Status = AnswerStatus.Reject;
             _context.Update(answer);
             _context.SaveChanges();
 
-            return View(nameof(AnswersList), new { authorId = answer.Author.ModeratorId });
+            return RedirectToAction(nameof(AnswersList), new { authorId = answer.Author.ModeratorId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Confirm(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var answer = await _context.Answers
+                .Include(a => a.Application)
+                .Include(a => a.Attachment)
+                .Include(a => a.Author)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+
+            if (answer == null)
+            {
+                return NotFound();
+            }
+
+            return View(answer);
         }
 
         [Authorize(Roles = "CrmModerator")]
@@ -256,7 +303,7 @@ namespace CallCenterCRM.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Confirm(int id)
         {
-            var answer = _context.Answers.FirstOrDefault(a => a.Id == id);
+            var answer = _context.Answers.Include(a => a.Author).FirstOrDefault(a => a.Id == id);
             answer.Status = AnswerStatus.Confirm;
             _context.Update(answer);
             _context.SaveChanges();
