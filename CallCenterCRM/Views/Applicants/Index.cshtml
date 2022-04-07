@@ -38,32 +38,32 @@
 						@Html.DisplayFor(modelItem => item.Middlename)
 					</td>
 					<td>
-						<b>Hudud: </b>@Html.DisplayFor(modelItem => item.Region)<br>
-						<b>Tuman/shahar: </b>@Html.DisplayFor(modelItem => item.CityDistrict.Title)<br>
-						<b>Hozirgi yashash manzili: </b>@Html.DisplayFor(modelItem => item.Address)<br>
+						<b>Область: </b>@Html.DisplayFor(modelItem => item.Region)<br>
+						<b>Район/город: </b>@Html.DisplayFor(modelItem => item.CityDistrict.Title)<br>
+						<b>Текущий адрес проживания: </b>@Html.DisplayFor(modelItem => item.Address)<br>
 					</td>
 					<td>
 						@if (item.Contact != null)
 						{
-							<b>Telefon:</b>
+							<b>Телефон:</b>
 							@Html.DisplayFor(modelItem => item.Contact  ) <br>
 
 						}
 						@if (item.BirthDate != null)
 						{
-							<b>Tug'ilgan sana: </b>
+							<b>Дата рождения: </b>
 							@Html.DisplayFor(modelItem => item.BirthDate ) <br>
 
 						}
 						@if (item.ExtraContact != null)
 						{
-							<b>Qo'shimcha telefonlar:</b>
+							<b>Дополнительные телефоны:</b>
 							@Html.DisplayFor(modelItem => item.ExtraContact )
 							<br>
 						}
 						@if (item.Gender != null)
 						{
-							<b>Jinsi:</b>
+							<b>Пол:</b>
 							@Html.DisplayFor(modelItem => item.Gender )
 							<br>
 						}
