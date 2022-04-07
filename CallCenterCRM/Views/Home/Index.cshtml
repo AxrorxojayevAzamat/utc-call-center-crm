@@ -1,29 +1,92 @@
 ﻿@using Microsoft.AspNetCore.Authentication
 @using Newtonsoft.Json
+@using CallCenterCRM.Interfaces
+@inject IApplicationService applicationService
+
 @{
     ViewData["Title"] = "Home Page";
-    var name = User.Identities.First().Claims.First( c => c.Type == "name" ).Value;
-    
+    var name = User.Identities.First().Claims.First(c => c.Type == "name").Value;
+
 }
 @*<h2>Claims</h2>
-<h1>@name</h1>
-<dl>
+    <h1>@name</h1>
+    <dl>
     @foreach (var claim in User.Claims)
     {
-        <dt>@claim.Type</dt>
-        <dd>@claim.Value</dd>
+    <dt>@claim.Type</dt>
+    <dd>@claim.Value</dd>
     }
-</dl>
-<h2>Properties</h2>
+    </dl>
+    <h2>Properties</h2>
 
-<dl>
+    <dl>
     @foreach (var prop in (await Context.AuthenticateAsync()).Properties.Items)
     {
-        <dt>@prop.Key</dt>
-        <dd>@prop.Value</dd>
+    <dt>@prop.Key</dt>
+    <dd>@prop.Value</dd>
     }
-</dl>*@
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </dl>*@
+<div>
+    <h1 class="text-center">Статусы</h1>
+    <hr />
+    <div class="row">
+        <div class="col-6">
+            <h3>Оператор</h3>
+            <div class="py-1">
+                <span class="app-status btn-rounded btn-inverse-warning btn-fw">
+                    <i class="mdi mdi-send"></i>
+                    отправлено
+                </span>
+            </div>
+            <div class="py-1">
+                <span class="app-status btn-rounded btn-inverse-info btn-fw">
+                    <i class="mdi mdi-timetable"></i>
+                    в процессе
+                </span>
+            </div>
+            <div class="py-1">
+                <span class="app-status btn-rounded btn-inverse-success btn-fw">
+                    <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+                    обработан
+                </span>
+            </div>
+            <div class="py-1">
+                <span class="app-status btn-rounded btn-inverse-danger btn-fw">
+                    <i class="mdi mdi-close"></i>
+                    отклонен
+                </span>
+            </div>
+        </div>
+        <div class="col-6">
+            <h3>Модератор/Организация</h3>
+            <div class="row">
+                <div class="col-6">
+                    <h5>Запросы</h5>
+                    @foreach (ApplicationStatus applicationStatus in Enum.GetValues(typeof(ApplicationStatus)))
+                    {
+                        <div class="py-1">
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(applicationStatus).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAppStatusParams(applicationStatus).icon"></i>
+                                @applicationStatus.GetDisplayName()
+                            </span>
+                        </div>
+
+                    }
+                </div>
+                <div class="col-6">
+                    <h5>Ответы</h5>
+                    @foreach (AnswerStatus answerStatus in Enum.GetValues(typeof(AnswerStatus)))
+                    {
+                        <div class="py-1">
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(answerStatus).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(answerStatus).icon"></i>
+                                @answerStatus.GetDisplayName()
+                            </span>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

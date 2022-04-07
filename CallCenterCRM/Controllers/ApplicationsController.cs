@@ -65,6 +65,7 @@ namespace CallCenterCRM
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
                 .Include(a => a.Answer)
+                    .ThenInclude(a => a.Attachment)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (application.Status == ApplicationStatus.SendMod && application.RecipientId == userId)

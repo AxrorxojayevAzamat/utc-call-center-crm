@@ -63,12 +63,51 @@ namespace CallCenterCRM.Services
                     return new StatusParam() { color = "success", icon = "checkbox-marked-circle-outline" };
                     break;
                 case AnswerStatus.GotMod:
-                    return new StatusParam() { color = "info", icon = "check-all" }; 
+                    return new StatusParam() { color = "info", icon = "check-all" };
                     break;
                 default:
                     return new StatusParam() { color = "", icon = "" };
                     break;
             }
+        }
+
+        public StatusParam GetStatusForOperator(Application application)
+        {
+            if (application.Answer != null && application.Answer.Status == AnswerStatus.Confirm)
+            {
+                return new StatusParam()
+                {
+                    color = "success",
+                    icon = "checkbox-marked-circle-outline",
+                    text = "обработан"
+                };
+            }
+
+            if (application.Status == ApplicationStatus.RejectMod)
+            {
+                return new StatusParam()
+                {
+                    color = "danger",
+                    icon = "close",
+                    text = "отклонен"
+                };
+            }
+            else if (application.Status == ApplicationStatus.SendMod)
+            {
+                return new StatusParam()
+                {
+                    color = "warning",
+                    icon = "send",
+                    text = "отправлено"
+                };
+            }
+
+            return new StatusParam()
+            {
+                color = "info",
+                icon = "timetable",
+                text = "в процессе"
+            };
         }
     }
 }
@@ -77,4 +116,5 @@ public class StatusParam
 {
     public string color = "";
     public string icon = "";
+    public string text = "";
 }

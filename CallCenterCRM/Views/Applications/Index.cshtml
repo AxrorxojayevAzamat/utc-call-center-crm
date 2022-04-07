@@ -1,7 +1,6 @@
 ﻿@using CallCenterCRM.Interfaces
 @model IEnumerable<CallCenterCRM.Models.Application>
 @inject IApplicationService applicationService
-@using CallCenterCRM.Interfaces
 @inject IUserService userService
 
 @{
@@ -39,7 +38,6 @@
         <tbody>
             @foreach (var item in Model)
             {
-                @*<a asp-controller="Applications" asp-action="Details" asp-route-id=@item.Id >*@
                 <tr class="table-row-item">
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>
@@ -77,19 +75,27 @@
                         @Html.DisplayFor(modelItem => item.Recipient.Title)
                     </td>
                     <td>
-                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
-                            <i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
-                            @*@item.Status.GetDisplayName()*@
-                        </span>
-                        @if (item.Answer != null)
+                        @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
                         {
-                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Answer.Status).color btn-fw">
-                                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Answer.Status).icon"></i>
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetStatusForOperator(item).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetStatusForOperator(item).icon"></i>
                             </span>
+                        }
+                        else
+                        {
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
+                            </span>
+
+                            @if (item.Answer != null)
+                            {
+                                <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Answer.Status).color btn-fw">
+                                    <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Answer.Status).icon"></i>
+                                </span>
+                            }
                         }
                     </td>
                 </tr>
-                @*</a>*@
             }
         </tbody>
     </table>
