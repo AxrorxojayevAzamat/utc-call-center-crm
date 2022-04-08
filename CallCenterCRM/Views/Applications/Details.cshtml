@@ -133,9 +133,19 @@
 
                 }
             }
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </dt>
+            @if((Model.Reason != null || Model.Reason != "") && Model.Status == ApplicationStatus.RejectOrg)
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Reason)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Reason)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.UpdatedDate)
+                </dt>
+            }
+            
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.UpdatedDate)
             </dd>
@@ -224,9 +234,21 @@
         else if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName()
         && (Model.Status == ApplicationStatus.GotMod || Model.Status == ApplicationStatus.Edit))
         {
-            <a asp-action="SendOrg" asp-route-id="@Model?.Id" asp-route-moderatorId=@userService.GetUserId(userIdentityId) class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a>
-            <a asp-action="RejectMod" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
-        }
+            @if(userService.HasBranches(userIdentityId))
+            {
+                <a asp-action="SendOrg" asp-route-id="@Model?.Id" asp-route-moderatorId=@userService.GetUserId(userIdentityId) class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a>
+                <a asp-action="RejectMod" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+            }
+            else
+            {
+                <a asp-controller="Answers" asp-action="Create" 
+                    asp-route-applicationId="@Model?.Id" asp-route-authorId=@userService.GetUserId(userIdentityId) 
+                    class="btn btn-success btn-rounded btn-fw" >Написание ответа</a>
+                <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отложить</a>
+                <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+            }
+
+    }
         else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName()
         && (Model.Status == ApplicationStatus.SendOrg))
         {

@@ -74,7 +74,10 @@ namespace CallCenterCRM.Controllers
 
         public IActionResult Create(int applicationId, int authorId)
         {
-            var application = _context.Applications.Where(a => a.Id == applicationId).Include(a => a.Classification).First();
+            var application = _context.Applications.Where(a => a.Id == applicationId)
+                .Include(a => a.Classification).Include(a => a.Recipient).ThenInclude(a => a.Moderator).First();
+
+            AnswerStatus answerStatus = application.Recipient.Moderator != null ? AnswerStatus.Send : AnswerStatus.Confirm;
 
             ViewData["AppType"] = application.Type.GetDisplayName();
             ViewData["AppMeaning"] = application.MeaningOfApplication;
@@ -82,7 +85,8 @@ namespace CallCenterCRM.Controllers
 
             Answer answer = new Answer() {
                 ApplicationId = applicationId,
-                AuthorId = authorId
+                AuthorId = authorId,
+                Status = answerStatus,
             };
             return View(answer);
         }

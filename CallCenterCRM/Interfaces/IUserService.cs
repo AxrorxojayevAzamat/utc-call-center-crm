@@ -7,5 +7,7 @@
         public string GetUserTitle(string userIdentityId);
 
         public string GetUserRole(string userIdentityId);
+
+        public Boolean HasBranches(string userIdentityId);
     }
 }
