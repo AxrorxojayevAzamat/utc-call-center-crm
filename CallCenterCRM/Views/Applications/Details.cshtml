@@ -133,7 +133,7 @@
 
                 }
             }
-            @if((Model.Reason != null || Model.Reason != "") && Model.Status == ApplicationStatus.RejectOrg)
+            @if(applicationService.ShowReason(Model, userService.GetUserRole(userIdentityId)))
             {
                 <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Reason)
@@ -141,11 +141,17 @@
                 <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.Reason)
                 </dd>
-                <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.UpdatedDate)
-                </dt>
             }
-            
+            @*@if((Model.Reason != null || Model.Reason != "") 
+            && ((Model.Status == ApplicationStatus.RejectOrg && userService.GetUserRole(userIdentityId) != Roles.CrmOperator.GetDisplayName()) || 
+            (Model.Status == ApplicationStatus.RejectMod && userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())))
+            {
+                
+                
+            }*@
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </dt>
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.UpdatedDate)
             </dd>

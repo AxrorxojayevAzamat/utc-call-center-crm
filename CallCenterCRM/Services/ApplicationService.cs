@@ -109,6 +109,13 @@ namespace CallCenterCRM.Services
                 text = "в процессе"
             };
         }
+
+        public Boolean ShowReason(Application app, string role)
+        {
+            return (app.Reason != null || app.Reason != "")
+            && (app.Status == ApplicationStatus.RejectOrg && role != Roles.CrmOperator.GetDisplayName()
+            || app.Status == ApplicationStatus.RejectMod && role == Roles.CrmOperator.GetDisplayName());
+        }
     }
 }
 
