@@ -33,7 +33,6 @@ namespace CallCenterCRM.Models
         }
 
         [Key]
-        [Column(TypeName = "int(11)")]
         public int Id { get; set; }
         [Display(Name = "Источник обращения")]
         public ReferenceSources ReferenceSource { get; set; }
@@ -52,7 +51,6 @@ namespace CallCenterCRM.Models
         [StringLength(255)]
         [Display(Name = "Дополнительный контакт")]
         public string? ExtraContact { get; set; } = null!;
-        [Column(TypeName = "int(11)")]
         [Display(Name = "Регион")]
         public Regions Region { get; set; }
         [Display(Name = "Город или район")]
@@ -60,7 +58,6 @@ namespace CallCenterCRM.Models
         [StringLength(255)]
         [Display(Name = "Махалла")]
         public string? Maxalla { get; set; } = null!;
-        [Column(TypeName = "text")]
         [Display(Name = "Адрес")]
         public string Address { get; set; } = null!;
         [Display(Name = "Пол")]
