@@ -18,7 +18,6 @@ namespace CallCenterCRM.Models
         }
 
         [Key]
-        [Column(TypeName = "int(11)")]
         public int Id { get; set; }
 
         [StringLength(255)]
@@ -36,7 +35,6 @@ namespace CallCenterCRM.Models
         [Display(Name = "Актив")]
         public bool IsActive { get; set; }
 
-        [Column(TypeName = "text")]
         [Display(Name = "Описание")]
         public string? Description { get; set; }
 

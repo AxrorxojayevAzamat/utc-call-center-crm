@@ -27,35 +27,27 @@ namespace CallCenterCRM.Models
         }
 
         [Key]
-        [Column(TypeName = "int(11)")]
         public int Id { get; set; }
         
-        [Column(TypeName = "int(11)")]
         [Display(Name = "Классификация")]
         public int ClassificationId { get; set; }
-        [Column(TypeName = "datetime")]
         [Display(Name = "Срок")]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:00}")]
         public DateTime ExpireTime { get; set; }
         
         [Display(Name = "Тип обращения")]
         public AppTypes Type { get; set; }
-        [Column(TypeName = "text")]
         [Display(Name = "Комментарий")]
         public string? Comment { get; set; } = null!;
-        [Column(TypeName = "text")]
         [Display(Name = "Причина")]
         public string? Reason { get; set; } = null!;
         [Display(Name = "Избранный")]
         public bool IsSelected { get; set; }
-        [Column(TypeName = "int(11)")]
         [Display(Name = "Получатель")]
         public int RecipientId { get; set; }
-        [Column(TypeName = "int(11)")]
         [Display(Name = "Вложение ")]
         public int? AttachmentId { get; set; }
         [Display(Name = "Заявител")]
-        [Column(TypeName = "int(11)")]
         public int ApplicantId { get; set; }
         [Display(Name = "Статус")]
         public ApplicationStatus Status { get; set; }
@@ -77,10 +69,8 @@ namespace CallCenterCRM.Models
         public virtual User? Recipient { get; set; } = null!;
         [InverseProperty("Application")]
         public virtual Answer? Answer { get; set; } = null!;
-        [Column(TypeName = "text")]
         [Display(Name = "Суть обращения")]
         public string MeaningOfApplication { get; set; } = null!;
-        [Column(TypeName = "text")]
         [Display(Name = "Дополнительное примечание к заявлении")]
         public string? AdditionalNote { get; set; }
 

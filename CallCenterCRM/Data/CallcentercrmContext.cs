@@ -71,7 +71,7 @@ namespace CallCenterCRM.Data
                     .HasForeignKey(d => d.OrganizationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Applicants_fk1");
-                entity.Property(d => d.BirthDate).HasDefaultValue(DateTime.Now);
+                entity.Property(d => d.BirthDate).HasDefaultValue(DateTime.UtcNow);
                 entity.Property(c => c.ReferenceSource).HasConversion<int>();
                 entity.Property(c => c.Type).HasConversion<int>();
                 entity.Property(c => c.Employment).HasConversion<int>();
@@ -157,11 +157,11 @@ namespace CallCenterCRM.Data
 
             foreach (var entityEntry in entries)
             {
-                entityEntry.Property("UpdatedDate").CurrentValue = DateTimeOffset.Now;
+                entityEntry.Property("UpdatedDate").CurrentValue = DateTimeOffset.UtcNow;
 
                 if (entityEntry.State == EntityState.Added)
                 {
-                    entityEntry.Property("CreatedDate").CurrentValue = DateTimeOffset.Now;
+                    entityEntry.Property("CreatedDate").CurrentValue = DateTimeOffset.UtcNow;
                 }
             }
 

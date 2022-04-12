@@ -30,7 +30,6 @@ namespace CallCenterCRM.Models
         }
 
         [Key]
-        [Column(TypeName = "int(11)")]
         public int Id { get; set; }
 
         public Guid IdentityId { get; set; } = Guid.NewGuid();
@@ -82,7 +81,7 @@ namespace CallCenterCRM.Models
         [Display(Name = "Адрес проживания")]
         public string? Address { get; set; }
 
-        [Column(TypeName = "int(11)")]
+        [Column(TypeName = "integer")]
         [Display(Name = "Связка с организацией")]
         public int? ModeratorId { get; set; }
 
@@ -92,7 +91,7 @@ namespace CallCenterCRM.Models
         public virtual User? Moderator { get; set; }
 
         [Display(Name = "Классификация")]
-        [Column(TypeName = "int(11)")]
+        [Column(TypeName = "integer")]
         public int? ClassificationId { get; set; }
 
         [Display(Name = "Классификация")]
