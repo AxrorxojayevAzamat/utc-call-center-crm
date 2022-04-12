@@ -1,0 +1,10 @@
+stages:
+  - build
+build:
+  stage: build
+  only:
+  - master
+  script:
+  - cd CallCenterCRM/
+  - dotnet restore
+  - dotnet publish --no-restore -c Release ./ --output /var/www/call-center-crm/
