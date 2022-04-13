@@ -30,7 +30,7 @@ builder.Services.AddSingleton<IdentityService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CallcentercrmContext>(options =>
               //options.UseMySql("server=localhost;port=3306;database=callcentercrm;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"), x => x.UseNetTopologySuite())
-              options.UseNpgsql("Server=localhost;Port=54331;Database=crm;Username=crm;Password=crm@123sA;",(x)=>{})
+              options.UseNpgsql("Server=localhost;Port=5432;Database=crm;Username=crm;Password=crm@123sA;",(x)=>{})
               );
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>(); 
