@@ -21,7 +21,6 @@ namespace CallCenterCRM.Controllers
             _context = context;
         }
 
-        // GET: Citydistricts
         public async Task<IActionResult> Index()
         {
             var citydistricts = await _context.Citydistricts.ToListAsync();
@@ -29,7 +28,6 @@ namespace CallCenterCRM.Controllers
             return View(citydistricts);
         }
 
-        // GET: Citydistricts/Details/5
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -48,16 +46,12 @@ namespace CallCenterCRM.Controllers
             return View(citydistrict);
         }
 
-        // GET: Citydistricts/Create
         public IActionResult Create()
         {
             Citydistrict citydistrict = new Citydistrict();
             return View(citydistrict);
         }
 
-        // POST: Citydistricts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind] Citydistrict citydistrict)
@@ -71,7 +65,6 @@ namespace CallCenterCRM.Controllers
             return View(citydistrict);
         }
 
-        // GET: Citydistricts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,9 +81,6 @@ namespace CallCenterCRM.Controllers
             return View(citydistrict);
         }
 
-        // POST: Citydistricts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind] Citydistrict citydistrict)
@@ -123,7 +113,6 @@ namespace CallCenterCRM.Controllers
             return View(citydistrict);
         }
 
-        // GET: Citydistricts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -141,7 +130,6 @@ namespace CallCenterCRM.Controllers
             return View(citydistrict);
         }
 
-        // POST: Citydistricts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

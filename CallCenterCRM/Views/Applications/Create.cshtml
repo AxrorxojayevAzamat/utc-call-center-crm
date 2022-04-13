@@ -28,7 +28,7 @@
 		</div>
 		<div class="form-group col-md-4">
 			<label asp-for="ExpireTime" class="control-label"></label>
-			<input asp-for="ExpireTime" class="form-control" value="@DateTime.Today.ToString("dd/MM/yyyy")" />
+			<input asp-for="ExpireTime" class="form-control" />
 			<span asp-validation-for="ExpireTime" class="text-danger"></span>
 		</div>
 		@*<div class="form-group col-md-4">

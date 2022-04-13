@@ -52,7 +52,6 @@
 		<div class="form-group col-md-4">
 			<label asp-for="RecipientId" class="control-label"></label>
 			<select asp-for="RecipientId" class="form-control" asp-items="ViewBag.RecipientId"></select>
-			<span asp-validation-for="RecipientId" class="text-danger"></span>
 		</div>
 		<div class="form-group col-md-4">
 			<label asp-for="AttachmentId" class="control-label"></label>
@@ -81,4 +80,10 @@
 		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/ClassificationScriptsPartial");
 	}
+	<script>
+		setTimeout(
+            ()=> {
+				$("#RecipientId").val(@Model.RecipientId).trigger('change');
+            }, 300)
+	</script>
 }

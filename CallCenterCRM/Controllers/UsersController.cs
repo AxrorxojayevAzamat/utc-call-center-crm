@@ -26,14 +26,12 @@ namespace CallCenterCRM.Controllers
             this.identityService = identityService;
         }
 
-        // GET: Users
         public async Task<IActionResult> Index()
         {
             var callcentercrmContext = _context.Users.Include(u => u.Moderator);
             return View(await callcentercrmContext.ToListAsync());
         }
 
-        // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,17 +50,13 @@ namespace CallCenterCRM.Controllers
             return View(user);
         }
 
-        // GET: Users/Create
         public IActionResult Create()
         {
             RegisterUserInput user = new RegisterUserInput();
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City");
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Username");
             return View(user);
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind] RegisterUserInput userInput)
@@ -101,7 +95,6 @@ namespace CallCenterCRM.Controllers
             return View(user);
         }
 
-        // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -123,9 +116,6 @@ namespace CallCenterCRM.Controllers
             return View(user);
         }
 
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind] User user)
@@ -159,7 +149,80 @@ namespace CallCenterCRM.Controllers
             return View(user);
         }
 
-        // GET: Users/Delete/5
+        public async Task<IActionResult> Profile(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Username", user.ModeratorId);
+            ViewBag.Role = user.Role;
+            if (user.Role == Roles.CrmModerator)
+            {
+                ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title", user.ClassificationId);
+            }
+            ProfileInput profile = new ProfileInput()
+            {
+                Id = user.Id,
+                CreatedDate = user.CreatedDate,
+                Surname = user.Surname,
+                Firstname = user.Firstname,
+                Middlename = user.Middlename,
+                PassportData = user.PassportData,
+                Address = user.Address,
+                ModeratorId = user.ModeratorId,
+                ClassificationId = user.ClassificationId,
+            };
+            return View(profile);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Profile(int id, ProfileInput profile)
+        {
+            if (id != profile.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    User user = _context.Users.Find(id);
+                    user.Surname = profile.Surname;
+                    user.Firstname = profile.Firstname;
+                    user.Middlename = profile.Middlename;
+                    user.PassportData = profile.PassportData;
+                    user.Address = profile.Address;
+                    user.ModeratorId = profile.ModeratorId;
+                    user.ClassificationId = profile.ClassificationId;
+                    _context.Update(user);
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(profile.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", profile.ModeratorId);
+            return View(profile);
+        }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -178,7 +241,6 @@ namespace CallCenterCRM.Controllers
             return View(user);
         }
 
-        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -46,7 +46,7 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient);
+                .Include(a => a.Recipient).OrderByDescending(a => a.Id);
 
             return View("Index", await callcentercrmContext.ToListAsync());
         }
@@ -85,7 +85,11 @@ namespace CallCenterCRM
 
         public IActionResult Create(int applicantId)
         {
-            Application application = new Application();
+            DateTime date = DateTime.Now.AddDays(3);
+            Application application = new Application()
+            {
+                ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind),
+            };
             application.ApplicantId = applicantId;
 
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
@@ -157,9 +161,8 @@ namespace CallCenterCRM
             {
                 try
                 {
-                    application.Status = application.Status == ApplicationStatus.RejectMod 
-                        ? ApplicationStatus.Edit 
-                        : ApplicationStatus.SendMod;
+                    application.Status = application.Status == ApplicationStatus.RejectMod ?
+                        ApplicationStatus.Edit : ApplicationStatus.SendMod;
 
                     application.IsChanged = true;
 
@@ -192,7 +195,7 @@ namespace CallCenterCRM
 
                 return RedirectToAction(nameof(Index));
             }
-            
+
             return View(application);
         }
 
@@ -274,7 +277,7 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.Id).ToList();
 
             return View("Index", applications);
         }
@@ -286,7 +289,7 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.Id).ToList();
 
             return View("Index", applications);
         }
@@ -298,7 +301,7 @@ namespace CallCenterCRM
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
-                .Include(a => a.Classification)
+                .Include(a => a.Classification).OrderByDescending(a => a.Id)
                 .ToList();
 
             return View("Index", applications);
@@ -312,7 +315,7 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.Id).ToList();
 
             return View("Index", applications);
         }
@@ -408,7 +411,7 @@ namespace CallCenterCRM
             return View(application);
         }
 
-        [Authorize(Roles = "CrmOrganization")]
+        [Authorize(Roles = "CrmModerator,CrmOrganization")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult RejectOrg(int id, Application app)
@@ -424,6 +427,10 @@ namespace CallCenterCRM
             {
                 application.Status = ApplicationStatus.RejectOrg;
                 application.Reason = app.Reason;
+                if (application.Recipient.ModeratorId == null)
+                {
+                    application.Status = ApplicationStatus.RejectMod;
+                }
                 _context.Update(application);
                 _context.SaveChanges();
             }

@@ -43,6 +43,11 @@ namespace CallCenterCRM.Services
             return usersCount > 0;
         }
 
+        public Boolean UserExists(string userIdentityId)
+        {
+            return getUserByIdentityId(userIdentityId) != null;
+        }
+
         private User getUserByIdentityId(string userIdentityId)
         {
             Guid valueIdentityId = Guid.Empty;
