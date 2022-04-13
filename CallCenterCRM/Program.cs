@@ -14,7 +14,7 @@ var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
 
 //Http client
-builder.Services.AddHttpContextAccessor(); 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<AuthenticationDelegatingHandler>();
 builder.Services.AddHttpClient("IdentityAPI", client =>
 {
@@ -30,10 +30,10 @@ builder.Services.AddSingleton<IdentityService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CallcentercrmContext>(options =>
               //options.UseMySql("server=localhost;port=3306;database=callcentercrm;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"), x => x.UseNetTopologySuite())
-              options.UseNpgsql("Server=localhost;Port=54331;Database=uzcloud;Username=postgres;Password=c065e76a148975b90f407ac2a065b48a;",(x)=>{})
+              options.UseNpgsql("Server=localhost;Port=54331;Database=uzcloud;Username=postgres;Password=c065e76a148975b90f407ac2a065b48a;", (x) => { })
               );
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAttachmentService, AttachmentService>(); 
+builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 //builder.Services.AddDbContext<CallcentercrmContext>();
 builder.Services.AddAuthentication(options =>
@@ -64,7 +64,17 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+
+
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CallcentercrmContext>();
+    db.Database.Migrate();
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
