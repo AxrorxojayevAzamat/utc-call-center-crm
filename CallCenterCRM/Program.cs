@@ -32,7 +32,7 @@ builder.Services.AddSingleton<IdentityService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CallcentercrmContext>(options =>
               //options.UseMySql("server=localhost;port=3306;database=callcentercrm;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"), x => x.UseNetTopologySuite())
-              options.UseNpgsql("Server=localhost;Port=5432;Database=crm;Username=crm;Password=crm@123sA;", (x) => { })
+              options.UseNpgsql(configuration.GetConnectionString("CallCenterCRMContext"), (x) => { })
               );
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>();
@@ -44,7 +44,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = "oidc";
 })
     .AddCookie("Cookies", c => c.ExpireTimeSpan = TimeSpan.FromMinutes(10))
-    .AddOpenIdConnect("oidc", options =>
+    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
