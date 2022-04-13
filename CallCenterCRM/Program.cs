@@ -41,7 +41,7 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = "OpenIdConnect";
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
 })
     .AddCookie("Cookies", options =>
    {
@@ -51,7 +51,7 @@ builder.Services.AddAuthentication(options =>
        if (builder.Environment.IsDevelopment())
            options.Cookie.SecurePolicy = CookieSecurePolicy.None;
    })
-    .AddOpenIdConnect("OpenIdConnect", options =>
+    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -68,11 +68,9 @@ builder.Services.AddAuthentication(options =>
         options.ClaimActions.MapJsonKey("role", "role", "role");
         options.TokenValidationParameters.RoleClaimType = "role";
         options.ResponseType = "code";
-        options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.ResponseMode = "query";
-        options.SignInScheme = "Cookies";
         options.SaveTokens = true;
+
+       options.SignInScheme = "Cookies";
 
     });
 
