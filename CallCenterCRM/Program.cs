@@ -40,8 +40,8 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 //builder.Services.AddDbContext<CallcentercrmContext>();
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "oidc";
 })
     .AddCookie("Cookies", options =>
    {
@@ -51,11 +51,11 @@ builder.Services.AddAuthentication(options =>
        if (builder.Environment.IsDevelopment())
            options.Cookie.SecurePolicy = CookieSecurePolicy.None;
    })
-    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+    .AddOpenIdConnect("oidc", options =>
     {
 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.SignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
+        options.SignOutScheme = "Cookies";
 
         options.Authority = configuration.GetValue<string>("Identity:Url");
         options.GetClaimsFromUserInfoEndpoint = true;

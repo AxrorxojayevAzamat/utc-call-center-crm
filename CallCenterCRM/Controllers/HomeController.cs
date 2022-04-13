@@ -48,7 +48,7 @@ namespace CallCenterCRM.Controllers
         [Route("action")]
         public IActionResult Logout()
         {
-            return SignOut("Cookies", "OpenIdConnect");
+            return SignOut("Cookies", "oidc");
         }
         public IActionResult Statistics()
         {
