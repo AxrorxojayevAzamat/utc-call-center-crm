@@ -5,6 +5,8 @@ using CallCenterCRM.Interfaces;
 using CallCenterCRM.Services;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using System.Configuration;
@@ -30,7 +32,7 @@ builder.Services.AddSingleton<IdentityService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CallcentercrmContext>(options =>
               //options.UseMySql("server=localhost;port=3306;database=callcentercrm;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.33-mysql"), x => x.UseNetTopologySuite())
-              options.UseNpgsql("Server=localhost;Port=5432;Database=crm;Username=crm;Password=crm@123sA;",(x)=>{})
+              options.UseNpgsql("Server=localhost;Port=5432;Database=crm;Username=crm;Password=crm@123sA;", (x) => { })
               );
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>();
@@ -44,6 +46,9 @@ builder.Services.AddAuthentication(options =>
     .AddCookie("Cookies", c => c.ExpireTimeSpan = TimeSpan.FromMinutes(10))
     .AddOpenIdConnect("oidc", options =>
     {
+
+        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.SignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
 
         options.Authority = configuration.GetValue<string>("Identity:Url");
         options.GetClaimsFromUserInfoEndpoint = true;
