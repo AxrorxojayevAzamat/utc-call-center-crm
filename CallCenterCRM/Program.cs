@@ -40,8 +40,8 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 //builder.Services.AddDbContext<CallcentercrmContext>();
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = "Cookies";
-    options.DefaultChallengeScheme = "oidc";
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+       options.DefaultChallengeScheme = "oidc";
 })
     .AddCookie("Cookies", c => c.ExpireTimeSpan = TimeSpan.FromMinutes(10))
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
