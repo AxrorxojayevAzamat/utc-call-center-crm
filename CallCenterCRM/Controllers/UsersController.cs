@@ -11,6 +11,7 @@ using CallCenterCRM.Models;
 using CallCenterCRM.Features.Identity;
 using System.ComponentModel.DataAnnotations;
 using CallCenterCRM.Forms;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CallCenterCRM.Controllers
 {
@@ -26,6 +27,7 @@ namespace CallCenterCRM.Controllers
             this.identityService = identityService;
         }
 
+        [Authorize(Roles = "CrmAdmin")]
         public async Task<IActionResult> Index()
         {
             var callcentercrmContext = _context.Users.Include(u => u.Moderator);
@@ -217,7 +219,7 @@ namespace CallCenterCRM.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", profile.ModeratorId);
             return View(profile);
