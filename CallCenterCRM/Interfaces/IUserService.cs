@@ -8,8 +8,8 @@
 
         public string GetUserRole(string userIdentityId);
 
-        public Boolean HasBranches(string userIdentityId);
-        public Boolean UserExists(string userIdentityId);
+        public bool HasBranches(string userIdentityId);
+        public bool UserExists(string userIdentityId);
 
     }
 }

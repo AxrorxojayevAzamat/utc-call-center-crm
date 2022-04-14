@@ -15,6 +15,7 @@ namespace CallCenterCRM.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly CallcentercrmContext _context;
+        private const string homeUrl = "/";
 
         public HomeController(ILogger<HomeController> logger, CallcentercrmContext context)
         {
@@ -48,7 +49,7 @@ namespace CallCenterCRM.Controllers
         [Route("action")]
         public IActionResult Logout()
         {
-            return SignOut("Cookies", "oidc");
+            return SignOut(new AuthenticationProperties() { RedirectUri = homeUrl },"Cookies", "oidc");
         }
         public IActionResult Statistics()
         {

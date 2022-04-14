@@ -7,121 +7,118 @@
 <h1>Подробности</h1>
 
 <div>
-    <h4>Applicant</h4>
+    <h4>Заявитель</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.ReferenceSource)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.ReferenceSource)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Surname)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Surname)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Firstname)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Firstname)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Middlename)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Middlename)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Contact)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Contact)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ExtraContact)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ExtraContact)
-        </dd>
-        <dt class = "col-sm-2">
+        @if (Model.ExtraContact != null && Model.ExtraContact != "")
+        {
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ExtraContact)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ExtraContact)
+            </dd>
+        }
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Region)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Region)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Maxalla)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Maxalla)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirthDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirthDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Employment)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Employment)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Confidentiality)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Confidentiality)
-        </dd>
-       
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.CityDistrict)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.CityDistrict.Title)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Organization)
+        @if (Model.Maxalla != null && Model.Maxalla != "")
+        {
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Maxalla)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Maxalla)
+            </dd>
+        }
+
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Address)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Organization.City)
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Address)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Gender)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Gender)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Employment)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Employment)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Confidentiality)
+        </dt>
+        <dd class="col-sm-8">
+            @(Model.Confidentiality ? "есть" : "нет")
+        </dd>
+
+
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.UpdatedDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.UpdatedDate)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a> |
-    <a asp-action="Index"  class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    <a asp-controller="Applications" asp-action="Create" asp-route-applicantId=@Model.Id class="btn btn-rounded btn-success">Создать заявление</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
+    <a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw">Заявители</a>
 </div>

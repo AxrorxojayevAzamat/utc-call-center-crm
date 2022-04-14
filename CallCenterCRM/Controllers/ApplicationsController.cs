@@ -45,6 +45,7 @@ namespace CallCenterCRM
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
+                .Include(a => a.Answer)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient).OrderByDescending(a => a.Id);
 
@@ -457,7 +458,7 @@ namespace CallCenterCRM
             return View(application);
         }
 
-        [Authorize(Roles = "CrmOrganization")]
+        [Authorize(Roles = "CrmModerator,CrmOrganization")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delay(int id, Application app)

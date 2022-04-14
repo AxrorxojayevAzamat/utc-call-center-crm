@@ -36,14 +36,14 @@ namespace CallCenterCRM.Services
             return userRole.GetDisplayName();
         }
 
-        public Boolean HasBranches(string userIdentityId)
+        public bool HasBranches(string userIdentityId)
         {
             int usersCount = _context.Users.Where(a => a.ModeratorId == getUserByIdentityId(userIdentityId).Id).ToList().Count();
 
             return usersCount > 0;
         }
 
-        public Boolean UserExists(string userIdentityId)
+        public bool UserExists(string userIdentityId)
         {
             return getUserByIdentityId(userIdentityId) != null;
         }

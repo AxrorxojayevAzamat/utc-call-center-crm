@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CallCenterCRM.Controllers
 {
@@ -20,6 +21,7 @@ namespace CallCenterCRM.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "CrmAdmin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Classifications.ToListAsync());

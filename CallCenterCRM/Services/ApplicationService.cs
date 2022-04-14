@@ -110,7 +110,7 @@ namespace CallCenterCRM.Services
             };
         }
 
-        public Boolean ShowReason(Application app, string role)
+        public bool ShowReason(Application app, string role)
         {
             return (app.Reason != null || app.Reason != "")
             && (app.Status == ApplicationStatus.RejectOrg && role != Roles.CrmOperator.GetDisplayName()
