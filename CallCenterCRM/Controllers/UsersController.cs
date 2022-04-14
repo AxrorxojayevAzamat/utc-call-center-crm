@@ -86,7 +86,7 @@ namespace CallCenterCRM.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Something wrong with server!!!");
+                    throw new Exception(ex.Message);
                 }
 
                 return RedirectToAction(nameof(Index));
