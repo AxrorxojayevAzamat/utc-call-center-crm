@@ -74,11 +74,11 @@
 						</a>
 						<a asp-controller="Applications" asp-action="Create" asp-route-applicantId=@item.Id class="btn btn-rounded btn-primary">Создать новый</a>
 					</td>
-					@*<td>
-						<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
+					<td>
 						<a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
-						<a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>
-					</td>*@
+						@*<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
+						<a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>*@
+					</td>
 				</tr>
 			}
 		</tbody>

@@ -51,7 +51,7 @@ namespace CallCenterCRM
         public IActionResult Create()
         {
             ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title");
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City");
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Title");
             Applicant applicant = new Applicant()
             {
                 BirthDate = DateTime.Today.AddYears(-18),
@@ -67,10 +67,10 @@ namespace CallCenterCRM
             {
                 _context.Add(applicant);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = applicant.Id });
             }
             ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title", applicant.CityDistrictId);
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", applicant.OrganizationId);
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Title", applicant.OrganizationId);
             return View(applicant);
         }
 
@@ -118,7 +118,7 @@ namespace CallCenterCRM
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = applicant.Id });
             }
             ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title", applicant.CityDistrictId);
             ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Title", applicant.OrganizationId);

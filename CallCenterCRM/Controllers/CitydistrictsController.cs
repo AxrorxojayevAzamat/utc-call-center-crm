@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
 using static CallCenterCRM.Models.Citydistrict;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CallCenterCRM.Controllers
 {
@@ -20,7 +21,7 @@ namespace CallCenterCRM.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles="CrmAdmin")]
         public async Task<IActionResult> Index()
         {
             var citydistricts = await _context.Citydistricts.ToListAsync();

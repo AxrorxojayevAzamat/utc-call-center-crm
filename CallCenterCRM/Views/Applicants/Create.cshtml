@@ -1,16 +1,27 @@
 ﻿@model CallCenterCRM.Models.Applicant
+@using CallCenterCRM.Interfaces
+@inject IUserService userService
 
 @{
-	ViewData["Title"] = "Create";
+	string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+	string userIdentityId = GetUserClaim(typeIdentityId);
+
+	var isAuthenticated = User.Identity.IsAuthenticated;
+	
+	string GetUserClaim(string type)
+	{
+		return User.Identities.First().Claims.First(c => c.Type == type).Value;
+	}
 }
 
 <h1>Создать</h1>
 
-<h4>Applicant</h4>
+<h4>Заявитель</h4>
 <hr />
 <form asp-action="Create">
 	<div class="row">
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<input type="hidden" asp-for="OrganizationId" value=@userService.GetUserId(userIdentityId) />
 		<div class="form-group col-md-4">
 			<label asp-for="ReferenceSource" class="control-label"></label>
 			<select asp-for="ReferenceSource" class="form-control" asp-items="Model.ReferenceSourcesList"></select>
