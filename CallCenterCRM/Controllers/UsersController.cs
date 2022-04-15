@@ -163,7 +163,8 @@ namespace CallCenterCRM.Controllers
             {
                 return NotFound();
             }
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Username", user.ModeratorId);
+            var moderators = _context.Users.Where(a => a.Role == Roles.CrmModerator).ToList();
+            ViewData["ModeratorId"] = new SelectList(moderators, "Id", "Username", user.ModeratorId);
             ViewBag.Role = user.Role;
             if (user.Role == Roles.CrmModerator)
             {
@@ -178,7 +179,6 @@ namespace CallCenterCRM.Controllers
                 Middlename = user.Middlename,
                 PassportData = user.PassportData,
                 Address = user.Address,
-                ModeratorId = user.ModeratorId,
                 ClassificationId = user.ClassificationId,
             };
             return View(profile);
