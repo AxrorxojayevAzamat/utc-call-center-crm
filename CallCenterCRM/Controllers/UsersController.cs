@@ -88,7 +88,7 @@ namespace CallCenterCRM.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Something wrong with server!!!");
+                    throw new Exception(ex.Message);
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -258,6 +258,53 @@ namespace CallCenterCRM.Controllers
             var branches = _context.Users.Where(u => u.ModeratorId == moderatorId).ToList();
 
             return View("Branches", branches);
+        }
+
+        [HttpGet]
+        public IActionResult PasswordChange(int id)
+        {
+            User user = _context.Users.Find(id);
+            PasswordChangeInput passwordChange = new PasswordChangeInput()
+            {
+                UserId = user.Id,
+                CreatedDate = user.CreatedDate,
+                OldPassword = user.Password
+            };
+
+            return View(passwordChange);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PasswordChange(int id, PasswordChangeInput passwordChange)
+        {
+            if (id != passwordChange.UserId)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    User user = _context.Users.Find(id);
+
+                    _context.Update(user);
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(passwordChange.UserId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            return View(passwordChange);
         }
 
         private bool UserExists(int id)
