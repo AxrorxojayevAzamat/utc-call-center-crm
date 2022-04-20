@@ -23,7 +23,6 @@ namespace CallCenterCRM.Models
         }
 
         [Key]
-        [Column(TypeName = "int(11)")]
         public int Id { get; set; }
         [StringLength(255)]
         [Display(Name = "Название")]

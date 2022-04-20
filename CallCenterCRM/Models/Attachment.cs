@@ -12,7 +12,6 @@ namespace CallCenterCRM.Models
     public partial class Attachment : BaseModel
     {
         [Key]
-        [Column(TypeName = "int(11)")]
         public int Id { get; set; }
         [StringLength(255)]
         [Display(Name = "Имя хеша")]
