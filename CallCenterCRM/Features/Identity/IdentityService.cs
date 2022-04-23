@@ -56,5 +56,18 @@ namespace CallCenterCRM.Features.Identity
                 Role = (Roles) roleIndex
             };
         }
+
+        public async Task<FileResponse> ChangePassword(PasswordChangeInput passwordChange, Guid identityId)
+        {
+            var client = HttpClient.CreateClient("IdentityAPI");
+            var usersClient = new UsersClient(client.BaseAddress?.AbsoluteUri, client);
+
+            return await usersClient.ChangePasswordAsync(new UserChangePasswordApiDtoOfString
+            {
+                UserId = identityId.ToString(),
+                Password = passwordChange.NewPassword,
+                ConfirmPassword = passwordChange.ConfirmPassword,
+            });
+        }
     }
 }

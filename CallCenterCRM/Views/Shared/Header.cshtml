@@ -47,6 +47,9 @@
 						<a asp-controller="Users" asp-action="Profile" asp-route-id=@userService.GetUserId(userIdentityId) class="dropdown-item">
 							<i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> Профиль <span class="badge badge-pill badge-danger"></span>
 						</a>
+						<a asp-controller="Users" asp-action="PasswordChange" asp-route-id=@userService.GetUserId(userIdentityId) class="dropdown-item">
+							<i class="dropdown-item-icon mdi mdi-account-key text-primary me-2"></i> Пароль <span class="badge badge-pill badge-danger"></span>
+						</a>
 					}
 					<a asp-area="" asp-controller="Home" asp-action="Logout" class="dropdown-item"><i class="dropdown-item-icon mdi mdi-logout text-primary me-2"></i>Выход</a>
 				</div>

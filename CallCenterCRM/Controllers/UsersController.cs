@@ -261,22 +261,24 @@ namespace CallCenterCRM.Controllers
         }
 
         [HttpGet]
-        public IActionResult PasswordChange(int id)
+        public IActionResult PasswordChange(int id, bool byAdmin = false)
         {
             User user = _context.Users.Find(id);
             PasswordChangeInput passwordChange = new PasswordChangeInput()
             {
                 UserId = user.Id,
                 CreatedDate = user.CreatedDate,
-                OldPassword = user.Password
+                OldPassword = user.Password,
+                Password = byAdmin ? user.Password : null,
             };
+            ViewData["byAdmin"] = byAdmin;
 
             return View(passwordChange);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult PasswordChange(int id, PasswordChangeInput passwordChange)
+        public async Task<IActionResult> PasswordChange(int id, PasswordChangeInput passwordChange)
         {
             if (id != passwordChange.UserId)
             {
@@ -287,9 +289,21 @@ namespace CallCenterCRM.Controllers
                 try
                 {
                     User user = _context.Users.Find(id);
+                    try
+                    {
+                        int statusCode = (await identityService.ChangePassword(passwordChange, user.IdentityId)).StatusCode;
+                        if (statusCode == 200)
+                        {
+                            user.Password = passwordChange.NewPassword;
+                            _context.Update(user);
+                            _context.SaveChanges();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
 
-                    _context.Update(user);
-                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
