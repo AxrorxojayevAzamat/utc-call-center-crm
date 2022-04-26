@@ -32,13 +32,16 @@ namespace CallCenterCRM.Forms
 
 
         [StringLength(255)]
-        //[DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$",
+            ErrorMessage = "Парол слабый или менее 8 символов")]
         [Display(Name = "Ввод пароля")]
         public string Password { get; set; } = null!;
 
         //[DataType(DataType.Password)]
         [Display(Name = "Подтвердить Пароль")]
         [Compare("Password", ErrorMessage = "Пароль и пароль подтверждения не совпадают.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$",
+            ErrorMessage = "Парол слабый или менее 8 символов")]
         public string ConfirmPassword { get; set; } = null!;
         [Display(Name = "Роль")]
         public Roles Role { get; set; }

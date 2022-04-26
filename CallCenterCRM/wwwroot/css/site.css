@@ -2708,7 +2708,16 @@ h5 span.crm {
    font-size: 2em;
 }
 
+.password-input-wrap {
+    position: relative;
+}
 
+    .password-input-wrap .icon-password-show {
+        position: absolute;
+        right: 10px;
+        top: 7px;
+        cursor: pointer;
+    }
 /*.table-row-item:hover {
     opacity: 0.7;
 border: 2px solid #000;

@@ -111,12 +111,12 @@
                         <span class="menu-title">Классификации</span>
                     </a>
                 </li>
-                <li class="nav-item @Html.IsActive(controller: "Attachments", action: "Index")">
+                @*<li class="nav-item @Html.IsActive(controller: "Attachments", action: "Index")">
                     <a class="nav-link" asp-area="" asp-controller="Attachments" asp-action="Index">
                         <i class="mdi mdi-attachment menu-icon"></i>
                         <span class="menu-title">Вложения</span>
                     </a>
-                </li>
+                </li>*@
             }
 
             @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName()
