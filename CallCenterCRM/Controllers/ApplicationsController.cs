@@ -17,10 +17,12 @@ namespace CallCenterCRM
     {
         private readonly CallcentercrmContext _context;
         private readonly IAttachmentService _attachmentService;
-        public ApplicationsController(CallcentercrmContext context, IAttachmentService attachmentService)
+        private readonly IApplicationService _applicationService;
+        public ApplicationsController(CallcentercrmContext context, IAttachmentService attachmentService, IApplicationService applicationService)
         {
             _context = context;
             _attachmentService = attachmentService;
+            _applicationService = applicationService;
         }
 
         [Authorize(Roles = "CrmOperator")]
@@ -68,13 +70,17 @@ namespace CallCenterCRM
                 .Include(a => a.Answer)
                     .ThenInclude(a => a.Attachment)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
+            User user = _context.Users.Where(a => a.Id == userId).FirstOrDefault();
             if (application.Status == ApplicationStatus.SendMod && application.RecipientId == userId)
             {
                 application.Status = ApplicationStatus.GotMod;
-                _context.Update(application);
-                _context.SaveChanges();
             }
+            if (application.RecipientId == userId || application.Recipient.ModeratorId == userId)
+            {
+                application.IsGot = _applicationService.IsGot(user.Role, application.Status);
+            }
+            _context.Update(application);
+            _context.SaveChanges();
 
             if (application == null)
             {
@@ -166,6 +172,7 @@ namespace CallCenterCRM
                         ApplicationStatus.Edit : ApplicationStatus.SendMod;
 
                     application.IsChanged = true;
+                    application.IsGot = false;
 
                     int attachmentId = -1;
 
@@ -311,7 +318,8 @@ namespace CallCenterCRM
         public IActionResult Delayed(int recipientId)
         {
             var applications = _context.Applications.Include(a => a.Recipient)
-                .Where(a => a.Status == ApplicationStatus.Delay && (a.Recipient.ModeratorId == recipientId || a.Recipient.Id == recipientId))
+                .Where(a => (a.Status == ApplicationStatus.Delay || a.Status == ApplicationStatus.AskDelay || a.Status == ApplicationStatus.RejectDelay)
+                && (a.Recipient.ModeratorId == recipientId || a.Recipient.Id == recipientId))
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
@@ -386,6 +394,7 @@ namespace CallCenterCRM
             {
                 application.Status = ApplicationStatus.SendOrg;
                 application.RecipientId = app.RecipientId;
+                application.IsGot = false;
                 _context.Update(application);
                 _context.SaveChanges();
             }
@@ -428,6 +437,7 @@ namespace CallCenterCRM
             {
                 application.Status = ApplicationStatus.RejectOrg;
                 application.Reason = app.Reason;
+                application.IsGot = false;
                 if (application.Recipient.ModeratorId == null)
                 {
                     application.Status = ApplicationStatus.RejectMod;
@@ -476,6 +486,7 @@ namespace CallCenterCRM
                 {
                     application.Status = ApplicationStatus.Delay;
                     application.IsDelayed = true;
+                    application.IsGot = false;
                     _context.Update(application);
                     _context.SaveChanges();
                 }
@@ -493,6 +504,85 @@ namespace CallCenterCRM
             }
 
             return RedirectToAction(nameof(AppsList), new { recipientId });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> AskDelay(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var application = await _context.Applications
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return View(application);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "CrmModerator,CrmOrganization")]
+        public IActionResult AskDelay(int id)
+        {
+            var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            application.Status = ApplicationStatus.AskDelay;
+            application.IsGot = false;
+            _context.Update(application);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RejectDelay(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var application = await _context.Applications
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return View(application);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "CrmModerator,CrmOrganization")]
+        public IActionResult RejectDelay(int id)
+        {
+            var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            application.Status = ApplicationStatus.RejectDelay;
+            application.IsGot = false;
+            _context.Update(application);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
         }
     }
 }

@@ -76,6 +76,8 @@ namespace CallCenterCRM.Models
 
         public bool IsChanged { get; set; }
         public bool IsDelayed { get; set; }
+        public bool IsGot { get; set; }
+
 
         //[StringLength(255)]
         //[Display(Name = "Соответствующие обращения")]

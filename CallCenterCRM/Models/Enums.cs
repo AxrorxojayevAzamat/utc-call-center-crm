@@ -51,6 +51,7 @@ namespace CallCenterCRM.Models
         [Display(Name = "Отказ от организации")] RejectOrg = -2,
         [Display(Name = "Отредактирован")] Edit = 3,
         [Display(Name = "Просьба о задержке")] AskDelay = 4,
+        [Display(Name = "Отказ о задержке")] RejectDelay = -4,
         [Display(Name = "Отложено")] Delay = 5,
         [Display(Name = "Взял модератор")] GotMod = 0,
     }

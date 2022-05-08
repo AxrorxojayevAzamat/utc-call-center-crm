@@ -1383,6 +1383,7 @@ body {
             transition-duration: 0.25s;
             transition-property: background;
             -webkit-transition-property: background;
+            justify-content: space-between;
         }
 
             .sidebar .nav .nav-item .collapse {
@@ -2718,6 +2719,43 @@ h5 span.crm {
         top: 7px;
         cursor: pointer;
     }
+
+.count-of-apps {
+    width: 20px;
+    height: 20px;
+    line-height: 1.3;
+    border-radius: 50%;
+    right: -30px;
+    position: relative;
+    text-align: center;
+    color: #fff;
+}
+
+.count-app {
+    width: 7px;
+    height: 7px;
+    line-height: 1;
+    border-radius: 50%;
+    color: #1F3BB3;
+    background-color: #1F3BB3;
+    font-size: 7px;
+}
+
+.bg-green {
+    background-color: #34B1AA;
+}
+
+.bg-yellow {
+    background-color: #ffaf00;
+}
+
+.bg-red {
+    background-color: #F95F53;
+}
+
+.border-notification {
+    border: 2px dashed #1F3BB3;
+}
 /*.table-row-item:hover {
     opacity: 0.7;
 border: 2px solid #000;

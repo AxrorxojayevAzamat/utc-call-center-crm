@@ -1,0 +1,13 @@
+﻿@model CallCenterCRM.Models.Application
+
+<h1>Отклонить заявку</h1>
+
+<p>Вы уверены, что хотите отклонить задержку?</p>
+
+<div>
+    <form asp-action="RejectDelay">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Да" class="btn btn-danger btn-rounded btn-fw" /> 
+        <a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    </form>
+</div>

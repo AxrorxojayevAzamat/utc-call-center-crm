@@ -1,5 +1,6 @@
 ﻿
 
+using CallCenterCRM.Data;
 using CallCenterCRM.Interfaces;
 using CallCenterCRM.Models;
 
@@ -7,6 +8,11 @@ namespace CallCenterCRM.Services
 {
     public class ApplicationService : IApplicationService
     {
+        private readonly CallcentercrmContext _context;
+        public ApplicationService(CallcentercrmContext context)
+        {
+            _context = context;
+        }
         public string GetAppNumber(Application item)
         {
             int Id = item.Id;
@@ -38,8 +44,15 @@ namespace CallCenterCRM.Services
                 case ApplicationStatus.Delay:
                     return new StatusParam() { color = "warning", icon = "timer" };
                     break;
+                case ApplicationStatus.AskDelay:
+                    return new StatusParam() { color = "warning", icon = "timer" };
+                    break;
+                case ApplicationStatus.RejectDelay:
+                    return new StatusParam() { color = "danger", icon = "timer" };
+                    break;
                 case ApplicationStatus.GotMod:
                     return new StatusParam() { color = "info", icon = "check-all" };
+                    break;
                 default:
                     return new StatusParam() { color = "", icon = "" };
                     break;
@@ -116,6 +129,29 @@ namespace CallCenterCRM.Services
             && (app.Status == ApplicationStatus.RejectOrg && role != Roles.CrmOperator.GetDisplayName()
             || app.Status == ApplicationStatus.RejectMod && role == Roles.CrmOperator.GetDisplayName());
         }
+
+        public int AppCount(int userId, ApplicationStatus status)
+        {
+            User moderator = _context.Users.Where( a => a.Id == userId ).FirstOrDefault();
+
+            int count = _context.Applications
+                .Where(a => (a.RecipientId == userId || moderator.Id == userId) && a.Status == status && a.IsGot == false)
+                .ToList().Count;
+            return count;
+        }
+
+        public bool IsGot(Roles role, ApplicationStatus status)
+        {
+            return (role == Roles.CrmOperator && status == ApplicationStatus.RejectMod)
+                || (role == Roles.CrmModerator && status == ApplicationStatus.SendMod)
+                || (role == Roles.CrmModerator && status == ApplicationStatus.RejectOrg)
+                || (role == Roles.CrmModerator && status == ApplicationStatus.AskDelay)
+                || (role == Roles.CrmOrganization && status == ApplicationStatus.SendOrg)
+                || (role == Roles.CrmOrganization && status == ApplicationStatus.Delay)
+                || (role == Roles.CrmOrganization && status == ApplicationStatus.RejectDelay);
+        }
+
+
     }
 }
 

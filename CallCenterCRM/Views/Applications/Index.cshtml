@@ -21,6 +21,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th></th>
                 <th>Номер обращения</th>
                 <th>Источник обращения</th>
                 <th>Дата поступления</th>
@@ -39,6 +40,13 @@
             @foreach (var item in Model)
             {
                 <tr class="table-row-item">
+
+                    <td>
+                        @if (applicationService.IsGot(userService.GetRole(userIdentityId), item.Status) && !item.IsGot)
+                        {
+                            <span class="count-app">00</span>
+                        }
+                    </td>
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>
                             @applicationService.GetAppNumber(item)
@@ -94,6 +102,7 @@
                             }
                         }
                     </td>
+
                 </tr>
             }
         </tbody>

@@ -232,41 +232,60 @@
 <div>
     @if (Model.Answer == null)
     {
-        @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName()
-       && (Model.Status == ApplicationStatus.SendMod || Model.Status == ApplicationStatus.RejectMod))
+        @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
         {
-            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
-        }
-        else if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName()
-        && (Model.Status == ApplicationStatus.GotMod || Model.Status == ApplicationStatus.Edit || Model.Status == ApplicationStatus.Delay))
-        {
-            @if (userService.HasBranches(userIdentityId) && Model.Status != ApplicationStatus.Delay)
+            @if (Model.Status == ApplicationStatus.SendMod || Model.Status == ApplicationStatus.RejectMod)
             {
-                <a asp-action="SendOrg" asp-route-id="@Model?.Id" asp-route-moderatorId=@userService.GetUserId(userIdentityId) class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a>
-                <a asp-action="RejectMod" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
             }
-            else
+        }
+        else if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+        {
+            @if (Model.Status == ApplicationStatus.GotMod || Model.Status == ApplicationStatus.Edit || Model.Status == ApplicationStatus.AskDelay)
             {
-                <a asp-controller="Answers" asp-action="Create"
-                   asp-route-applicationId="@Model?.Id" asp-route-authorId=@userService.GetUserId(userIdentityId)
-                   class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
-                @if (Model.Status != ApplicationStatus.Delay)
+                @if (userService.HasBranches(userIdentityId) && Model.Status != ApplicationStatus.Delay)
                 {
-                    <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отложить</a>
-                    <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+                    @if (Model.Status == ApplicationStatus.AskDelay)
+                    {
+                        <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отложить</a>
+                        <a asp-action="RejectDelay" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонить задержку</a>
+                    }
+                    else
+                    {
+                        <a asp-action="SendOrg" asp-route-id="@Model?.Id" asp-route-moderatorId=@userService.GetUserId(userIdentityId) class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a>
+                        <a asp-action="RejectMod" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+                    }
+                }
+                else
+                {
+                    <a asp-controller="Answers" asp-action="Create"
+       asp-route-applicationId="@Model?.Id" asp-route-authorId=@userService.GetUserId(userIdentityId)
+       class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
+                    @if (Model.Status != ApplicationStatus.Delay)
+                    {
+                        <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отложить</a>
+                        <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+                    }
                 }
             }
-
-        }
-        else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName()
-        && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.Delay))
-        {
-            <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" asp-route-authorId=@userService.GetUserId(userIdentityId) class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
-
-            @if (Model.Status != ApplicationStatus.Delay)
+            @if(Model.Status == ApplicationStatus.RejectOrg)
             {
-                <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отложить</a>
-                <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+                <a asp-action="SendOrg" asp-route-id="@Model?.Id" asp-route-moderatorId=@userService.GetUserId(userIdentityId) class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a>
+            }
+        }
+        else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName())
+        {
+            @if (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.AskDelay || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay)
+            {
+                <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" asp-route-authorId=@userService.GetUserId(userIdentityId) class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
+                @if (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.Delay)
+                {
+                    <a asp-action="AskDelay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Просьба отложить</a>
+                    @if(!(Model.Status == ApplicationStatus.Delay || Model.Status == ApplicationStatus.RejectDelay))
+                    {
+                        <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
+                    }
+                }
             }
         }
     }
