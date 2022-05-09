@@ -75,7 +75,7 @@ namespace CallCenterCRM
             {
                 application.Status = ApplicationStatus.GotMod;
             }
-            if (application.RecipientId == userId || application.Recipient.ModeratorId == userId)
+            if (application.RecipientId == userId || application.Recipient.ModeratorId == userId && application.IsGot == false)
             {
                 application.IsGot = _applicationService.IsGot(user.Role, application.Status);
             }

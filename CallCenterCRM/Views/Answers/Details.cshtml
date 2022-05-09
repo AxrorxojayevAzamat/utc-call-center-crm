@@ -18,74 +18,220 @@
 <h1>Подробности</h1>
 
 <div>
-    <h4>Ответ</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.ResponsiblePerson)
-        </dt>
-        <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.ResponsiblePerson)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.Executor)
-        </dt>
-        <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.Executor)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.ResponseLetter)
-        </dt>
-        <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.ResponseLetter)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.RegisterNumber)
-        </dt>
-        <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.RegisterNumber)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.Result)
-        </dt>
-        <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.Result)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.Conclusion)
-        </dt>
-        <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.Conclusion)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-8">
-            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(Model.Status).color btn-fw">
-                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(Model.Status).icon"></i>
-                @Model.Status.GetDisplayName()
-            </span>
-        </dd>
-        @if (Model.Attachment != null)
-        {
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Attachment)
-            </dt>
-            <dd class="col-sm-8">
-                <a href="~/uploads/@Model.Attachment.Path" target="_blank">@Model.Attachment.OriginName</a>
-            </dd>
-        }
+    <div class="row">
+        <div class="col-6">
 
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.Author)
-        </dt>
-        <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.Author.Title)
-        </dd>
-    </dl>
+            <h4>Ответ</h4>
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.ResponsiblePerson)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.ResponsiblePerson)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Executor)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Executor)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.ResponseLetter)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.ResponseLetter)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.RegisterNumber)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.RegisterNumber)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Result)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Result)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Conclusion)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Conclusion)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Status)
+                </dt>
+                <dd class="col-sm-8">
+                    <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(Model.Status).color btn-fw">
+                        <i class="mdi mdi-@applicationService.GetAnswerStatusParams(Model.Status).icon"></i>
+                        @Model.Status.GetDisplayName()
+                    </span>
+                </dd>
+                @if (Model.Attachment != null)
+                {
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Attachment)
+                    </dt>
+                    <dd class="col-sm-8">
+                        <a href="~/uploads/@Model.Attachment.Path" target="_blank">@Model.Attachment.OriginName</a>
+                    </dd>
+                }
+
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Author)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Author.Title)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-6">
+            <h4>Заявление</h4>
+            @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
+            {
+                <div class="toggle-selected">
+                    <a asp-controller="Applications" asp-action="ToggleSelected" asp-route-Id=@Model.Application.Id>
+                        <i class="mdi mdi-@(Model.Application.IsSelected ? "star" : "star-outline")"></i>
+                    </a>
+                </div>
+            }
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-4">
+                    Номер обращения
+                </dt>
+                <dd class="col-sm-8">
+                    @applicationService.GetAppNumber(Model.Application)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Application.Type)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Application.Type)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Application.MeaningOfApplication)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Application.MeaningOfApplication)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Application.ExpireTime)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Application.ExpireTime)
+                </dd>
+                @if (Model.Application.Comment != null && Model.Application.Comment != "")
+                {
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Application.Comment)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Application.Comment)
+                    </dd>
+                }
+                @if (Model.Application.AdditionalNote != null && Model.Application.AdditionalNote != "")
+                {
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Application.AdditionalNote)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Application.AdditionalNote)
+                    </dd>
+                }
+                @if (Model.Application.Attachment != null)
+                {
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Application.Attachment)
+                    </dt>
+                    <dd class="col-sm-8">
+                        <a href="~/uploads/@Model.Application.Attachment.Path" target="_blank">@Model.Application.Attachment.OriginName</a>
+                    </dd>
+                }
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Application.Classification)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Application.Classification.Direction)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Application.Recipient)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Application.Recipient.Title)
+                </dd>
+                @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
+                {
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Application.Status)
+                    </dt>
+                    <dd class="col-sm-8">
+                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetStatusForOperator(Model.Application).color btn-fw">
+                            <i class="mdi mdi-@applicationService.GetStatusForOperator(Model.Application).icon"></i>
+                            @applicationService.GetStatusForOperator(Model.Application).text
+                        </span>
+                    </dd>
+                }
+                else
+                {
+                    @if (Model.Application.Answer != null && Model.Application.Answer.Status == AnswerStatus.Confirm)
+                    {
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Application.Answer.Status)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(Model.Application.Answer.Status).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(Model.Application.Answer.Status).icon"></i>
+                                @Model.Application.Answer.Status.GetDisplayName()
+                            </span>
+                        </dd>
+                    }
+                    else
+                    {
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Application.Status)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(Model.Application.Status).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAppStatusParams(Model.Application.Status).icon"></i>
+                                @Model.Application.Status.GetDisplayName()
+                            </span>
+                        </dd>
+
+                    }
+                }
+                @if (applicationService.ShowReason(Model.Application, userService.GetUserRole(userIdentityId)))
+                {
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Application.Reason)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Application.Reason)
+                    </dd>
+                }
+                @*@if((Model.Application.Reason != null || Model.Application.Reason != "")
+                    && ((Model.Application.Status == ApplicationStatus.RejectOrg && userService.GetUserRole(userIdentityId) != Roles.CrmOperator.GetDisplayName()) ||
+                    (Model.Application.Status == ApplicationStatus.RejectMod && userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())))
+                    {
+
+
+                    }*@
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Application.UpdatedDate)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Application.UpdatedDate)
+                </dd>
+            </dl>
+
+        </div>
+    </div>
 </div>
 <div>
-    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName() 
+    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName()
     && (Model.Status == AnswerStatus.GotMod || Model.Status == AnswerStatus.Edit))
     {
         <a asp-action="Confirm" asp-route-id="@Model?.Id" class="btn btn-success btn-rounded btn-fw">Подтверждать</a>

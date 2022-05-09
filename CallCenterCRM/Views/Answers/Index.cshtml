@@ -21,6 +21,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th></th>
                 <th>
                     @Html.DisplayNameFor(model => model.ResponsiblePerson)
                 </th>
@@ -52,6 +53,12 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>
+                        @if (applicationService.IsGotAnswer(userService.GetRole(userIdentityId), item.Status) && !item.IsGot)
+                        {
+                            <span class="count-app">00</span>
+                        }
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ResponsiblePerson)
                     </td>

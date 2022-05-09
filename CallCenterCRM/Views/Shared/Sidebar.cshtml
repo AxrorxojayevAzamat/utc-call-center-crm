@@ -177,6 +177,16 @@
                     <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="AnswersList" asp-route-authorId=@userService.GetUserId(userIdentityId)>
                         <i class="menu-icon mdi mdi-card-text-outline"></i>
                         <span class="menu-title">Ответы</span>
+                        @if (appService.AnswerCount(userService.GetUserId(userIdentityId), AnswerStatus.Send) > 0
+                       && userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+                        {
+                            <span class="count-of-apps bg-green">@appService.AnswerCount(userService.GetUserId(userIdentityId),AnswerStatus.Send)</span>
+                        }
+                        @if (appService.AnswerCount(userService.GetUserId(userIdentityId), AnswerStatus.Confirm) > 0
+                       && userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName())
+                        {
+                            <span class="count-of-apps bg-green">@appService.AnswerCount(userService.GetUserId(userIdentityId),AnswerStatus.Confirm)</span>
+                        }
                     </a>
                 </li>
                 @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
@@ -185,7 +195,13 @@
                         <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Edited" asp-route-authorId=@userService.GetUserId(userIdentityId)>
                             <i class="menu-icon mdi mdi-pencil"></i>
                             <span class="menu-title">Переработанные ответы</span>
+                            @if (appService.AnswerCount(userService.GetUserId(userIdentityId), AnswerStatus.Edit) > 0
+                           && userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+                            {
+                                <span class="count-of-apps bg-yellow">@appService.AnswerCount(userService.GetUserId(userIdentityId),AnswerStatus.Edit)</span>
+                            }
                         </a>
+
                     </li>
                 }
                 else
@@ -194,6 +210,11 @@
                         <a class="nav-link" asp-area="" asp-controller="Answers" asp-action="Rejected" asp-route-authorId=@userService.GetUserId(userIdentityId)>
                             <i class="menu-icon mdi mdi-close-circle"></i>
                             <span class="menu-title">Отклоненные ответы</span>
+                            @if (appService.AnswerCount(userService.GetUserId(userIdentityId), AnswerStatus.Reject) > 0
+                           && userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName())
+                            {
+                                <span class="count-of-apps bg-red">@appService.AnswerCount(userService.GetUserId(userIdentityId),AnswerStatus.Reject)</span>
+                            }
                         </a>
                     </li>
                 }

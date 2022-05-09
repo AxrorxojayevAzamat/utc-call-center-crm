@@ -17,11 +17,13 @@ namespace CallCenterCRM.Controllers
     {
         private readonly CallcentercrmContext _context;
         private readonly IAttachmentService _attachmentService;
+        private readonly IApplicationService _applicationService;
 
-        public AnswersController(CallcentercrmContext context, IAttachmentService attachmentService)
+        public AnswersController(CallcentercrmContext context, IAttachmentService attachmentService, IApplicationService applicationService)
         {
             _context = context;
             _attachmentService = attachmentService;
+            _applicationService = applicationService;
         }
 
         public async Task<IActionResult> Index()
@@ -53,16 +55,23 @@ namespace CallCenterCRM.Controllers
 
             var answer = await _context.Answers
                 .Include(a => a.Application)
+                    .ThenInclude(a => a.Applicant)
                 .Include(a => a.Attachment)
                 .Include(a => a.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            User user = _context.Users.Where(a => a.Id == userId).FirstOrDefault();
             if (answer.Status == AnswerStatus.Send && answer.Author.ModeratorId == userId)
             {
                 answer.Status = AnswerStatus.GotMod;
-                _context.Update(answer);
-                _context.SaveChanges();
             }
+            if (answer.AuthorId == userId || answer.Author.ModeratorId == userId)
+            {
+                answer.IsGot = _applicationService.IsGotAnswer(user.Role, answer.Status);
+            }
+            _context.Update(answer);
+            _context.SaveChanges();
+
 
             if (answer == null)
             {
@@ -83,7 +92,8 @@ namespace CallCenterCRM.Controllers
             ViewData["AppMeaning"] = application.MeaningOfApplication;
             ViewData["AppClassification"] = application.Classification.Title;
 
-            Answer answer = new Answer() {
+            Answer answer = new Answer()
+            {
                 ApplicationId = applicationId,
                 AuthorId = authorId,
                 Status = answerStatus,
@@ -162,7 +172,7 @@ namespace CallCenterCRM.Controllers
                 {
                     int attachmentId = -1;
 
-                    if (file != null)
+                    if (file != null) 
                     {
                         attachmentId = _attachmentService.UploadFileToStorage(file);
                     }
@@ -173,6 +183,7 @@ namespace CallCenterCRM.Controllers
                     }
 
                     answer.Status = AnswerStatus.Edit;
+                    answer.IsGot = false;
                     _context.Update(answer);
                     _context.SaveChanges();
                 }
@@ -189,7 +200,7 @@ namespace CallCenterCRM.Controllers
                 }
                 return RedirectToAction(nameof(AnswersList), new { authorId = answer.AuthorId });
             }
-            
+
             return View(answer);
         }
 
@@ -269,10 +280,11 @@ namespace CallCenterCRM.Controllers
         [Authorize(Roles = "CrmModerator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Reject(int id) 
+        public IActionResult Reject(int id)
         {
             var answer = _context.Answers.Include(a => a.Author).FirstOrDefault(a => a.Id == id);
             answer.Status = AnswerStatus.Reject;
+            answer.IsGot = false;
             _context.Update(answer);
             _context.SaveChanges();
 
@@ -309,6 +321,7 @@ namespace CallCenterCRM.Controllers
         {
             var answer = _context.Answers.Include(a => a.Author).FirstOrDefault(a => a.Id == id);
             answer.Status = AnswerStatus.Confirm;
+            answer.IsGot = false;
             _context.Update(answer);
             _context.SaveChanges();
 

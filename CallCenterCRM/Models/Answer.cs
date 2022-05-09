@@ -60,6 +60,7 @@ namespace CallCenterCRM.Models
         [ForeignKey(nameof(AuthorId))]
         [InverseProperty(nameof(User.Answers))]
         public virtual User? Author { get; set; } = null!;
+        public bool IsGot { get; set; }
 
         /*notmapped*/
         [NotMapped]

@@ -140,6 +140,16 @@ namespace CallCenterCRM.Services
             return count;
         }
 
+        public int AnswerCount(int userId, AnswerStatus status)
+        {
+            User moderator = _context.Users.Where(a => a.Id == userId).FirstOrDefault();
+
+            int count = _context.Answers
+                .Where(a => (a.AuthorId == userId || moderator.Id == userId) && a.Status == status && a.IsGot == false)
+                .ToList().Count;
+            return count;
+        }
+
         public bool IsGot(Roles role, ApplicationStatus status)
         {
             return (role == Roles.CrmOperator && status == ApplicationStatus.RejectMod)
@@ -151,6 +161,13 @@ namespace CallCenterCRM.Services
                 || (role == Roles.CrmOrganization && status == ApplicationStatus.RejectDelay);
         }
 
+        public bool IsGotAnswer(Roles role, AnswerStatus status)
+        {
+            return (role == Roles.CrmModerator && status == AnswerStatus.Send)
+                || (role == Roles.CrmModerator && status == AnswerStatus.Edit)
+                || (role == Roles.CrmOrganization && status == AnswerStatus.Confirm)
+                || (role == Roles.CrmOrganization && status == AnswerStatus.Reject);
+        }
 
     }
 }
