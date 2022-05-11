@@ -7,7 +7,7 @@
 <h1>Заявители</h1>
 
 <p>
-	<a asp-action="Create" class="btn btn-success btn-rounded">Создать новое</a>
+	<a asp-controller="Applications" asp-action="CreateApplicant" class="btn btn-success btn-rounded">Создать новое</a>
 </p>
 <div class="table-responsive">
 	<table class="table table-striped">
@@ -72,11 +72,11 @@
 						<a class="btn btn-rounded btn-info application-count">
 							@item.Applications.Count
 						</a>
-						<a asp-controller="Applications" asp-action="Create" asp-route-applicantId=@item.Id class="btn btn-rounded btn-primary">Создать новый</a>
+						<a asp-controller="Applications" asp-action="EditApplicantCreateApp" asp-route-applicantId=@item.Id class="btn btn-rounded btn-primary">Создать новый</a>
 					</td>
 					<td>
-						<a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
-						@*<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
+						@*<a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
+						<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
 						<a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>*@
 					</td>
 				</tr>

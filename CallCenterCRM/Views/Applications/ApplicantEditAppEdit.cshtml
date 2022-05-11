@@ -1,0 +1,180 @@
+﻿@model CallCenterCRM.Forms.ApplicantAppInput
+@using CallCenterCRM.Interfaces
+@inject IUserService userService
+
+@{
+	string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+	string userIdentityId = GetUserClaim(typeIdentityId);
+
+	var isAuthenticated = User.Identity.IsAuthenticated;
+	
+	string GetUserClaim(string type)
+	{
+		return User.Identities.First().Claims.First(c => c.Type == type).Value;
+	}
+}
+
+<h1>Редактировать</h1>
+
+<h4>Заявление</h4>
+<hr />
+<form asp-action="Edit" enctype="multipart/form-data">
+	<h1>Заявитель</h1>
+    <hr />
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="OrganizationId" value=@userService.GetUserId(userIdentityId) />
+		<input type="hidden" asp-for="CreatedDate" />
+        <div class="form-group col-md-4">
+            <label asp-for="ReferenceSource" class="control-label"></label>
+            <select asp-for="ReferenceSource" class="form-control" asp-items="Model.ReferenceSourcesList"></select>
+            <span asp-validation-for="ReferenceSource" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Surname" class="control-label"></label>
+            <input asp-for="Surname" class="form-control" />
+            <span asp-validation-for="Surname" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Firstname" class="control-label"></label>
+            <input asp-for="Firstname" class="form-control" />
+            <span asp-validation-for="Firstname" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Middlename" class="control-label"></label>
+            <input asp-for="Middlename" class="form-control" />
+            <span asp-validation-for="Middlename" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Contact" class="control-label"></label>
+            <input asp-for="Contact" class="form-control" />
+            <span asp-validation-for="Contact" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ExtraContact" class="control-label"></label>
+            <input asp-for="ExtraContact" class="form-control" />
+            <span asp-validation-for="ExtraContact" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Region" class="control-label"></label>
+            <select asp-for="Region" class="form-control" asp-items="Model.RegionsList"></select>
+            <span asp-validation-for="Region" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="CityDistrictId" class="control-label"></label>
+            <select asp-for="CityDistrictId" class="form-control" asp-items="ViewBag.CityDistrictId"></select>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Maxalla" class="control-label"></label>
+            <input asp-for="Maxalla" class="form-control" />
+            <span asp-validation-for="Maxalla" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Address" class="control-label"></label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Gender" class="control-label"></label>
+            <select asp-for="Gender" class="form-control" asp-items="Model.GendersList"></select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="BirthDate" class="control-label"></label>
+            <input asp-for="BirthDate" class="form-control" />
+            <span asp-validation-for="BirthDate" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Type" class="control-label"></label>
+            <select asp-for="Type" class="form-control" asp-items="Model.TypesList"></select>
+            <span asp-validation-for="Type" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Employment" class="control-label"></label>
+            <select asp-for="Employment" class="form-control" asp-items="Model.EmploymentsList"></select>
+            <span asp-validation-for="Employment" class="text-danger"></span>
+        </div>
+        <div class="form-group form-check col-md-4">
+            <label class="form-check-label mt-4 mx-2">
+                <input class="form-check-input" asp-for="Confidentiality" /> @Html.DisplayNameFor(model => model.Confidentiality)
+            </label>
+        </div>
+    </div>
+    <br />
+    <h1>Заявление</h1>
+    <hr />
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="AppId" />
+        <input type="hidden" asp-for="ApplicantId" />
+        <input type="hidden" asp-for="AppCreatedDate" />
+        <div class="form-group col-md-4">
+            <label asp-for="ClassificationId" class="control-label"></label>
+            <select asp-for="ClassificationId" class="form-control" asp-items="ViewBag.ClassificationId">
+                <option> - </option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label class="control-label">Направление</label>
+            <input type="text" id="Direction" class="form-control" value="" disabled />
+        </div>
+        <div class="form-group col-md-4">
+            <label class="control-label">Значение</label>
+            <input type="text" id="Value" class="form-control" value="" disabled />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ExpireTime" class="control-label"></label>
+            <input asp-for="ExpireTime" class="form-control" />
+            <span asp-validation-for="ExpireTime" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="AppType" class="control-label"></label>
+            <select asp-for="AppType" class="form-control" asp-items="Model.AppTypesList"></select>
+            <span asp-validation-for="Type" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Comment" class="control-label"></label>
+            <input asp-for="Comment" class="form-control" />
+            <span asp-validation-for="Comment" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="RecipientId" class="control-label"></label>
+            <select asp-for="RecipientId" class="form-control" asp-items="ViewBag.RecipientId"></select>
+            <span asp-validation-for="RecipientId" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="AttachmentId" class="control-label"></label>
+            <input type="file" name="file" id="file" class="form-control" />
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="MeaningOfApplication" class="control-label"></label>
+            <textarea asp-for="MeaningOfApplication" class="form-control"></textarea>
+            <span asp-validation-for="MeaningOfApplication" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="AdditionalNote" class="control-label"></label>
+            <textarea asp-for="AdditionalNote" class="form-control"></textarea>
+            <span asp-validation-for="AdditionalNote" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-12 mt-3">
+            <input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
+            <a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+		await Html.RenderPartialAsync("Scripts/_ValidationScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_InputMaskScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/ClassificationScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/CityScriptsPartial");
+	}
+    <script>
+		setTimeout(
+            ()=> {
+				$("#RecipientId").val(@Model.RecipientId).trigger('change');
+            }, 300)
+	</script>
+}

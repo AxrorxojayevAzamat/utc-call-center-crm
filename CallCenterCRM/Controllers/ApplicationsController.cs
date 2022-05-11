@@ -10,6 +10,7 @@ using CallCenterCRM.Data;
 using CallCenterCRM.Models;
 using CallCenterCRM.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using CallCenterCRM.Forms;
 
 namespace CallCenterCRM
 {
@@ -75,7 +76,7 @@ namespace CallCenterCRM
             {
                 application.Status = ApplicationStatus.GotMod;
             }
-            if (application.RecipientId == userId || application.Recipient.ModeratorId == userId && application.IsGot == false)
+            if (userId != null && (application.RecipientId == userId || application.Recipient.ModeratorId == userId) && application.IsGot == false)
             {
                 application.IsGot = _applicationService.IsGot(user.Role, application.Status);
             }
@@ -137,43 +138,30 @@ namespace CallCenterCRM
             return View(application);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult CreateApplicant()
         {
-            if (id == null)
+            DateTime date = DateTime.Now.AddDays(3);
+            ApplicantAppInput applicantApp = new ApplicantAppInput()
             {
-                return NotFound();
-            }
+                ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind),
+                BirthDate = DateTime.Today.AddYears(-18),
+            };
 
-            var application = await _context.Applications.FindAsync(id);
-            if (application == null)
-            {
-                return NotFound();
-            }
-            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title", application.ClassificationId);
-            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Username", application.RecipientId);
-
-            return View(application);
+            ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title");
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Title");
+            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
+            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Title", applicantApp.RecipientId);
+            return View("ApplicantCreate", applicantApp);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind] Application application, IFormFile file)
+        public async Task<IActionResult> CreateApplicant(ApplicantAppInput applicantApp, IFormFile file)
         {
-            if (id != application.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    application.Status = application.Status == ApplicationStatus.RejectMod ?
-                        ApplicationStatus.Edit : ApplicationStatus.SendMod;
-
-                    application.IsChanged = true;
-                    application.IsGot = false;
-
                     int attachmentId = -1;
 
                     if (file != null)
@@ -183,30 +171,294 @@ namespace CallCenterCRM
 
                     if (attachmentId > -1)
                     {
-                        application.AttachmentId = attachmentId;
+                        applicantApp.AttachmentId = attachmentId;
                     }
 
-                    _context.Update(application);
+                    Applicant applicant = new Applicant()
+                    {
+                        Address = applicantApp.Address,
+                        BirthDate = applicantApp.BirthDate,
+                        CityDistrictId = applicantApp.CityDistrictId,
+                        Confidentiality = applicantApp.Confidentiality,
+                        Contact = applicantApp.Contact,
+                        Employment = applicantApp.Employment,
+                        ExtraContact = applicantApp.ExtraContact,
+                        Firstname = applicantApp.Firstname,
+                        Gender = applicantApp.Gender,
+                        Maxalla = applicantApp.Maxalla,
+                        Middlename = applicantApp.Middlename,
+                        OrganizationId = applicantApp.OrganizationId,
+                        ReferenceSource = applicantApp.ReferenceSource,
+                        Region = applicantApp.Region,
+                        Surname = applicantApp.Surname,
+                        Type = applicantApp.Type,
+                    };
+
+                    _context.Applicants.Add(applicant);
                     _context.SaveChanges();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ApplicationExists(application.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
 
+                    Application application = new Application()
+                    {
+                        AdditionalNote = applicantApp.AdditionalNote,
+                        ApplicantId = applicant.Id,
+                        AttachmentId = applicantApp.AttachmentId,
+                        ClassificationId = applicantApp.ClassificationId,
+                        Comment = applicantApp.Comment,
+                        ExpireTime = applicantApp.ExpireTime,
+                        MeaningOfApplication = applicantApp.MeaningOfApplication,
+                        Reason = applicantApp.Reason,
+                        RecipientId = applicantApp.RecipientId,
+                        Type = applicantApp.AppType
+                    };
+                    _context.Applications.Add(application);
+                    _context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(application);
+            return View(applicantApp);
         }
 
+        public IActionResult EditApplicantCreateApp(int applicantId)
+        {
+            if (applicantId == null)
+            {
+                return NotFound();
+            }
+            var applicant = _context.Applicants.Where(a => a.Id == applicantId).FirstOrDefault();
+            
+            DateTime date = DateTime.Now.AddDays(3);
+            ApplicantAppInput applicantApp = new ApplicantAppInput()
+            {
+                ApplicantId = applicant.Id,
+                Address = applicant.Address,
+                ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind),
+                BirthDate = applicant.BirthDate,
+                CityDistrictId = applicant.CityDistrictId,
+                Confidentiality = applicant.Confidentiality,
+                Contact = applicant.Contact,
+                CreatedDate = applicant.CreatedDate,
+                Employment = applicant.Employment,
+                ExtraContact = applicant.ExtraContact,
+                Firstname = applicant.Firstname,
+                Gender = applicant.Gender,
+                Maxalla = applicant.Maxalla,
+                Middlename = applicant.Middlename,
+                OrganizationId = applicant.OrganizationId,
+                ReferenceSource = applicant.ReferenceSource,
+                Region = applicant.Region,
+                Surname = applicant.Surname,
+                Type = applicant.Type,
+            };
+
+            ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title", applicantApp.CityDistrictId);
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Title", applicantApp.OrganizationId);
+            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title", applicantApp.ClassificationId);
+            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Title", applicantApp.RecipientId);
+            return View("ApplicantEditAppCreate", applicantApp);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditApplicantCreateApp(ApplicantAppInput applicantApp, IFormFile file)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    int attachmentId = -1;
+
+                    if (file != null)
+                    {
+                        attachmentId = _attachmentService.UploadFileToStorage(file);
+                    }
+
+                    if (attachmentId > -1)
+                    {
+                        applicantApp.AttachmentId = attachmentId;
+                    }
+
+                    Applicant applicant = new Applicant()
+                    {
+                        Id = applicantApp.ApplicantId,
+                        Address = applicantApp.Address,
+                        BirthDate = applicantApp.BirthDate,
+                        CityDistrictId = applicantApp.CityDistrictId,
+                        Confidentiality = applicantApp.Confidentiality,
+                        Contact = applicantApp.Contact,
+                        Employment = applicantApp.Employment,
+                        ExtraContact = applicantApp.ExtraContact,
+                        Firstname = applicantApp.Firstname,
+                        Gender = applicantApp.Gender,
+                        Maxalla = applicantApp.Maxalla,
+                        Middlename = applicantApp.Middlename,
+                        OrganizationId = applicantApp.OrganizationId,
+                        ReferenceSource = applicantApp.ReferenceSource,
+                        Region = applicantApp.Region,
+                        Surname = applicantApp.Surname,
+                        Type = applicantApp.Type,
+                        CreatedDate = applicantApp.CreatedDate,
+                    };
+
+                    _context.Applicants.Update(applicant);
+                    _context.SaveChanges();
+
+                    Application application = new Application()
+                    {
+                        AdditionalNote = applicantApp.AdditionalNote,
+                        ApplicantId = applicant.Id,
+                        AttachmentId = applicantApp.AttachmentId,
+                        ClassificationId = applicantApp.ClassificationId,
+                        Comment = applicantApp.Comment,
+                        ExpireTime = applicantApp.ExpireTime,
+                        MeaningOfApplication = applicantApp.MeaningOfApplication,
+                        Reason = applicantApp.Reason,
+                        RecipientId = applicantApp.RecipientId,
+                        Type = applicantApp.AppType
+                    };
+                    _context.Applications.Add(application);
+                    _context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(applicantApp);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var application = _context.Applications.Where(a => a.Id == id).Include(a => a.Applicant).FirstOrDefault();
+
+            DateTime date = DateTime.Now.AddDays(3);
+            ApplicantAppInput applicantApp = new ApplicantAppInput()
+            {
+                ApplicantId = application.Applicant.Id,
+                Address = application.Applicant.Address,
+                BirthDate = application.Applicant.BirthDate,
+                CityDistrictId = application.Applicant.CityDistrictId,
+                Confidentiality = application.Applicant.Confidentiality,
+                Contact = application.Applicant.Contact,
+                CreatedDate = application.Applicant.CreatedDate,
+                Employment = application.Applicant.Employment,
+                ExtraContact = application.Applicant.ExtraContact,
+                Firstname = application.Applicant.Firstname,
+                Gender = application.Applicant.Gender,
+                Maxalla = application.Applicant.Maxalla,
+                Middlename = application.Applicant.Middlename,
+                OrganizationId = application.Applicant.OrganizationId,
+                ReferenceSource = application.Applicant.ReferenceSource,
+                Region = application.Applicant.Region,
+                Surname = application.Applicant.Surname,
+                Type = application.Applicant.Type,
+                AdditionalNote = application.AdditionalNote,
+                AttachmentId = application.AttachmentId,
+                ClassificationId = application.ClassificationId,
+                ExpireTime = application.ExpireTime,
+                Comment = application.Comment,
+                MeaningOfApplication = application.MeaningOfApplication,
+                Reason = application.Reason,
+                RecipientId = application.RecipientId,
+                AppType = application.Type,
+                AppCreatedDate = application.CreatedDate,
+                AppId = (int)id
+            };
+
+            ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title", applicantApp.CityDistrictId);
+            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Title", applicantApp.OrganizationId);
+            ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title", applicantApp.ClassificationId);
+            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Title", applicantApp.RecipientId);
+            return View("ApplicantEditAppEdit", applicantApp);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(ApplicantAppInput applicantApp, IFormFile file)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    int attachmentId = -1;
+
+                    if (file != null)
+                    {
+                        attachmentId = _attachmentService.UploadFileToStorage(file);
+                    }
+
+                    if (attachmentId > -1)
+                    {
+                        applicantApp.AttachmentId = attachmentId;
+                    }
+
+                    Applicant applicant = new Applicant()
+                    {
+                        Id = applicantApp.ApplicantId,
+                        Address = applicantApp.Address,
+                        BirthDate = applicantApp.BirthDate,
+                        CityDistrictId = applicantApp.CityDistrictId,
+                        Confidentiality = applicantApp.Confidentiality,
+                        Contact = applicantApp.Contact,
+                        Employment = applicantApp.Employment,
+                        ExtraContact = applicantApp.ExtraContact,
+                        Firstname = applicantApp.Firstname,
+                        Gender = applicantApp.Gender,
+                        Maxalla = applicantApp.Maxalla,
+                        Middlename = applicantApp.Middlename,
+                        OrganizationId = applicantApp.OrganizationId,
+                        ReferenceSource = applicantApp.ReferenceSource,
+                        Region = applicantApp.Region,
+                        Surname = applicantApp.Surname,
+                        Type = applicantApp.Type,
+                        CreatedDate = applicantApp.CreatedDate,
+                    };
+
+                    _context.Applicants.Update(applicant);
+                    _context.SaveChanges();
+
+                    Application application = new Application()
+                    {
+                        Id = applicantApp.AppId,
+                        AdditionalNote = applicantApp.AdditionalNote,
+                        ApplicantId = applicant.Id,
+                        AttachmentId = applicantApp.AttachmentId,
+                        ClassificationId = applicantApp.ClassificationId,
+                        Comment = applicantApp.Comment,
+                        ExpireTime = applicantApp.ExpireTime,
+                        MeaningOfApplication = applicantApp.MeaningOfApplication,
+                        Reason = applicantApp.Reason,
+                        RecipientId = applicantApp.RecipientId,
+                        Type = applicantApp.AppType,
+                        CreatedDate = applicantApp.AppCreatedDate
+                    };
+                    _context.Applications.Update(application);
+                    _context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(applicantApp);
+        }
+
+       
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
