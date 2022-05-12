@@ -55,7 +55,7 @@ namespace CallCenterCRM
             return View("Index", await callcentercrmContext.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id, int? userId)
+        public async Task<IActionResult> Details(int? id, int? userId, string? actionName)
         {
             if (id == null)
             {
@@ -76,13 +76,14 @@ namespace CallCenterCRM
             {
                 application.Status = ApplicationStatus.GotMod;
             }
-            if (userId != null && (application.RecipientId == userId || application.Recipient.ModeratorId == userId) && application.IsGot == false)
+            if ((application.RecipientId == userId || application.Recipient.ModeratorId == userId || application.Applicant.OrganizationId == userId)
+                && userId != null && application.IsGot == false )
             {
                 application.IsGot = _applicationService.IsGot(user.Role, application.Status);
             }
             _context.Update(application);
             _context.SaveChanges();
-
+            ViewData["actionName"] = actionName;
             if (application == null)
             {
                 return NotFound();
@@ -374,7 +375,7 @@ namespace CallCenterCRM
                 RecipientId = application.RecipientId,
                 AppType = application.Type,
                 AppCreatedDate = application.CreatedDate,
-                AppId = (int)id
+                AppId = (int)id,
             };
 
             ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title", applicantApp.CityDistrictId);
@@ -392,6 +393,7 @@ namespace CallCenterCRM
             {
                 try
                 {
+                    
                     int attachmentId = -1;
 
                     if (file != null)
@@ -442,8 +444,14 @@ namespace CallCenterCRM
                         Reason = applicantApp.Reason,
                         RecipientId = applicantApp.RecipientId,
                         Type = applicantApp.AppType,
-                        CreatedDate = applicantApp.AppCreatedDate
+                        CreatedDate = applicantApp.AppCreatedDate,
+                        Status = applicantApp.AppStatus
                     };
+                    application.Status = application.Status == ApplicationStatus.RejectMod ?
+                    ApplicationStatus.Edit : ApplicationStatus.SendMod;
+
+                    application.IsChanged = true;
+                    application.IsGot = false;
                     _context.Applications.Update(application);
                     _context.SaveChanges();
 

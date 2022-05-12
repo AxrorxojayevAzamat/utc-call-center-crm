@@ -295,7 +295,7 @@
             Ответ
         </a>
     }
-
-    <a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    <a asp-controller="Applications" asp-action=@ViewBag.actionName asp-route-recipientId=@userService.GetUserId(userIdentityId)
+        class="btn btn-secondary btn-rounded btn-fw">Назад</a>
 </div>
 

@@ -13,6 +13,9 @@
     {
         return User.Identities.First().Claims.First(c => c.Type == type).Value;
     }
+
+    string actionName = this.ViewContext.RouteData.Values["action"].ToString();
+    string something = "something";
 }
 
 <h1>Заявление</h1>
@@ -48,7 +51,8 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId) 
+                        asp-route-actionName=@actionName>
                             @applicationService.GetAppNumber(item)
                         </a>
                     </td>

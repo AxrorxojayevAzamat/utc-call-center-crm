@@ -129,6 +129,8 @@ namespace CallCenterCRM.Forms
         [NotMapped]
         public int? OrganizationId { get; set; }
 
+        public ApplicationStatus AppStatus { get; set; }
+
         public DateTimeOffset? CreatedDate { get; set; }
         public DateTimeOffset? AppCreatedDate { get; set; }
 
