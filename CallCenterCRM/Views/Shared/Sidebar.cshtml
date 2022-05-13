@@ -96,6 +96,11 @@
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="RejectedMod">
                             <i class="menu-icon mdi mdi-lead-pencil"></i>
                             <span class="menu-title">Переработанные приложения</span>
+                            @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.RejectMod) > 0
+                           && userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
+                            {
+                                <span class="count-of-apps bg-red">@appService.AppCount(userService.GetUserId(userIdentityId),ApplicationStatus.RejectMod)</span>
+                            }
                         </a>
                     </li>
                 }

@@ -285,7 +285,8 @@
     }
     else if (Model.Answer != null && Model.Answer.Status != AnswerStatus.Confirm)
     {
-        <a asp-controller="Answers" asp-action="Details" asp-route-id="@Model.Answer.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>
+        <a asp-controller="Answers" asp-action="Details" asp-route-id="@Model.Answer.Id" asp-route-userId=@userService.GetUserId(userIdentityId)
+        asp-route-actionName="AnswersList">
             Ответ
         </a>
     }

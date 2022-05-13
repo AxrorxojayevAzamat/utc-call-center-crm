@@ -71,7 +71,7 @@ namespace CallCenterCRM.Controllers
             }
             _context.Update(answer);
             _context.SaveChanges();
-
+            //ViewData["actionName"] = actionName
 
             if (answer == null)
             {
