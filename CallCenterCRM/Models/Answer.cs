@@ -32,11 +32,9 @@ namespace CallCenterCRM.Models
         [Display(Name = "Исполнитель")]
         public string Executor { get; set; } = null!;
         [Display(Name = "Ответное письмо")]
-        public string ResponseLetter { get; set; } = null!;
-        [Display(Name = "Вложение")]
         public int? AttachmentId { get; set; }
         [Display(Name = "Регистрационный номер")]
-        public int RegisterNumber { get; set; }
+        public string RegisterNumber { get; set; }
         [StringLength(255)]
         [Display(Name = "Результат рассмотрения")]
         public string Result { get; set; } = null!;

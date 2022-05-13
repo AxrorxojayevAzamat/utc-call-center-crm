@@ -13,6 +13,8 @@
     {
         return User.Identities.First().Claims.First(c => c.Type == type).Value;
     }
+
+    string actionName = this.ViewContext.RouteData.Values["action"].ToString();
 }
 
 <h1>Ответы</h1>
@@ -23,16 +25,13 @@
             <tr>
                 <th></th>
                 <th>
+                    @Html.DisplayNameFor(model => model.RegisterNumber)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.ResponsiblePerson)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Executor)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResponseLetter)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RegisterNumber)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Result)
@@ -46,7 +45,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Status)
                 </th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -60,16 +58,16 @@
                         }
                     </td>
                     <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)
+                       asp-route-actionName=@actionName>
+                            @Html.DisplayFor(modelItem => item.RegisterNumber)
+                        </a>
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.ResponsiblePerson)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Executor)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ResponseLetter)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RegisterNumber)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Result)
@@ -84,11 +82,6 @@
                         <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Status).color btn-fw">
                             <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Status).icon"></i>
                         </span>
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)>
-                            <i class="mdi mdi-eye"></i>
-                        </a>
                     </td>
                 </tr>
             }

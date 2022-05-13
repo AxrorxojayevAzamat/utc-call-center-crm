@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Создать</h1>
+<h1>Создать ответ</h1>
 
 <h4>Заявление</h4>
 <hr />
@@ -36,30 +36,26 @@
         <input type="hidden" asp-for="ApplicationId" />
         <input type="hidden" asp-for="AuthorId" />
         <input type="hidden" asp-for="Status" />
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <label asp-for="ResponsiblePerson" class="control-label"></label>
             <input asp-for="ResponsiblePerson" class="form-control" />
             <span asp-validation-for="ResponsiblePerson" class="text-danger"></span>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <label asp-for="Executor" class="control-label"></label>
             <input asp-for="Executor" class="form-control" />
             <span asp-validation-for="Executor" class="text-danger"></span>
         </div>
-        <div class="form-group col-md-4">
-            <label asp-for="ResponseLetter" class="control-label"></label>
-            <input asp-for="ResponseLetter" class="form-control" />
-            <span asp-validation-for="ResponseLetter" class="text-danger"></span>
-        </div>
-        <div class="form-group col-md-4">
-            <label asp-for="AttachmentId" class="control-label"></label>
-            <input type="file" name="file" id="file" class="form-control" />
-        </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <label asp-for="RegisterNumber" class="control-label"></label>
             <input asp-for="RegisterNumber" class="form-control" />
             <span asp-validation-for="RegisterNumber" class="text-danger"></span>
         </div>
+        <div class="form-group col-md-3">
+            <label asp-for="AttachmentId" class="control-label"></label>
+            <input type="file" name="file" id="file" class="form-control" />
+        </div>
+        
         <div class="form-group col-md-6">
             <label asp-for="Result" class="control-label"></label>
             <textarea asp-for="Result" class="form-control"></textarea>
@@ -72,7 +68,8 @@
         </div>
         <div class="form-group col-md-12 mt-3">
             <input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
-            <a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
+            <a asp-controller="Applications" asp-action="Details" asp-route-id=@ViewBag.AppId
+            class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
         </div>
     </div>
 </form>

@@ -38,12 +38,6 @@
                     @Html.DisplayFor(model => model.Executor)
                 </dd>
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.ResponseLetter)
-                </dt>
-                <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.ResponseLetter)
-                </dd>
-                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.RegisterNumber)
                 </dt>
                 <dd class="col-sm-8">
@@ -212,13 +206,6 @@
                         @Html.DisplayFor(model => model.Application.Reason)
                     </dd>
                 }
-                @*@if((Model.Application.Reason != null || Model.Application.Reason != "")
-                    && ((Model.Application.Status == ApplicationStatus.RejectOrg && userService.GetUserRole(userIdentityId) != Roles.CrmOperator.GetDisplayName()) ||
-                    (Model.Application.Status == ApplicationStatus.RejectMod && userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())))
-                    {
-
-
-                    }*@
                 <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Application.UpdatedDate)
                 </dt>

@@ -46,7 +46,7 @@ namespace CallCenterCRM.Controllers
             return View("Index", await callcentercrmContext.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id, int? userId)
+        public async Task<IActionResult> Details(int? id, int? userId, string? actionName)
         {
             if (id == null)
             {
@@ -88,6 +88,7 @@ namespace CallCenterCRM.Controllers
 
             AnswerStatus answerStatus = application.Recipient.Moderator != null ? AnswerStatus.Send : AnswerStatus.Confirm;
 
+            ViewData["AppId"] = application.Id;
             ViewData["AppType"] = application.Type.GetDisplayName();
             ViewData["AppMeaning"] = application.MeaningOfApplication;
             ViewData["AppClassification"] = application.Classification.Title;

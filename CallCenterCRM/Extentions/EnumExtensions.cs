@@ -7,7 +7,7 @@ public static class EnumExtensions
 {
     public static string GetDisplayName(this Enum enumValue)
     {
-        string displayName;
+        string? displayName;
         displayName = enumValue.GetType()
             .GetMember(enumValue.ToString())
             .FirstOrDefault()
