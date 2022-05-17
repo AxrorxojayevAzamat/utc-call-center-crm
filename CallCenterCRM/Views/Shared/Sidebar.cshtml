@@ -143,7 +143,7 @@
                     <li class="nav-item @Html.IsActive(controller: "Applications", action: "Delayed")">
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Delayed" asp-route-recipientId=@userService.GetUserId(userIdentityId)>
                             <i class="menu-icon mdi mdi-clock-end"></i>
-                            <span class="menu-title">Отложенные заявки</span>
+                            <span class="menu-title">Просроченные заявки</span>
                             @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.AskDelay) > 0
                            && userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
                             {
@@ -157,7 +157,7 @@
                     <li class="nav-item @Html.IsActive(controller: "Applications", action: "Delayed")">
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Delayed" asp-route-recipientId=@userService.GetUserId(userIdentityId)>
                             <i class="menu-icon mdi mdi-clock-end"></i>
-                            <span class="menu-title">Отложенные заявки</span>
+                            <span class="menu-title">Просроченные заявки</span>
                             @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.RejectDelay)
                            + appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.Delay) > 0
                            && userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName())

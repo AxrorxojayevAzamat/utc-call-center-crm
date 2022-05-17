@@ -69,7 +69,8 @@
 						}
 					</td>
 					<td>
-						<a class="btn btn-rounded btn-info application-count">
+						<a asp-controller="Applications" asp-action="ListByApplicant" asp-route-applicantId=@item.Id
+						class="btn btn-rounded btn-info application-count" target="_blank">
 							@item.Applications.Count
 						</a>
 						<a asp-controller="Applications" asp-action="EditApplicantCreateApp" asp-route-applicantId=@item.Id class="btn btn-rounded btn-primary">Создать новый</a>

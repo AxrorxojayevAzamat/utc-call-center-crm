@@ -54,6 +54,20 @@ namespace CallCenterCRM
 
             return View("Index", await callcentercrmContext.ToListAsync());
         }
+        [Authorize(Roles = "CrmOperator")]
+        public async Task<IActionResult> ListByApplicant(int? applicantId)
+        {
+            var callcentercrmContext = _context.Applications.Include(a => a.Recipient)
+                .Where(a => a.ApplicantId == applicantId)
+                .Include(a => a.Applicant)
+                    .ThenInclude(a => a.CityDistrict)
+                .Include(a => a.Attachment)
+                .Include(a => a.Answer)
+                .Include(a => a.Classification)
+                .Include(a => a.Recipient).OrderByDescending(a => a.Id);
+
+            return View("Index", await callcentercrmContext.ToListAsync());
+        }
 
         public async Task<IActionResult> Details(int? id, int? userId, string? actionName)
         {
@@ -205,7 +219,7 @@ namespace CallCenterCRM
                         AttachmentId = applicantApp.AttachmentId,
                         ClassificationId = applicantApp.ClassificationId,
                         Comment = applicantApp.Comment,
-                        ExpireTime = applicantApp.ExpireTime,
+                        //ExpireTime = applicantApp.ExpireTime,
                         MeaningOfApplication = applicantApp.MeaningOfApplication,
                         Reason = applicantApp.Reason,
                         RecipientId = applicantApp.RecipientId,
@@ -316,7 +330,7 @@ namespace CallCenterCRM
                         AttachmentId = applicantApp.AttachmentId,
                         ClassificationId = applicantApp.ClassificationId,
                         Comment = applicantApp.Comment,
-                        ExpireTime = applicantApp.ExpireTime,
+                        //ExpireTime = applicantApp.ExpireTime,
                         MeaningOfApplication = applicantApp.MeaningOfApplication,
                         Reason = applicantApp.Reason,
                         RecipientId = applicantApp.RecipientId,
@@ -439,7 +453,7 @@ namespace CallCenterCRM
                         AttachmentId = applicantApp.AttachmentId,
                         ClassificationId = applicantApp.ClassificationId,
                         Comment = applicantApp.Comment,
-                        ExpireTime = applicantApp.ExpireTime,
+                        //ExpireTime = applicantApp.ExpireTime,
                         MeaningOfApplication = applicantApp.MeaningOfApplication,
                         Reason = applicantApp.Reason,
                         RecipientId = applicantApp.RecipientId,
@@ -633,7 +647,8 @@ namespace CallCenterCRM
             var branches = _context.Users.Where(u => u.ModeratorId == moderatorId).ToList();
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
             ViewData["RecipientId"] = new SelectList(branches, "Id", "Title", 0);
-
+            DateTime date = DateTime.Now.AddDays(3);
+            application.ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind);
             return View(application);
         }
 
@@ -654,6 +669,7 @@ namespace CallCenterCRM
             {
                 application.Status = ApplicationStatus.SendOrg;
                 application.RecipientId = app.RecipientId;
+                application.ExpireTime = app.ExpireTime;
                 application.IsGot = false;
                 _context.Update(application);
                 _context.SaveChanges();
