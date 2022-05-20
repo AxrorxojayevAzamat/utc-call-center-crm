@@ -91,7 +91,7 @@ namespace CallCenterCRM
                 application.Status = ApplicationStatus.GotMod;
             }
             if ((application.RecipientId == userId || application.Recipient.ModeratorId == userId || application.Applicant.OrganizationId == userId)
-                && userId != null && application.IsGot == false )
+                && userId != null && application.IsGot == false)
             {
                 application.IsGot = _applicationService.IsGot(user.Role, application.Status);
             }
@@ -246,7 +246,7 @@ namespace CallCenterCRM
                 return NotFound();
             }
             var applicant = _context.Applicants.Where(a => a.Id == applicantId).FirstOrDefault();
-            
+
             DateTime date = DateTime.Now.AddDays(3);
             ApplicantAppInput applicantApp = new ApplicantAppInput()
             {
@@ -407,7 +407,7 @@ namespace CallCenterCRM
             {
                 try
                 {
-                    
+
                     int attachmentId = -1;
 
                     if (file != null)
@@ -480,7 +480,7 @@ namespace CallCenterCRM
             return View(applicantApp);
         }
 
-       
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -667,12 +667,15 @@ namespace CallCenterCRM
             }
             try
             {
-                application.Status = ApplicationStatus.SendOrg;
-                application.RecipientId = app.RecipientId;
-                application.ExpireTime = app.ExpireTime;
-                application.IsGot = false;
-                _context.Update(application);
-                _context.SaveChanges();
+                if (application.ExpireTime > DateTime.Now)
+                {
+                    application.Status = ApplicationStatus.SendOrg;
+                    application.RecipientId = app.RecipientId;
+                    application.ExpireTime = app.ExpireTime;
+                    application.IsGot = false;
+                    _context.Update(application);
+                    _context.SaveChanges();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -758,7 +761,7 @@ namespace CallCenterCRM
             }
             try
             {
-                if (app.ExpireTime > application.ExpireTime)
+                if (app.ExpireTime > application.ExpireTime && app.ExpireTime > DateTime.Now)
                 {
                     application.Status = ApplicationStatus.Delay;
                     application.IsDelayed = true;

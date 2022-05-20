@@ -6,7 +6,7 @@
 @{
     string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
     string userIdentityId = GetUserClaim(typeIdentityId);
-
+    DateTime currentTime = DateTime.Now;
     var isAuthenticated = User.Identity.IsAuthenticated;
 
     string GetUserClaim(string type)
@@ -269,16 +269,21 @@
         }
         else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName())
         {
-            @if (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.AskDelay || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay)
+            @if (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.AskDelay 
+            || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay)
             {
-                <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" asp-route-authorId=@userService.GetUserId(userIdentityId) class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
-                @if (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.Delay)
+                @if(Model.ExpireTime > currentTime && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.Delay))
                 {
-                    <a asp-action="AskDelay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Просьба отложить</a>
-                    @if(!(Model.Status == ApplicationStatus.Delay || Model.Status == ApplicationStatus.RejectDelay))
+                    <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" 
+                        asp-route-authorId=@userService.GetUserId(userIdentityId) class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
+                    @if(Model.Status == ApplicationStatus.SendOrg)
                     {
                         <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
                     }
+                } 
+                @if (Model.ExpireTime < currentTime && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.RejectDelay) )
+                {
+                    <a asp-action="AskDelay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Спросите продолжить</a>
                 }
             }
         }

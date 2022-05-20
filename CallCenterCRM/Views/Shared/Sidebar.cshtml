@@ -174,7 +174,7 @@
                         @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.RejectOrg) > 0
                        && userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
                         {
-                            <span class="count-of-apps bg-red">@appService.AppCount(userService.GetUserId(userIdentityId),ApplicationStatus.AskDelay)</span>
+                            <span class="count-of-apps bg-red">@appService.AppCount(userService.GetUserId(userIdentityId),ApplicationStatus.RejectOrg)</span>
                         }
                     </a>
                 </li>

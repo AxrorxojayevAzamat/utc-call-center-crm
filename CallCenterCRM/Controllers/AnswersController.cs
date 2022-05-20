@@ -95,6 +95,7 @@ namespace CallCenterCRM.Controllers
 
             Answer answer = new Answer()
             {
+                ResponsiblePerson = $"{application.Recipient.Surname} {application.Recipient.Firstname} {application.Recipient.Middlename}",
                 ApplicationId = applicationId,
                 AuthorId = authorId,
                 Status = answerStatus,
