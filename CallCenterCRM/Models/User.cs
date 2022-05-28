@@ -14,7 +14,7 @@ namespace CallCenterCRM.Models
     [Index(nameof(Email), Name = "Email", IsUnique = true)]
     [Index(nameof(Username), Name = "Username", IsUnique = true)]
     [Index(nameof(ModeratorId), Name = "Users_fk0")]
-    [Index(nameof(ClassificationId), Name = "Users_fk1")]
+    [Index(nameof(DirectionId), Name = "Users_fk2")]
     public partial class User : BaseModel
     {
         public User()
@@ -90,14 +90,13 @@ namespace CallCenterCRM.Models
         [Display(Name = "Связка с организацией")]
         public virtual User? Moderator { get; set; }
 
-        [Display(Name = "Классификация")]
-        [Column(TypeName = "integer")]
-        public int? ClassificationId { get; set; }
+        [Display(Name = "Направление")]
+        public int? DirectionId { get; set; }
 
-        [Display(Name = "Классификация")]
-        [ForeignKey(nameof(ClassificationId))]
-        [InverseProperty(nameof(CallCenterCRM.Models.Classification.Users))]
-        public virtual Classification? Classification { get; set; }
+        [Display(Name = "Направление")]
+        [ForeignKey(nameof(DirectionId))]
+        [InverseProperty(nameof(CallCenterCRM.Models.Direction.Users))]
+        public virtual Direction? Direction { get; set; }
 
         [InverseProperty(nameof(Answer.Author))]
         public virtual ICollection<Answer> Answers { get; set; }

@@ -1,0 +1,42 @@
+﻿@model CallCenterCRM.Models.Direction
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<h1>Редактировать</h1>
+
+<h4>Направление</h4>
+<hr />
+<form asp-action="Edit">
+	<div class="row">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<input type="hidden" asp-for="Id" />
+		<input type="hidden" asp-for="CreatedDate" />
+		<div class="form-group col-md-4">
+			<label asp-for="Title" class="control-label"></label>
+			<input asp-for="Title" class="form-control" />
+			<span asp-validation-for="Title" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-4">
+			<label asp-for="Consequence" class="control-label"></label>
+			<input asp-for="Consequence" class="form-control" />
+			<span asp-validation-for="Consequence" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-6">
+			<label asp-for="Description" class="control-label"></label>
+			<textarea asp-for="Description" class="form-control"></textarea>
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+		<div class="form-group col-md-12 mt-3">
+			<input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
+			<a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+    @{
+		await Html.RenderPartialAsync("Scripts/_ValidationScriptsPartial");
+	}
+}

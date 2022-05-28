@@ -1,5 +1,20 @@
 ﻿<script>
     $(document).ready(() => {
         $("#Role")[0].firstChild.remove()
+        $("#DirectionField").hide()
+        $("#ModeratorField").hide()
+    })
+
+    $("#Role").change(function(e) {
+        if(e.target.value === "2") {
+            $("#DirectionField").show()
+            $("#ModeratorField").hide()
+        } else if(e.target.value === "3") {
+            $("#DirectionField").hide()
+            $("#ModeratorField").show()
+        } else {
+            $("#DirectionField").hide()
+            $("#ModeratorField").hide()
+        }
     })
 </script>

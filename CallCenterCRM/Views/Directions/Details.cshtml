@@ -1,4 +1,4 @@
-﻿@model CallCenterCRM.Models.Classification
+﻿@model CallCenterCRM.Models.Direction
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +7,7 @@
 <h1>Подробности</h1>
 
 <div>
-    <h4>Классификация</h4>
+    <h4>Направление</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -17,16 +17,16 @@
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Consequence)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Consequence)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UpdatedDate)

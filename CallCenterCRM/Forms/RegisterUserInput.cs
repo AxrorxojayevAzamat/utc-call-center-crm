@@ -49,6 +49,12 @@ namespace CallCenterCRM.Forms
         [StringLength(255)]
         [Display(Name = "Город")]
         public string City { get; set; } = null!;
+        
+        [Display(Name = "Направление")]
+        public int? DirectionId { get; set; }
+
+        [Display(Name = "Модератор")]
+        public int? ModeratorId { get; set; }
 
         [NotMapped]
         public List<SelectListItem> RolesList { get; set; }

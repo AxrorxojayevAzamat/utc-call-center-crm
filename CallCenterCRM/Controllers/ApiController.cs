@@ -29,15 +29,18 @@ namespace CallCenterCRM.Controllers
         public JsonResult Classification(int Id)
         {
             var classification = _context.Classifications.Find(Id);
-            var moderators = _context.Users.Where(u => u.ClassificationId == Id).Select(c => new
+            var direction = _context.Directions.Find(classification.DirectionId);
+            var moderators = _context.Users.Where(u => u.DirectionId == classification.DirectionId).Select(c => new
             {
                 Id = c.Id,
                 Title = c.Title
             }).ToList();
 
-            return Json(new  {
-                classification = classification,
-                moderators = moderators
+            return Json(new
+            {
+                directionTitle = direction.Title,
+                directionConsequence = direction.Consequence,
+                moderators
             });
         }
     }

@@ -43,6 +43,7 @@ namespace CallCenterCRM.Controllers
 
             var user = await _context.Users
                 .Include(u => u.Moderator)
+                .Include(u => u.Direction)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
@@ -55,7 +56,8 @@ namespace CallCenterCRM.Controllers
         public IActionResult Create()
         {
             RegisterUserInput user = new RegisterUserInput();
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Username");
+            ViewData["ModeratorId"] = new SelectList(_context.Users.Where(u => u.Role == Roles.CrmModerator), "Id", "Username");
+            ViewData["DirectionId"] = new SelectList(_context.Directions, "Id", "Title");
             return View(user);
         }
 
@@ -72,6 +74,8 @@ namespace CallCenterCRM.Controllers
                 Password = userInput.Password,
                 Role = userInput.Role,
                 City = userInput.City,
+                ModeratorId = userInput.Role == Roles.CrmModerator || userInput.Role == Roles.CrmOperator ? null : userInput.ModeratorId,
+                DirectionId = userInput.Role == Roles.CrmOrganization || userInput.Role == Roles.CrmOperator ? null : userInput.DirectionId,
             };
 
             if (ModelState.IsValid)
@@ -113,7 +117,7 @@ namespace CallCenterCRM.Controllers
             ViewBag.Role = user.Role;
             if (user.Role == Roles.CrmModerator)
             {
-                ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title", user.ClassificationId);
+                ViewData["DirectionId"] = new SelectList(_context.Directions, "Id", "Title", user.DirectionId);
             }
             return View(user);
         }
@@ -168,7 +172,7 @@ namespace CallCenterCRM.Controllers
             ViewBag.Role = user.Role;
             if (user.Role == Roles.CrmModerator)
             {
-                ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title", user.ClassificationId);
+                ViewData["DirectionId"] = new SelectList(_context.Directions, "Id", "Title", user.DirectionId);
             }
             ProfileInput profile = new ProfileInput()
             {
@@ -179,7 +183,7 @@ namespace CallCenterCRM.Controllers
                 Middlename = user.Middlename,
                 PassportData = user.PassportData,
                 Address = user.Address,
-                ClassificationId = user.ClassificationId,
+                DirectionId = user.DirectionId,
             };
             return View(profile);
         }
@@ -204,7 +208,7 @@ namespace CallCenterCRM.Controllers
                     user.PassportData = profile.PassportData;
                     user.Address = profile.Address;
                     user.ModeratorId = profile.ModeratorId;
-                    user.ClassificationId = profile.ClassificationId;
+                    user.DirectionId = profile.DirectionId;
                     _context.Update(user);
                     _context.SaveChanges();
                 }

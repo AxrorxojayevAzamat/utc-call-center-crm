@@ -28,8 +28,9 @@
                     cache: false,
                     processData: false,
                     success: function(data) {
-                        $("#Direction").val(data.classification.direction)
-                        $("#Value").val(data.classification.value)
+                        console.log(data);
+                        $("#Direction").val(data.directionTitle)
+                        $("#Value").val(data.directionConsequence)
 
                         for(let moderator of data.moderators) {
                             moderatorsSelect.append(new Option(moderator.title, moderator.id))

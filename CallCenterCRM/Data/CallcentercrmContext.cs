@@ -25,6 +25,7 @@ namespace CallCenterCRM.Data
         public virtual DbSet<Attachment> Attachments { get; set; } = null!;
         public virtual DbSet<Citydistrict> Citydistricts { get; set; } = null!;
         public virtual DbSet<Classification> Classifications { get; set; } = null!;
+        public virtual DbSet<Direction> Directions { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -114,11 +115,11 @@ namespace CallCenterCRM.Data
                     .HasForeignKey(d => d.ModeratorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Users_fk0");
-                entity.HasOne(d => d.Classification)
+                entity.HasOne(d => d.Direction)
                     .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.ClassificationId)
+                    .HasForeignKey(d => d.DirectionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Users_fk1");
+                    .HasConstraintName("Users_fk2");
                 entity.Property(d => d.Role).HasConversion<int>();
             });
 
@@ -127,6 +128,15 @@ namespace CallCenterCRM.Data
                 {
                     entity.Property(c => c.Region).HasConversion<int>();
                 });
+
+            modelBuilder.Entity<Classification>(entity =>
+            {
+                entity.HasOne(d => d.Direction)
+                    .WithMany(p => p.Classifications)
+                    .HasForeignKey(d => d.DirectionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Classification_fk0");
+            });
 
             //modelBuilder.Entity<Classification>(
             //    entity =>

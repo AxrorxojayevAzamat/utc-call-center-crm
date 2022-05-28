@@ -9,12 +9,13 @@ using Microsoft.EntityFrameworkCore;
 namespace CallCenterCRM.Models
 {
     [Table("classification")]
+    [Index(nameof(DirectionId), Name = "Classification_fk0")]
+
     public partial class Classification : BaseModel
     {
         public Classification()
         {
             Applications = new HashSet<Application>();
-            Users = new HashSet<User>();
         }
 
         [Key]
@@ -24,24 +25,21 @@ namespace CallCenterCRM.Models
         [Display(Name = "Название")]
         public string Title { get; set; } = null!;
 
-        [StringLength(255)]
-        [Display(Name = "Направление")]
-        public string Direction { get; set; }= null!;
-
-        [StringLength(255)]
-        [Display(Name = "Значение")]
-        public string Value { get; set; } = null!;
-
         [Display(Name = "Актив")]
         public bool IsActive { get; set; }
 
         [Display(Name = "Описание")]
         public string? Description { get; set; }
 
+        [Display(Name = "Направление")]
+        public int? DirectionId { get; set; }
+
+        [Display(Name = "Направление")]
+        [ForeignKey(nameof(DirectionId))]
+        [InverseProperty("Classifications")]
+        public virtual Direction? Direction { get; set; } = null!;
+
         [InverseProperty(nameof(Application.Classification))]
         public virtual ICollection<Application> Applications { get; set; }
-
-        [InverseProperty(nameof(User.Classification))]
-        public virtual ICollection<User> Users { get; set; }
     }
 }

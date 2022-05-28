@@ -36,9 +36,9 @@ namespace CallCenterCRM.Forms
         [Display(Name = "Связка с организацией")]
         public int? ModeratorId { get; set; }
 
-        [Display(Name = "Классификация")]
+        [Display(Name = "Направление")]
         [Column(TypeName = "int(11)")]
-        public int? ClassificationId { get; set; }
+        public int? DirectionId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
 

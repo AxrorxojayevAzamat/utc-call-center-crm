@@ -106,7 +106,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTime>("BirthDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValue(new DateTime(2022, 5, 13, 6, 14, 52, 804, DateTimeKind.Utc).AddTicks(7749));
+                        .HasDefaultValue(new DateTime(2022, 5, 27, 14, 25, 36, 7, DateTimeKind.Utc).AddTicks(2980));
 
                     b.Property<int?>("CityDistrictId")
                         .HasColumnType("integer");
@@ -331,10 +331,8 @@ namespace CallCenterCRM.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Direction")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                    b.Property<int?>("DirectionId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -347,14 +345,42 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Value")
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "DirectionId" }, "Classification_fk0");
+
+                    b.ToTable("classification");
+                });
+
+            modelBuilder.Entity("CallCenterCRM.Models.Direction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Consequence")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<DateTimeOffset?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
-                    b.ToTable("classification");
+                    b.ToTable("direction");
                 });
 
             modelBuilder.Entity("CallCenterCRM.Models.User", b =>
@@ -373,15 +399,15 @@ namespace CallCenterCRM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<int?>("ClassificationId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Contact")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
                     b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("DirectionId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -437,7 +463,7 @@ namespace CallCenterCRM.Migrations
 
                     b.HasIndex(new[] { "ModeratorId" }, "Users_fk0");
 
-                    b.HasIndex(new[] { "ClassificationId" }, "Users_fk1");
+                    b.HasIndex(new[] { "DirectionId" }, "Users_fk2");
 
                     b.ToTable("users");
                 });
@@ -519,19 +545,29 @@ namespace CallCenterCRM.Migrations
                     b.Navigation("Recipient");
                 });
 
+            modelBuilder.Entity("CallCenterCRM.Models.Classification", b =>
+                {
+                    b.HasOne("CallCenterCRM.Models.Direction", "Direction")
+                        .WithMany("Classifications")
+                        .HasForeignKey("DirectionId")
+                        .HasConstraintName("Classification_fk0");
+
+                    b.Navigation("Direction");
+                });
+
             modelBuilder.Entity("CallCenterCRM.Models.User", b =>
                 {
-                    b.HasOne("CallCenterCRM.Models.Classification", "Classification")
+                    b.HasOne("CallCenterCRM.Models.Direction", "Direction")
                         .WithMany("Users")
-                        .HasForeignKey("ClassificationId")
-                        .HasConstraintName("Users_fk1");
+                        .HasForeignKey("DirectionId")
+                        .HasConstraintName("Users_fk2");
 
                     b.HasOne("CallCenterCRM.Models.User", "Moderator")
                         .WithMany("Organizations")
                         .HasForeignKey("ModeratorId")
                         .HasConstraintName("Users_fk0");
 
-                    b.Navigation("Classification");
+                    b.Navigation("Direction");
 
                     b.Navigation("Moderator");
                 });
@@ -561,6 +597,11 @@ namespace CallCenterCRM.Migrations
             modelBuilder.Entity("CallCenterCRM.Models.Classification", b =>
                 {
                     b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("CallCenterCRM.Models.Direction", b =>
+                {
+                    b.Navigation("Classifications");
 
                     b.Navigation("Users");
                 });

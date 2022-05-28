@@ -1,0 +1,51 @@
+﻿@model IEnumerable<CallCenterCRM.Models.Direction>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Направление</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success btn-rounded">Создать новое</a>
+</p>
+<div class="table-responsive">
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Consequence)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdatedDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consequence)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdatedDate)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
+                        <a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

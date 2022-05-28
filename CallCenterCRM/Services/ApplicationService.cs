@@ -132,11 +132,11 @@ namespace CallCenterCRM.Services
 
         public int AppCount(int userId, ApplicationStatus status)
         {
-            User moderator = _context.Users.Where( a => a.Id == userId ).FirstOrDefault();
-
-            int count = _context.Applications
-                .Where(a => (a.RecipientId == userId || moderator.Id == userId) && a.Status == status && a.IsGot == false)
-                .ToList().Count;
+            User moderator = _context.Users.Where( a => a.ModeratorId == userId ).FirstOrDefault();
+            var apps = _context.Applications
+                .Where(a => (a.RecipientId == userId || (moderator != null ? moderator.Id == userId : false )) && a.Status == status && a.IsGot == false)
+                .ToList();
+            int count = apps.Count;
             return count;
         }
 

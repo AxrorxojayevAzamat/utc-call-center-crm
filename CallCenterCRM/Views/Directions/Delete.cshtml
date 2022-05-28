@@ -1,13 +1,14 @@
-﻿@model CallCenterCRM.Models.Classification
+﻿@model CallCenterCRM.Models.Direction
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Delete";
 }
 
-<h1>Подробности</h1>
+<h1>Удалить</h1>
 
+<h3>Вы уверены, что хотите удалить это?</h3>
 <div>
-    <h4>Классификация</h4>
+    <h4>Направление</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -23,10 +24,10 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
+            @Html.DisplayNameFor(model => model.Consequence)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
+            @Html.DisplayFor(model => model.Consequence)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UpdatedDate)
@@ -35,8 +36,10 @@
             @Html.DisplayFor(model => model.UpdatedDate)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a> |
-    <a asp-action="Index"  class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger btn-rounded btn-fw" /> |
+        <a asp-action="Index"  class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    </form>
 </div>

@@ -12,11 +12,11 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CallCenterCRM.Controllers
 {
-    public class ClassificationsController : Controller
+    public class DirectionsController : Controller
     {
         private readonly CallcentercrmContext _context;
 
-        public ClassificationsController(CallcentercrmContext context)
+        public DirectionsController(CallcentercrmContext context)
         {
             _context = context;
         }
@@ -24,7 +24,7 @@ namespace CallCenterCRM.Controllers
         [Authorize(Roles = "CrmAdmin")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Classifications.ToListAsync());
+            return View(await _context.Directions.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -34,35 +34,33 @@ namespace CallCenterCRM.Controllers
                 return NotFound();
             }
 
-            var classification = await _context.Classifications
+            var direction = await _context.Directions
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (classification == null)
+            if (direction == null)
             {
                 return NotFound();
             }
 
-            return View(classification);
+            return View(direction);
         }
 
         public IActionResult Create()
         {
-            ViewData["DirectionId"] = new SelectList(_context.Directions, "Id", "Title");
-
             return View();
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind] Classification classification)
+        public IActionResult Create([Bind] Direction direction)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(classification);
+                _context.Add(direction);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(classification);
+            return View(direction);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -72,21 +70,19 @@ namespace CallCenterCRM.Controllers
                 return NotFound();
             }
 
-            var classification = await _context.Classifications.FindAsync(id);
-            ViewData["DirectionId"] = new SelectList(_context.Directions, "Id", "Title", classification.DirectionId);
-
-            if (classification == null)
+            var direction = await _context.Directions.FindAsync(id);
+            if (direction == null)
             {
                 return NotFound();
             }
-            return View(classification);
+            return View(direction);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind] Classification classification)
+        public IActionResult Edit(int id, [Bind] Direction direction)
         {
-            if (id != classification.Id)
+            if (id != direction.Id)
             {
                 return NotFound();
             }
@@ -95,12 +91,12 @@ namespace CallCenterCRM.Controllers
             {
                 try
                 {
-                    _context.Update(classification);
+                    _context.Update(direction);
                     _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClassificationExists(classification.Id))
+                    if (!DirectionExists(direction.Id))
                     {
                         return NotFound();
                     }
@@ -111,7 +107,7 @@ namespace CallCenterCRM.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(classification);
+            return View(direction);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -121,29 +117,29 @@ namespace CallCenterCRM.Controllers
                 return NotFound();
             }
 
-            var classification = await _context.Classifications
+            var direction = await _context.Directions
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (classification == null)
+            if (direction == null)
             {
                 return NotFound();
             }
 
-            return View(classification);
+            return View(direction);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var classification = await _context.Classifications.FindAsync(id);
-            _context.Classifications.Remove(classification);
+            var direction = await _context.Directions.FindAsync(id);
+            _context.Directions.Remove(direction);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClassificationExists(int id)
+        private bool DirectionExists(int id)
         {
-            return _context.Classifications.Any(e => e.Id == id);
+            return _context.Directions.Any(e => e.Id == id);
         }
     }
 }
