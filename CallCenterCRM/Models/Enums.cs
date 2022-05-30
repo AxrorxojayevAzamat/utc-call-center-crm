@@ -67,7 +67,7 @@ namespace CallCenterCRM.Models
 
     public enum Regions
     {
-        [Display(Name = "г. Ташкент")] TashkentCity,
+        [Display(Name = "г. Ташкент")] TashkentCity = 1,
         [Display(Name = "Андижан")] Andijan = 2,
         [Display(Name = "Бухара")] Bukhara = 3,
         [Display(Name = "Фергана")] Fergana = 4,

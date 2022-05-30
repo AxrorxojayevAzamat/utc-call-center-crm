@@ -1,0 +1,66 @@
+﻿@model IEnumerable<CallCenterCRM.Models.Classification>
+@using CallCenterCRM.Interfaces
+@inject IUserService userService
+
+@{
+    string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    string userIdentityId = GetUserClaim(typeIdentityId);
+
+    var isAuthenticated = User.Identity.IsAuthenticated;
+
+    string GetUserClaim(string type)
+    {
+        return User.Identities.First().Claims.First(c => c.Type == type).Value;
+    }
+}
+
+<div class="table-responsive">
+    <table id="statsTable" class="table table-striped" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th>Классификации</th>
+                <th>Количество прибытий</th>
+                <th>Отношение к общему</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applications.Count)
+                    </td>
+                    <td>
+                        @($"{(item.Applications.Count * 100 / ViewBag.countApps).ToString("N3")}%")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @*    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+        {
+        <table id="statsTable" class="table table-striped" border="1" cellspacing="0" cellpadding="0">
+        <thead>
+        <th width="49" rowspan="2" valign="middle">
+        №
+        </th>
+        <th width="133" rowspan="2" valign="middle">
+        </th>
+        <th width="196" colspan="4" valign="middle">
+        </th>
+        <th width="49" rowspan="2" valign="middle">
+        </th>
+        <th width="147" colspan="3" valign="middle">
+        </th>
+        <th width="49" rowspan="2" valign="middle">
+        </th>
+        </thead>
+        <tbody>
+        </tbody>
+        </table>
+        }*@
+
+</div>

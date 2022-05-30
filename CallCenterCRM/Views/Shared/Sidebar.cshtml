@@ -133,12 +133,6 @@
                         <span class="menu-title">Направление</span>
                     </a>
                 </li>
-                @*<li class="nav-item @Html.IsActive(controller: "Attachments", action: "Index")">
-                    <a class="nav-link" asp-area="" asp-controller="Attachments" asp-action="Index">
-                    <i class="mdi mdi-attachment menu-icon"></i>
-                    <span class="menu-title">Вложения</span>
-                    </a>
-                    </li>*@
             }
 
             @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName()
@@ -231,11 +225,45 @@
                 }
             }
 
-            @if (userService.GetUserRole(userIdentityId) == Roles.CrmAdmin.GetDisplayName()
-           || userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
+
+
+            @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
             {
-                <li class="nav-item @Html.IsActive(controller: "Home", action: "Statistics")">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Statistics">
+                <li class="nav-item @Html.IsActive(controller: "Home", action: "StatisticsOperator")">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="StatisticsOperator">
+                        <i class="mdi menu-icon mdi-chart-line"></i>
+                        <span class="menu-title">Статистика</span>
+                    </a>
+                </li>
+            }
+            else if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+            {
+                @if (userService.HasBranches(userIdentityId))
+                {
+                    <li class="nav-item @Html.IsActive(controller: "Home", action: "StatisticsModerator")">
+                        <a class="nav-link" asp-area="" asp-controller="Home"
+               asp-action="StatisticsModerator" asp-route-userId=@userService.GetUserId(userIdentityId)>
+                            <i class="mdi menu-icon mdi-chart-line"></i>
+                            <span class="menu-title">Статистика</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item @Html.IsActive(controller: "Home", action: "StatisticsOrganization")">
+                        <a class="nav-link" asp-area="" asp-controller="Home"
+               asp-action="StatisticsOrganization" asp-route-userId=@userService.GetUserId(userIdentityId)>
+                            <i class="mdi menu-icon mdi-chart-line"></i>
+                            <span class="menu-title">Статистика</span>
+                        </a>
+                    </li>
+                }
+            }
+            else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName())
+            {
+                <li class="nav-item @Html.IsActive(controller: "Home", action: "StatisticsOrganization")">
+                    <a class="nav-link" asp-area="" asp-controller="Home"
+               asp-action="StatisticsOrganization" asp-route-userId=@userService.GetUserId(userIdentityId)>
                         <i class="mdi menu-icon mdi-chart-line"></i>
                         <span class="menu-title">Статистика</span>
                     </a>

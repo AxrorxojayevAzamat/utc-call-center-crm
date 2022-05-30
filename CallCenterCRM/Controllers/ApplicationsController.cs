@@ -667,7 +667,7 @@ namespace CallCenterCRM
             }
             try
             {
-                if (application.ExpireTime > DateTime.Now)
+                if (app.ExpireTime > DateTime.Now)
                 {
                     application.Status = ApplicationStatus.SendOrg;
                     application.RecipientId = app.RecipientId;

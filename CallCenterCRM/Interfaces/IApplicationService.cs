@@ -15,5 +15,9 @@ namespace CallCenterCRM.Interfaces
 
         public bool IsGot(Roles role, ApplicationStatus status);
         public bool IsGotAnswer(Roles role, AnswerStatus status);
+
+        public List<ModeratorStats>? GetModeratorStats(int userId);
+        public List<OrganizationStats>? GetOrganizationStats(int userId);
+
     }
 }

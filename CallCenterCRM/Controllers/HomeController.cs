@@ -1,12 +1,11 @@
-﻿using CallCenterCRM.Data;
-using CallCenterCRM.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using CallCenterCRM.Data;
 using CallCenterCRM.Models;
-using CallCenterCRM.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
 using System.Diagnostics;
+using CallCenterCRM.Interfaces;
 
 namespace CallCenterCRM.Controllers
 {
@@ -15,12 +14,14 @@ namespace CallCenterCRM.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly CallcentercrmContext _context;
+        private readonly IApplicationService _applicationService;
         private const string homeUrl = "/";
 
-        public HomeController(ILogger<HomeController> logger, CallcentercrmContext context)
+        public HomeController(ILogger<HomeController> logger, CallcentercrmContext context, IApplicationService applicationService)
         {
             _logger = logger;
             _context = context;
+            _applicationService = applicationService;
         }
 
         public IActionResult Index()
@@ -49,11 +50,39 @@ namespace CallCenterCRM.Controllers
         [Route("action")]
         public IActionResult Logout()
         {
-            return SignOut(new AuthenticationProperties() { RedirectUri = homeUrl },"Cookies", "oidc");
+            return SignOut(new AuthenticationProperties() { RedirectUri = homeUrl }, "Cookies", "oidc");
         }
-        public IActionResult Statistics()
+
+        [Authorize(Roles = "CrmOperator")]
+        public IActionResult StatisticsOperator()
         {
-            return View();
+            var classification = _context.Classifications.Include(c => c.Applications).ToList();
+            float countApps = _context.Applications.ToList().Count;
+            ViewData["countApps"] = countApps;
+
+            return View(classification);
+        }
+
+        [Authorize(Roles = "CrmModerator")]
+        public IActionResult StatisticsModerator(int userId)
+        {
+            User? user = _context.Users
+                .Include(u => u.Organizations)
+                .Where(u => u.Id == userId).FirstOrDefault();
+
+            ViewData["branches"] = user.Organizations.ToList();
+
+            List<ModeratorStats>? moderatorStats = _applicationService.GetModeratorStats(userId);
+
+            return View(moderatorStats);
+        }
+
+        [Authorize(Roles = "CrmOrganization,CrmModerator")]
+        public IActionResult StatisticsOrganization(int userId)
+        {
+            List<OrganizationStats>? organizationStats = _applicationService.GetOrganizationStats(userId);
+
+            return View(organizationStats);
         }
     }
 }

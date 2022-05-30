@@ -3,6 +3,7 @@
 using CallCenterCRM.Data;
 using CallCenterCRM.Interfaces;
 using CallCenterCRM.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CallCenterCRM.Services
 {
@@ -132,11 +133,12 @@ namespace CallCenterCRM.Services
 
         public int AppCount(int userId, ApplicationStatus status)
         {
-            User moderator = _context.Users.Where( a => a.ModeratorId == userId ).FirstOrDefault();
-            var apps = _context.Applications
-                .Where(a => (a.RecipientId == userId || (moderator != null ? moderator.Id == userId : false )) && a.Status == status && a.IsGot == false)
-                .ToList();
+            User moderator = _context.Users.Where(a => a.ModeratorId == userId).FirstOrDefault();
+            var apps = _context.Applications.Include(a => a.Recipient)
+                .Where(a => (moderator != null ? a.Recipient.ModeratorId == userId : a.RecipientId == userId)
+                && a.Status == status && a.IsGot == false).ToList();
             int count = apps.Count;
+
             return count;
         }
 
@@ -169,6 +171,99 @@ namespace CallCenterCRM.Services
                 || (role == Roles.CrmOrganization && status == AnswerStatus.Reject);
         }
 
+        public List<ModeratorStats>? GetModeratorStats(int userId)
+        {
+            var stats = new List<ModeratorStats>();
+
+
+            foreach (Regions region in Enum.GetValues(typeof(Regions)))
+            {
+                var applications = _context.Applications
+                    .Include(u => u.Applicant)
+                    .Include(u => u.Recipient)
+                        .ThenInclude(r => r.Organizations)
+                    .Where(a => a.Applicant.Region == region && a.Recipient.ModeratorId == userId);
+
+                var user = _context.Users.Where(u => u.Id == userId).Include(u => u.Organizations);
+
+
+                ModeratorStats stat = new ModeratorStats()
+                {
+                    Region = region,
+                    BranchesCount = CountBranchesApps(user, applications),
+                    DoneCount = GetStatusCount(applications).DoneCount,
+                    ProcessCount = GetStatusCount(applications).ProcessCount,
+                    RejectedCount = GetStatusCount(applications).RejectedCount,
+                };
+                stats.Add(stat);
+            }
+
+            return stats;
+        }
+
+        private static List<int> CountBranchesApps(IQueryable<User> branches, IQueryable<Application> apps)
+        {
+            List<int> branchesCount = new List<int>();
+
+            foreach (var branch in branches.FirstOrDefault().Organizations)
+            {
+                branchesCount.Add(apps.Where(a => a.RecipientId == branch.Id).ToList().Count);
+            }
+
+            return branchesCount;
+        }
+
+        public List<OrganizationStats>? GetOrganizationStats(int userId)
+        {
+            var stats = new List<OrganizationStats>();
+
+            foreach (Regions region in Enum.GetValues(typeof(Regions)))
+            {
+                var applications = _context.Applications
+                    .Include(u => u.Applicant)
+                    .Include(u => u.Recipient)
+                    .Where(a => a.Applicant.Region == region && a.RecipientId == userId);
+
+                OrganizationStats stat = new OrganizationStats()
+                {
+                    Region = region,
+
+                    FizikCount = GetPersonCount(applications).FizikCount,
+                    YurikCount = GetPersonCount(applications).YurikCount,
+                    MaleCount = GetPersonCount(applications).MaleCount,
+                    FemaleCount = GetPersonCount(applications).FemaleCount,
+
+                    DoneCount = GetStatusCount(applications).DoneCount,
+                    ProcessCount = GetStatusCount(applications).ProcessCount,
+                    RejectedCount = GetStatusCount(applications).RejectedCount,
+                };
+                stats.Add(stat);
+            }
+
+            return stats;
+        }
+
+        private static Stats GetStatusCount(IQueryable<Application> apps)
+        {
+            return new Stats()
+            {
+                DoneCount = apps.Where(a => a.Answer.Status == AnswerStatus.Confirm).ToList().Count,
+                ProcessCount = apps.Where(a => !(a.Answer.Status == AnswerStatus.Confirm
+                    || a.Status == ApplicationStatus.RejectMod)).ToList().Count,
+                RejectedCount = apps.Where(a => a.Status == ApplicationStatus.RejectMod).ToList().Count,
+            };
+        }
+
+        private static OrganizationStats GetPersonCount(IQueryable<Application> apps)
+        {
+            return new OrganizationStats()
+            {
+                FizikCount = apps.Where(a => a.Applicant.Type == Types.Individual).ToList().Count,
+                YurikCount = apps.Where(a => a.Applicant.Type == Types.Business).ToList().Count,
+                MaleCount = apps.Where(a => a.Applicant.Gender == Genders.Male).ToList().Count,
+                FemaleCount = apps.Where(a => a.Applicant.Gender == Genders.Female).ToList().Count,
+            };
+        }
     }
 }
 

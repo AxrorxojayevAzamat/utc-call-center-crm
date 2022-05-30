@@ -1,0 +1,77 @@
+﻿@model IEnumerable<CallCenterCRM.Models.ModeratorStats>
+@using CallCenterCRM.Interfaces
+@inject IUserService userService
+
+@{
+    string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    string userIdentityId = GetUserClaim(typeIdentityId);
+
+    var isAuthenticated = User.Identity.IsAuthenticated;
+
+    string GetUserClaim(string type)
+    {
+        return User.Identities.First().Claims.First(c => c.Type == type).Value;
+    }
+}
+
+<div class="table-responsive">
+
+    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+    {
+        <table id="statsTable" class="table table-striped" cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th rowspan="2" valign="middle">
+                        №
+                    </th>
+                    <th rowspan="2" valign="middle">
+                        Территориальные отделения Республиканского центра
+                    </th>
+                    <th colspan=@ViewBag.branches.Count valign="middle">
+                        Количество обращений
+                    </th>
+                    <th colspan="3" valign="middle">
+                        Заявки на статус
+                    </th>
+                    <th rowspan="2" valign="middle">
+                        Общий
+                    </th>
+                </tr>
+                <tr>
+                    @foreach (var user in ViewBag.branches)
+                    {
+                        <th>@user.Title</th>
+                    }
+                    <th>
+                        Рассмотрено
+                    </th>
+                    <th>
+                        В процессе
+                    </th>
+                    <th>
+                        Отклоненный
+                    </th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Convert.ToInt32(item.Region)</td>
+                        <td>@item.Region.GetDisplayName()</td>
+                        @foreach (var branchCount in item.BranchesCount)
+                        {
+                            <td>@branchCount</td>
+                        }
+                        <td>@item.DoneCount</td>
+                        <td>@item.ProcessCount</td>
+                        <td>@item.RejectedCount</td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</div>
