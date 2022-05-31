@@ -36,9 +36,10 @@
         <input type="hidden" asp-for="ApplicationId" />
         <input type="hidden" asp-for="AuthorId" />
         <input type="hidden" asp-for="Status" />
+        <input type="hidden" asp-for="ResponsiblePerson" />
         <div class="form-group col-md-3">
             <label asp-for="ResponsiblePerson" class="control-label"></label>
-            <input asp-for="ResponsiblePerson" class="form-control" disabled />
+            <input class="form-control" value="@Model.ResponsiblePerson" disabled />
             <span asp-validation-for="ResponsiblePerson" class="text-danger"></span>
         </div>
         <div class="form-group col-md-3">

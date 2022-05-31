@@ -146,8 +146,8 @@ namespace CallCenterCRM.Services
         {
             User moderator = _context.Users.Where(a => a.Id == userId).FirstOrDefault();
 
-            int count = _context.Answers
-                .Where(a => (a.AuthorId == userId || moderator.Id == userId) && a.Status == status && a.IsGot == false)
+            int count = _context.Answers.Include(a => a.Author)
+                .Where(a => (moderator != null ? a.Author.Id == userId : a.AuthorId == userId) && a.Status == status && a.IsGot == false)
                 .ToList().Count;
             return count;
         }
