@@ -15,6 +15,9 @@
 }
 
 <div class="table-responsive">
+    <button class="btn btn-export-excel" id="btnExport" onclick="ExportToExcel('xlsx')">
+        Экспорт в Excel <i class="menu-icon mdi mdi-file-excel"></i>
+    </button>
     <table id="statsTable" class="table table-striped" cellspacing="0" cellpadding="0">
         <thead>
             <tr>
@@ -40,27 +43,11 @@
             }
         </tbody>
     </table>
-    @*    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
-        {
-        <table id="statsTable" class="table table-striped" border="1" cellspacing="0" cellpadding="0">
-        <thead>
-        <th width="49" rowspan="2" valign="middle">
-        №
-        </th>
-        <th width="133" rowspan="2" valign="middle">
-        </th>
-        <th width="196" colspan="4" valign="middle">
-        </th>
-        <th width="49" rowspan="2" valign="middle">
-        </th>
-        <th width="147" colspan="3" valign="middle">
-        </th>
-        <th width="49" rowspan="2" valign="middle">
-        </th>
-        </thead>
-        <tbody>
-        </tbody>
-        </table>
-        }*@
 
 </div>
+
+@section Scripts {
+    @{
+		await Html.RenderPartialAsync("Scripts/_ExportExcelScriptsPartial");
+	}
+}

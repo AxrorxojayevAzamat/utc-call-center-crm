@@ -15,63 +15,68 @@
 }
 
 <div class="table-responsive">
-
-    @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
-    {
-        <table id="statsTable" class="table table-striped" cellspacing="0" cellpadding="0">
-            <thead>
-                <tr>
-                    <th rowspan="2" valign="middle">
-                        №
-                    </th>
-                    <th rowspan="2" valign="middle">
-                        Территориальные отделения Республиканского центра
-                    </th>
-                    <th colspan=@ViewBag.branches.Count valign="middle">
-                        Количество обращений
-                    </th>
-                    <th colspan="3" valign="middle">
-                        Заявки на статус
-                    </th>
-                    <th rowspan="2" valign="middle">
-                        Общий
-                    </th>
-                </tr>
-                <tr>
-                    @foreach (var user in ViewBag.branches)
-                    {
-                        <th>@user.Title</th>
-                    }
-                    <th>
-                        Рассмотрено
-                    </th>
-                    <th>
-                        В процессе
-                    </th>
-                    <th>
-                        Отклоненный
-                    </th>
-                </tr>
-
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
+    <button class="btn btn-export-excel" id="btnExport" onclick="ExportToExcel('xlsx')">
+        Экспорт в Excel <i class="menu-icon mdi mdi-file-excel"></i>
+    </button>
+    <table id="statsTable" class="table table-striped" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th rowspan="2" valign="middle">
+                    №
+                </th>
+                <th rowspan="2" valign="middle">
+                    Территориальные отделения Республиканского центра
+                </th>
+                <th colspan=@ViewBag.branches.Count valign="middle">
+                    Количество обращений
+                </th>
+                <th colspan="3" valign="middle">
+                    Заявки на статус
+                </th>
+                <th rowspan="2" valign="middle">
+                    Общий
+                </th>
+            </tr>
+            <tr>
+                @foreach (var user in ViewBag.branches)
                 {
-                    <tr>
-                        <td>@Convert.ToInt32(item.Region)</td>
-                        <td>@item.Region.GetDisplayName()</td>
-                        @foreach (var branchCount in item.BranchesCount)
-                        {
-                            <td>@branchCount</td>
-                        }
-                        <td>@item.DoneCount</td>
-                        <td>@item.ProcessCount</td>
-                        <td>@item.RejectedCount</td>
-                        <td></td>
-                    </tr>
+                    <th>@user.Title</th>
                 }
-            </tbody>
-        </table>
-    }
+                <th>
+                    Рассмотрено
+                </th>
+                <th>
+                    В процессе
+                </th>
+                <th>
+                    Отклоненный
+                </th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Convert.ToInt32(item.Region)</td>
+                    <td>@item.Region.GetDisplayName()</td>
+                    @foreach (var branchCount in item.BranchesCount)
+                    {
+                        <td>@branchCount</td>
+                    }
+                    <td>@item.DoneCount</td>
+                    <td>@item.ProcessCount</td>
+                    <td>@item.RejectedCount</td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
 </div>
+
+@section Scripts {
+    @{
+		await Html.RenderPartialAsync("Scripts/_ExportExcelScriptsPartial");
+	}
+}

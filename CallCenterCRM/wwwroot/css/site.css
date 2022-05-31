@@ -2768,6 +2768,12 @@ h5 span.crm {
 a.dropdown-item i.text-primary {
     color: #426696!important;
 }
+
+.btn-export-excel {
+    border: 1px solid #107c41;
+    color: #107c41;
+    font-size: 16px;
+}
 /*.table-row-item:hover {
     opacity: 0.7;
 border: 2px solid #000;

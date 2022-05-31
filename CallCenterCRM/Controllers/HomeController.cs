@@ -84,5 +84,23 @@ namespace CallCenterCRM.Controllers
 
             return View(organizationStats);
         }
+
+        [Authorize(Roles = "CrmModerator")]
+        public IActionResult StatisticsByClassification(int userId)
+        {
+            User? user = _context.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.Direction)
+                    .ThenInclude(c => c.Classifications)
+                .FirstOrDefault();
+
+            var classifications = user?.Direction?.Classifications.ToList();
+            var countApps = _context.Applications.Include(a => a.Recipient)
+                .Where(a => a.RecipientId == userId || a.Recipient.ModeratorId == userId)
+                .ToList();
+            ViewData["countApps"] = (float)countApps.Count;
+
+            return View("StatisticsOperator", classifications);
+        }
     }
 }

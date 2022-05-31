@@ -15,7 +15,9 @@
 } 
 
 <div class="table-responsive">
-    <button class="btn" id="btnExport" onclick="ExportToExcel('xlsx')"><i class="menu-icon mdi mdi-close-circle-outline"></i>Export to Excel</button>
+    <button class="btn btn-export-excel" id="btnExport" onclick="ExportToExcel('xlsx')">
+        Экспорт в Excel <i class="menu-icon mdi mdi-file-excel"></i>
+    </button>
     <table id="statsTable" class="table table-striped" cellspacing="0" cellpadding="0">
         <thead>
             <tr>
@@ -60,7 +62,7 @@
                     <td>@item.RejectedCount</td>
                     <td></td>
                 </tr>
-            }
+            } 
         </tbody>
     </table>
 </div>
