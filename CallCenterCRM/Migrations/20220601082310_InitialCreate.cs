@@ -10,29 +10,29 @@ namespace CallCenterCRM.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "answers");
+            //migrationBuilder.DropTable(
+            //    name: "answers");
 
-            migrationBuilder.DropTable(
-                name: "application");
+            //migrationBuilder.DropTable(
+            //    name: "application");
 
-            migrationBuilder.DropTable(
-                name: "classification");
+            //migrationBuilder.DropTable(
+            //    name: "classification");
 
-            migrationBuilder.DropTable(
-                name: "attachments");
+            //migrationBuilder.DropTable(
+            //    name: "attachments");
 
-            migrationBuilder.DropTable(
-                name: "applicants");
+            //migrationBuilder.DropTable(
+            //    name: "applicants");
 
-            migrationBuilder.DropTable(
-                name: "citydistrict");
+            //migrationBuilder.DropTable(
+            //    name: "citydistrict");
 
-            migrationBuilder.DropTable(
-                name: "users");
+            //migrationBuilder.DropTable(
+            //    name: "users");
 
-            migrationBuilder.DropTable(
-                name: "direction");
+            //migrationBuilder.DropTable(
+            //    name: "direction");
             migrationBuilder.CreateTable(
                 name: "attachments",
                 columns: table => new
