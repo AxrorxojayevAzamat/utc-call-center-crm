@@ -20,3 +20,21 @@ public static class EnumExtensions
         return displayName;
     }
 }
+
+public class ExpireTimeValidationAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        value = (DateTime)value;
+        // This assumes inclusivity, i.e. exactly six years ago is okay
+        if (DateTime.Today.CompareTo(value) < 0)
+        {
+            bool isGreeter = DateTime.Today.CompareTo(value) > 0;
+            return ValidationResult.Success;
+        }
+        else
+        {
+            return new ValidationResult("Срок действия должен быть позже сегодняшнего дня!");
+        }
+    }
+}

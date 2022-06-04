@@ -37,7 +37,7 @@
                         @Html.DisplayFor(modelItem => item.Applications.Count)
                     </td>
                     <td>
-                        @($"{(item.Applications.Count * 100 / ViewBag.countApps).ToString("N3")}%")
+                        @(item.Applications.Count > 0 ? $"{(item.Applications.Count * 100 / ViewBag.countApps).ToString("N3")}%" : "0.000%")
                     </td>
                 </tr>
             }

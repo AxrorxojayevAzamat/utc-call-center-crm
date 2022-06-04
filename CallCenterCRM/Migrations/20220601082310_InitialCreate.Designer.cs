@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CallCenterCRM.Migrations
 {
     [DbContext(typeof(CallcentercrmContext))]
-    [Migration("20220527142536_AddDirectionTable")]
-    partial class AddDirectionTable
+    [Migration("20220601082310_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -108,7 +108,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTime>("BirthDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValue(new DateTime(2022, 5, 27, 14, 25, 36, 7, DateTimeKind.Utc).AddTicks(2980));
+                        .HasDefaultValue(new DateTime(2022, 6, 1, 8, 23, 10, 816, DateTimeKind.Utc).AddTicks(7007));
 
                     b.Property<int?>("CityDistrictId")
                         .HasColumnType("integer");

@@ -281,7 +281,8 @@
                         <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
                     }
                 } 
-                @if (Model.ExpireTime < currentTime && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.RejectDelay) )
+                @if (
+                (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay) )
                 {
                     <a asp-action="AskDelay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Спросите продолжить</a>
                 }

@@ -127,7 +127,7 @@ namespace CallCenterCRM.Services
         public bool ShowReason(Application app, string role)
         {
             return (app.Reason != null || app.Reason != "")
-            && (app.Status == ApplicationStatus.RejectOrg && role != Roles.CrmOperator.GetDisplayName()
+            && ((app.Status == ApplicationStatus.RejectOrg || app.Status == ApplicationStatus.RejectDelay) && role != Roles.CrmOperator.GetDisplayName()
             || app.Status == ApplicationStatus.RejectMod && role == Roles.CrmOperator.GetDisplayName());
         }
 
@@ -135,7 +135,8 @@ namespace CallCenterCRM.Services
         {
             User moderator = _context.Users.Where(a => a.ModeratorId == userId).FirstOrDefault();
             var apps = _context.Applications.Include(a => a.Recipient)
-                .Where(a => (moderator != null ? a.Recipient.ModeratorId == userId : a.RecipientId == userId)
+                .Where(a => (moderator != null && status != ApplicationStatus.SendMod 
+                ? a.Recipient.ModeratorId == userId : a.RecipientId == userId)
                 && a.Status == status && a.IsGot == false).ToList();
             int count = apps.Count;
 
@@ -207,7 +208,8 @@ namespace CallCenterCRM.Services
 
             foreach (var branch in branches.FirstOrDefault().Organizations)
             {
-                branchesCount.Add(apps.Where(a => a.RecipientId == branch.Id).ToList().Count);
+                List<Application> branchApps = apps.Where(a => a.RecipientId == branch.Id).ToList();
+                branchesCount.Add(branchApps.Count);
             }
 
             return branchesCount;
@@ -245,23 +247,32 @@ namespace CallCenterCRM.Services
 
         private static Stats GetStatusCount(IQueryable<Application> apps)
         {
+
+            List<Application> appsDone = apps.Where(a => a.Answer.Status == AnswerStatus.Confirm).ToList();
+            List<Application> appsProcess = apps.Where(a => !(a.Answer.Status == AnswerStatus.Confirm|| a.Status == ApplicationStatus.RejectMod)).ToList();
+            List<Application> appReject = apps.Where(a => a.Status == ApplicationStatus.RejectMod).ToList();
+            
             return new Stats()
             {
-                DoneCount = apps.Where(a => a.Answer.Status == AnswerStatus.Confirm).ToList().Count,
-                ProcessCount = apps.Where(a => !(a.Answer.Status == AnswerStatus.Confirm
-                    || a.Status == ApplicationStatus.RejectMod)).ToList().Count,
-                RejectedCount = apps.Where(a => a.Status == ApplicationStatus.RejectMod).ToList().Count,
+                DoneCount = appsDone.Count,
+                ProcessCount = appsProcess.Count,
+                RejectedCount = appReject.Count,
             };
         }
 
         private static OrganizationStats GetPersonCount(IQueryable<Application> apps)
         {
+            List<Application> appsFizik = apps.Where(a => a.Applicant.Type == Types.Individual).ToList();
+            List<Application> appsYurik = apps.Where(a => a.Applicant.Type == Types.Business).ToList();
+            List<Application> appsMale = apps.Where(a => a.Applicant.Gender == Genders.Male).ToList();
+            List<Application> appsFemale = apps.Where(a => a.Applicant.Gender == Genders.Female).ToList();
+            
             return new OrganizationStats()
             {
-                FizikCount = apps.Where(a => a.Applicant.Type == Types.Individual).ToList().Count,
-                YurikCount = apps.Where(a => a.Applicant.Type == Types.Business).ToList().Count,
-                MaleCount = apps.Where(a => a.Applicant.Gender == Genders.Male).ToList().Count,
-                FemaleCount = apps.Where(a => a.Applicant.Gender == Genders.Female).ToList().Count,
+                FizikCount = appsFizik.Count,
+                YurikCount = appsYurik.Count,
+                MaleCount = appsMale.Count,
+                FemaleCount = appsFemale.Count,
             };
         }
     }

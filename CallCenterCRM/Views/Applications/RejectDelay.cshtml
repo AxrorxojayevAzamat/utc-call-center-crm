@@ -7,7 +7,15 @@
 <div>
     <form asp-action="RejectDelay">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Да" class="btn btn-danger btn-rounded btn-fw" /> 
-        <a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+        <input type="hidden" asp-for="CreatedDate" />
+		<div class="form-group col-md-6">
+			<label asp-for="Reason" class="control-label"></label>
+			<textarea asp-for="Reason" class="form-control" required></textarea>
+			<span asp-validation-for="Reason" class="text-danger"></span>
+		</div>
+       <div class="form-group col-md-12 mt-3">
+			<input type="submit" value="Отклонять" asp-action="RejectDelay" asp-route-id=@Model.Id class="btn btn-danger btn-rounded" />
+			<a asp-action="Details" asp-route-id=@Model.Id class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
+		</div>
     </form>
 </div>

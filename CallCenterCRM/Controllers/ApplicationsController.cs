@@ -631,13 +631,33 @@ namespace CallCenterCRM
         [Authorize(Roles = "CrmModerator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult RejectMod(int id)
+        public IActionResult RejectMod(int id, Application app)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
-            application.Status = ApplicationStatus.RejectMod;
-            _context.Update(application);
-            _context.SaveChanges();
+            
+            if (application == null)
+            {
+                return NotFound();
+            }
 
+            try
+            {
+                application.Status = ApplicationStatus.RejectMod;
+                application.Reason = app.Reason;
+                _context.Update(application);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ApplicationExists(app.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
         }
 
@@ -661,7 +681,7 @@ namespace CallCenterCRM
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
             int recipientId = application.RecipientId;
 
-            if (id != app.Id)
+            if (application == null)
             {
                 return NotFound();
             }
@@ -675,6 +695,13 @@ namespace CallCenterCRM
                     application.IsGot = false;
                     _context.Update(application);
                     _context.SaveChanges();
+                } 
+                else
+                {
+                    var branches = _context.Users.Where(u => u.ModeratorId == application.RecipientId).ToList();
+                    ViewData["RecipientId"] = new SelectList(branches, "Id", "Title", app.RecipientId);
+
+                    return View(app);
                 }
             }
             catch (DbUpdateConcurrencyException)
@@ -708,7 +735,7 @@ namespace CallCenterCRM
             var application = _context.Applications.Include(a => a.Recipient).FirstOrDefault(a => a.Id == id);
             int recipientId = application.RecipientId;
 
-            if (id != app.Id)
+            if (application == null)
             {
                 return NotFound();
             }
@@ -755,7 +782,7 @@ namespace CallCenterCRM
             var application = _context.Applications.Include(a => a.Recipient).FirstOrDefault(a => a.Id == id);
             int recipientId = application.RecipientId;
 
-            if (id != app.Id)
+            if (application == null)
             {
                 return NotFound();
             }
@@ -817,6 +844,7 @@ namespace CallCenterCRM
         public IActionResult AskDelay(int id)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            
             application.Status = ApplicationStatus.AskDelay;
             application.IsGot = false;
             _context.Update(application);
@@ -853,14 +881,33 @@ namespace CallCenterCRM
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "CrmModerator,CrmOrganization")]
-        public IActionResult RejectDelay(int id)
+        public IActionResult RejectDelay(int id, Application app)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
-            application.Status = ApplicationStatus.RejectDelay;
-            application.IsGot = false;
-            _context.Update(application);
-            _context.SaveChanges();
-
+            if (application == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                application.Status = ApplicationStatus.RejectDelay;
+                application.Reason = app.Reason;
+                application.IsGot = false;
+                _context.Update(application);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ApplicationExists(app.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            
             return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
         }
     }

@@ -6,10 +6,33 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CallCenterCRM.Migrations
 {
-    public partial class PostgresInitial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "answers");
+
+            migrationBuilder.DropTable(
+                name: "application");
+
+            migrationBuilder.DropTable(
+                name: "classification");
+
+            migrationBuilder.DropTable(
+                name: "attachments");
+
+            migrationBuilder.DropTable(
+                name: "applicants");
+
+            migrationBuilder.DropTable(
+                name: "citydistrict");
+
+            migrationBuilder.DropTable(
+                name: "users");
+
+            migrationBuilder.DropTable(
+                name: "direction");
             migrationBuilder.CreateTable(
                 name: "attachments",
                 columns: table => new
@@ -45,22 +68,43 @@ namespace CallCenterCRM.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "classification",
+                name: "direction",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Direction = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Value = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    Consequence = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_direction", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "classification",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    DirectionId = table.Column<int>(type: "integer", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_classification", x => x.Id);
+                    table.ForeignKey(
+                        name: "Classification_fk0",
+                        column: x => x.DirectionId,
+                        principalTable: "direction",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -83,7 +127,7 @@ namespace CallCenterCRM.Migrations
                     PassportData = table.Column<string>(type: "text", nullable: true),
                     Address = table.Column<string>(type: "text", nullable: true),
                     ModeratorId = table.Column<int>(type: "integer", nullable: true),
-                    ClassificationId = table.Column<int>(type: "integer", nullable: true),
+                    DirectionId = table.Column<int>(type: "integer", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
@@ -96,9 +140,9 @@ namespace CallCenterCRM.Migrations
                         principalTable: "users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "Users_fk1",
-                        column: x => x.ClassificationId,
-                        principalTable: "classification",
+                        name: "Users_fk2",
+                        column: x => x.DirectionId,
+                        principalTable: "direction",
                         principalColumn: "Id");
                 });
 
@@ -119,7 +163,7 @@ namespace CallCenterCRM.Migrations
                     Maxalla = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Address = table.Column<string>(type: "text", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 4, 11, 12, 18, 4, 613, DateTimeKind.Utc).AddTicks(7616)),
+                    BirthDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValue: new DateTime(2022, 6, 1, 8, 23, 10, 816, DateTimeKind.Utc).AddTicks(7007)),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     Employment = table.Column<int>(type: "integer", nullable: false),
                     Confidentiality = table.Column<bool>(type: "boolean", nullable: false),
@@ -149,7 +193,7 @@ namespace CallCenterCRM.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ClassificationId = table.Column<int>(type: "integer", nullable: false),
-                    ExpireTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExpireTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: true),
                     Reason = table.Column<string>(type: "text", nullable: true),
@@ -162,6 +206,7 @@ namespace CallCenterCRM.Migrations
                     AdditionalNote = table.Column<string>(type: "text", nullable: true),
                     IsChanged = table.Column<bool>(type: "boolean", nullable: false),
                     IsDelayed = table.Column<bool>(type: "boolean", nullable: false),
+                    IsGot = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
@@ -198,14 +243,14 @@ namespace CallCenterCRM.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ResponsiblePerson = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Executor = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    ResponseLetter = table.Column<string>(type: "text", nullable: false),
                     AttachmentId = table.Column<int>(type: "integer", nullable: true),
-                    RegisterNumber = table.Column<int>(type: "integer", nullable: false),
+                    RegisterNumber = table.Column<string>(type: "text", nullable: false),
                     Result = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Conclusion = table.Column<string>(type: "text", nullable: false),
                     AuthorId = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     ApplicationId = table.Column<int>(type: "integer", nullable: false),
+                    IsGot = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
@@ -279,6 +324,11 @@ namespace CallCenterCRM.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "Classification_fk0",
+                table: "classification",
+                column: "DirectionId");
+
+            migrationBuilder.CreateIndex(
                 name: "Email",
                 table: "users",
                 column: "Email",
@@ -296,9 +346,9 @@ namespace CallCenterCRM.Migrations
                 column: "ModeratorId");
 
             migrationBuilder.CreateIndex(
-                name: "Users_fk1",
+                name: "Users_fk2",
                 table: "users",
-                column: "ClassificationId");
+                column: "DirectionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -308,6 +358,9 @@ namespace CallCenterCRM.Migrations
 
             migrationBuilder.DropTable(
                 name: "application");
+
+            migrationBuilder.DropTable(
+                name: "classification");
 
             migrationBuilder.DropTable(
                 name: "attachments");
@@ -322,7 +375,7 @@ namespace CallCenterCRM.Migrations
                 name: "users");
 
             migrationBuilder.DropTable(
-                name: "classification");
+                name: "direction");
         }
     }
 }
