@@ -1790,7 +1790,7 @@ a {
 }
 
 .table-responsive {
-    overflow-x: auto;
+    overflow-x: visible;
     -webkit-overflow-scrolling: touch;
 }
 

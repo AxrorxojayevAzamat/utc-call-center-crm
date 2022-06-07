@@ -1,8 +1,12 @@
 ﻿<script>
 	let city_district = $("#CityDistrictId")
 
+	const params = new Proxy(new URLSearchParams(window.location.search), {
+	  get: (searchParams, prop) => searchParams.get(prop),
+	});
+
 	$(document).ready(() => {
-		requestToCity(1)
+		requestToCity(params.Region, params.CityDistrictId)
 	})
 
 	$('#Region').on("select2:select", function(e) {
@@ -10,7 +14,7 @@
 		requestToCity(id)
 	})
 
-	function requestToCity(regionId) {
+	function requestToCity(regionId, cityId = 0) {
 		$.ajax({
 			url: location.origin + `/api/cities/${regionId}`,
 			method: "GET",
@@ -21,8 +25,10 @@
 			success: function(data) {
 				city_district.empty();
 
+				city_district.append(new Option(" - ", ""))
 				for(let i in data) {
-					city_district.append(new Option(data[i].title, data[i].id))
+					if(cityId) city_district.append(new Option(data[i].title, data[i].id, cityId == data[i].id, cityId == data[i].id))
+					else city_district.append(new Option(data[i].title, data[i].id))
 				}
 
 				city_district.trigger('change')

@@ -64,7 +64,7 @@ namespace CallCenterCRM.Models
         public Genders Gender { get; set; }
         [DataType(DataType.Date)]
         [Display(Name = "Дата рождения")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime BirthDate { get; set; }
         [Display(Name = "Тип заявителя")]
         public Types Type { get; set; }

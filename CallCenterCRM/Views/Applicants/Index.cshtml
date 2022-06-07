@@ -1,88 +1,158 @@
 ﻿@model IEnumerable<CallCenterCRM.Models.Applicant>
 
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index";
 }
 
 <h1>Заявители</h1>
 
 <p>
-	<a asp-controller="Applications" asp-action="CreateApplicant" class="btn btn-success btn-rounded">Создать новое</a>
+    <a asp-controller="Applications" asp-action="CreateApplicant" class="btn btn-success btn-rounded">Создать новое</a>
 </p>
 <div class="table-responsive">
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>
-					Ф.И.О
-				</th>
-				<th>
-					Адрес
-				</th>
-				<th>
-					Дополнительная информация
-				</th>
-				<th>
-					Количество обращений
-				</th>
-				@*<th></th>*@
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model)
-			{
-				<tr>
-					<td>
-						@Html.DisplayFor(modelItem => item.Surname)
-						@Html.DisplayFor(modelItem => item.Firstname)
-						@Html.DisplayFor(modelItem => item.Middlename)
-					</td>
-					<td>
-						<b>Область: </b>@Html.DisplayFor(modelItem => item.Region)<br>
-						<b>Район/город: </b>@Html.DisplayFor(modelItem => item.CityDistrict.Title)<br>
-						<b>Текущий адрес проживания: </b>@Html.DisplayFor(modelItem => item.Address)<br>
-					</td>
-					<td>
-						@if (item.Contact != null)
-						{
-							<b>Телефон:</b>
-							@Html.DisplayFor(modelItem => item.Contact  ) <br>
+    <form asp-controller="Applicants" asp-action="Index" method="get">
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="Surname" class="control-label">Фамилия</label>
+                <input name="Surname" id="Surname" class="form-control" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Firstname" class="control-label">Имя</label>
+                <input name="Firstname" id="Firstname" class="form-control" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Middlename" class="control-label">Отчество</label>
+                <input name="Middlename" id="Middlename" class="form-control" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Appcount" class="control-label">Количество обращений</label>
+                <input type="number" name="Appcount" id="Appcount" class="form-control" value=@ViewBag.Appcount />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Contact" class="control-label">Контакт</label>
+                <input name="Contact" id="Contact" class="form-control" value=@ViewBag.Contact />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Region" class="control-label">Регион</label>
+                <select name="Region" id="Region" class="form-control" asp-items=@ViewBag.RegionsList>
+                    <option value=""> - </option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="CityDistrictId" class="control-label">Район/город</label>
+                <select name="CityDistrictId" id="CityDistrictId" class="form-control" asp-items="ViewBag.CityDistrictId">
+                    <option value=""> - </option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="ExtraContact" class="control-label">Дополнительный контакт</label>
+                <input name="ExtraContact" id="ExtraContact" class="form-control" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="BirthDate" class="control-label">Дата рождения</label>
+                <input type="date" name="BirthDate" id="BirthDate" class="form-control" value=@ViewBag.Birthdate />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Gender" class="control-label">Пол</label>
+                <select name="Gender" id="Gender" class="form-control" asp-items="ViewBag.GendersList">
+                    <option value=""> - </option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="Address" class="control-label">Адрес</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input name="Address" id="Address" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-end">
+                            <button id="clean_fields" class="btn btn-secondary">Очистить</button>
+                            <input type="submit" value="Поиск" class="btn btn-info" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-						}
-						@if (item.BirthDate != null)
-						{
-							<b>Дата рождения: </b>
-							@Html.DisplayFor(modelItem => item.BirthDate ) <br>
+    </form>
 
-						}
-						@if (item.ExtraContact != null)
-						{
-							<b>Дополнительные телефоны:</b>
-							@Html.DisplayFor(modelItem => item.ExtraContact )
-							<br>
-						}
-						@if (item.Gender != null)
-						{
-							<b>Пол:</b>
-							@Html.DisplayFor(modelItem => item.Gender )
-							<br>
-						}
-					</td>
-					<td>
-						<a asp-controller="Applications" asp-action="ListByApplicant" asp-route-applicantId=@item.Id
-						class="btn btn-rounded btn-info application-count" target="_blank">
-							@item.Applications.Count
-						</a>
-						<a asp-controller="Applications" asp-action="EditApplicantCreateApp" asp-route-applicantId=@item.Id class="btn btn-rounded btn-primary">Создать новый</a>
-					</td>
-					<td>
-						@*<a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
-						<a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
-						<a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>*@
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Ф.И.О
+                </th>
+                <th>
+                    Адрес
+                </th>
+                <th>
+                    Дополнительная информация
+                </th>
+                <th>
+                    Количество обращений
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Surname)
+                        @Html.DisplayFor(modelItem => item.Firstname)
+                        @Html.DisplayFor(modelItem => item.Middlename)
+                    </td>
+                    <td>
+                        <b>Область: </b>@Html.DisplayFor(modelItem => item.Region)<br>
+                        <b>Район/город: </b>@Html.DisplayFor(modelItem => item.CityDistrict.Title)<br>
+                        <b>Текущий адрес проживания: </b>@Html.DisplayFor(modelItem => item.Address)<br>
+                    </td>
+                    <td>
+                        @if (item.Contact != null)
+                        {
+                            <b>Телефон:</b>
+                            @Html.DisplayFor(modelItem => item.Contact  ) <br>
+
+                        }
+                        @if (item.BirthDate != null)
+                        {
+                            <b>Дата рождения: </b>
+                            @Html.DisplayFor(modelItem => item.BirthDate ) <br>
+
+                        }
+                        @if (item.ExtraContact != null)
+                        {
+                            <b>Дополнительные телефоны:</b>
+                            @Html.DisplayFor(modelItem => item.ExtraContact )
+                            <br>
+                        }
+                        @if (item.Gender != null)
+                        {
+                            <b>Пол:</b>
+                            @Html.DisplayFor(modelItem => item.Gender )
+                            <br>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Applications" asp-action="ListByApplicant" asp-route-applicantId=@item.Id
+                       class="btn btn-rounded btn-info application-count" target="_blank">
+                            @item.Applications.Count
+                        </a>
+                        <a asp-controller="Applications" asp-action="EditApplicantCreateApp" asp-route-applicantId=@item.Id class="btn btn-rounded btn-primary">Создать новый</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
+
+@section Scripts {
+    @{
+		await Html.RenderPartialAsync("Scripts/_InputMaskScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/CityScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/SearchFieldsScriptsPartial");
+	}
+}

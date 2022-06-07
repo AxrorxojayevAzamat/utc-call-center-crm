@@ -52,12 +52,16 @@
         </div>
         <div class="form-group col-md-4">
             <label asp-for="Region" class="control-label"></label>
-            <select asp-for="Region" class="form-control" asp-items="Model.RegionsList"></select>
+            <select asp-for="Region" class="form-control" asp-items="Model.RegionsList">
+                <option value=""> - </option>
+            </select>
             <span asp-validation-for="Region" class="text-danger"></span>
         </div>
         <div class="form-group col-md-4">
             <label asp-for="CityDistrictId" class="control-label"></label>
-            <select asp-for="CityDistrictId" class="form-control" asp-items="ViewBag.CityDistrictId"></select>
+            <select asp-for="CityDistrictId" class="form-control" asp-items="ViewBag.CityDistrictId">
+                <option value=""> - </option>
+            </select>
         </div>
         <div class="form-group col-md-4">
             <label asp-for="Maxalla" class="control-label"></label>
