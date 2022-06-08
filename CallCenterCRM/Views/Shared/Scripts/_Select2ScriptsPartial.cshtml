@@ -1,7 +1,9 @@
 ﻿<script src="~/lib/select2.js"></script>
 <script>
-	//let searchableFields = ["OrganizationId", "ClassificationId"]
 	$('select').select2()
-	//for(let x of $('select'))
-	//	console.log(x.id)
+
+	$('#selectBranchId').change(
+     function(){
+          $(this).closest('form').trigger('submit');
+     });
 </script>

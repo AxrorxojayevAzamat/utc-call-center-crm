@@ -10,6 +10,8 @@ namespace CallCenterCRM.Models
         public int DoneCount { get; set; }
         public int ProcessCount { get; set; }
         public int RejectedCount { get; set; }
+
+        public int AllCount { get; set; }
     }
 
     public class ModeratorStats : Stats

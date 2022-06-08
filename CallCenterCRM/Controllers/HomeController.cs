@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using System.Diagnostics;
 using CallCenterCRM.Interfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CallCenterCRM.Controllers
 {
@@ -64,15 +65,33 @@ namespace CallCenterCRM.Controllers
         }
 
         [Authorize(Roles = "CrmModerator")]
-        public IActionResult StatisticsModerator(int userId)
-        {
+        public IActionResult StatisticsModerator(int userId, int? branchId, bool? byClassification)
+        { 
+            if(byClassification ?? false) {
+                User? user1 = _context.Users
+               .Where(u => u.Id == userId)
+               .Include(u => u.Direction)
+                   .ThenInclude(c => c.Classifications)
+               .FirstOrDefault();
+
+                var classifications = user1?.Direction?.Classifications.ToList();
+                var countApps = _context.Applications.Include(a => a.Recipient)
+                    .Where(a => a.RecipientId == userId || a.Recipient.ModeratorId == userId)
+                    .ToList();
+                ViewData["countApps"] = (float)countApps.Count;
+                ViewData["byClassification"] = byClassification;
+
+                return View("StatisticsOperator", classifications);
+            }
+
             User? user = _context.Users
                 .Include(u => u.Organizations)
                 .Where(u => u.Id == userId).FirstOrDefault();
 
             ViewData["branches"] = user.Organizations.ToList();
+            ViewData["BranchesList"] = new SelectList(user.Organizations, "Id", "Title", branchId ?? null);
 
-            List<ModeratorStats>? moderatorStats = _applicationService.GetModeratorStats(userId);
+            List<ModeratorStats>? moderatorStats = _applicationService.GetModeratorStats(userId, branchId ?? null);
 
             return View(moderatorStats);
         }
@@ -85,22 +104,10 @@ namespace CallCenterCRM.Controllers
             return View(organizationStats);
         }
 
-        [Authorize(Roles = "CrmModerator")]
-        public IActionResult StatisticsByClassification(int userId)
-        {
-            User? user = _context.Users
-                .Where(u => u.Id == userId)
-                .Include(u => u.Direction)
-                    .ThenInclude(c => c.Classifications)
-                .FirstOrDefault();
-
-            var classifications = user?.Direction?.Classifications.ToList();
-            var countApps = _context.Applications.Include(a => a.Recipient)
-                .Where(a => a.RecipientId == userId || a.Recipient.ModeratorId == userId)
-                .ToList();
-            ViewData["countApps"] = (float)countApps.Count;
-
-            return View("StatisticsOperator", classifications);
-        }
+        //[Authorize(Roles = "CrmModerator")]
+        //public IActionResult StatisticsByClassification(int userId)
+        //{
+           
+        //}
     }
 }

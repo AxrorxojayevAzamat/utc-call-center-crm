@@ -174,7 +174,7 @@ namespace CallCenterCRM.Services
                 || (role == Roles.CrmOrganization && status == AnswerStatus.Reject);
         }
 
-        public List<ModeratorStats>? GetModeratorStats(int userId)
+        public List<ModeratorStats>? GetModeratorStats(int userId, int? branchId)
         {
             var stats = new List<ModeratorStats>();
 
@@ -184,8 +184,9 @@ namespace CallCenterCRM.Services
                 var applications = _context.Applications
                     .Include(u => u.Applicant)
                     .Include(u => u.Recipient)
-                        .ThenInclude(r => r.Organizations)
-                    .Where(a => a.Applicant.Region == region && a.Recipient.ModeratorId == userId);
+                        //.ThenInclude(r => r.Organizations)
+                    .Where(a => a.Applicant.Region == region && 
+                    (branchId != null ? a.RecipientId == branchId : (a.Recipient.ModeratorId == userId || a.RecipientId == userId)));
 
                 var user = _context.Users.Where(u => u.Id == userId).Include(u => u.Organizations);
 
@@ -193,10 +194,11 @@ namespace CallCenterCRM.Services
                 ModeratorStats stat = new ModeratorStats()
                 {
                     Region = region,
-                    BranchesCount = CountBranchesApps(user, applications),
+                    //BranchesCount = CountBranchesApps(user, applications),
                     DoneCount = GetStatusCount(applications).DoneCount,
                     ProcessCount = GetStatusCount(applications).ProcessCount,
                     RejectedCount = GetStatusCount(applications).RejectedCount,
+                    AllCount = applications.Count(),
                 };
                 stats.Add(stat);
             }
@@ -240,6 +242,8 @@ namespace CallCenterCRM.Services
                     DoneCount = GetStatusCount(applications).DoneCount,
                     ProcessCount = GetStatusCount(applications).ProcessCount,
                     RejectedCount = GetStatusCount(applications).RejectedCount,
+                    
+                    AllCount = applications.Count(),
                 };
                 stats.Add(stat);
             }
@@ -251,7 +255,7 @@ namespace CallCenterCRM.Services
         {
 
             List<Application> appsDone = apps.Where(a => a.Answer.Status == AnswerStatus.Confirm).ToList();
-            List<Application> appsProcess = apps.Where(a => !(a.Answer.Status == AnswerStatus.Confirm|| a.Status == ApplicationStatus.RejectMod)).ToList();
+            List<Application> appsProcess = apps.Where(a => !(a.Answer.Status == AnswerStatus.Confirm || a.Status == ApplicationStatus.RejectMod)).ToList();
             List<Application> appReject = apps.Where(a => a.Status == ApplicationStatus.RejectMod).ToList();
             
             return new Stats()

@@ -15,6 +15,20 @@
 }
 
 <div class="table-responsive">
+    @if (ViewBag.byClassification ?? false)
+    {
+        <div class="row">
+            <div class="form-group">
+                <a class="btn btn-info" asp-area="" asp-controller="Home" asp-action="StatisticsModerator"
+               asp-route-userId=@userService.GetUserId(userIdentityId) asp-route-byClassification=@(true)>
+                    Статистика по классам
+                </a>
+                <a class="btn btn-inverse-info" asp-area="" asp-controller="Home" asp-action="StatisticsModerator" asp-route-userId=@userService.GetUserId(userIdentityId)>
+                    Статистика
+                </a>
+            </div>
+        </div>
+    }
     <button class="btn btn-export-excel" id="btnExport" onclick="ExportToExcel('xlsx')">
         Экспорт в Excel <i class="menu-icon mdi mdi-file-excel"></i>
     </button>

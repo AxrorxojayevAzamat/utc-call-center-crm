@@ -60,9 +60,13 @@
                     <td>@item.DoneCount</td>
                     <td>@item.ProcessCount</td>
                     <td>@item.RejectedCount</td>
-                    <td></td>
+                    <td><b>@item.AllCount</b></td>
                 </tr>
             } 
+             <tr>
+                <td colspan="8"></td>
+                <td colspan="2"><b>Общее количество: @Model.Sum(m => m.AllCount)</b></td>
+            </tr>
         </tbody>
     </table>
 </div>
