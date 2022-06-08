@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
+using PagedList;
 
 namespace CallCenterCRM
 {
@@ -21,37 +22,62 @@ namespace CallCenterCRM
         }
 
         public async Task<IActionResult> Index(string? surname, string? firstname, string? middlename, int? appcount,
-            int? region, int? citydistrictid, string? contact, string? extracontact, DateTime? birthdate, int? gender, string? address)
+            int? region, int? citydistrictid, string? contact, string? extracontact, DateTime? birthdate, int? gender, string? address,
+            int? page, int? pageSize)
         {
-            ViewData["Surname"] = surname ?? " ";
+
+            // searching from DB
+            var applicants = _context.Applicants
+                .Include(a => a.Applications)
+                .Include(a => a.CityDistrict)
+                .Include(a => a.Organization)
+                .Where(a => (!String.IsNullOrEmpty(address) ? a.Address.ToLower().Contains(address.ToLower()) : true)
+                && ((appcount != null && appcount != 0) ? a.Applications.Count == appcount : true)
+                && (!String.IsNullOrEmpty(extracontact) ? a.ExtraContact == extracontact : true)
+                && (birthdate != null ? a.BirthDate.Equals(birthdate) : true)
+                && ((citydistrictid != null && citydistrictid != 0) ? a.CityDistrictId == citydistrictid : true)
+                && ((region != null && region != 0) ? ((int)a.Region) == region : true)
+                && (!String.IsNullOrEmpty(contact) ? a.Contact == contact : true)
+                && ((gender != null) ? ((int)a.Gender) == gender : true)
+                && (!String.IsNullOrEmpty(middlename) ? a.Middlename.ToLower().Contains(middlename.ToLower()) : true)
+                && (!String.IsNullOrEmpty(firstname) ? a.Firstname.ToLower().Contains(firstname.ToLower()) : true)
+                && (!String.IsNullOrEmpty(surname) ? a.Surname.ToLower().Contains(surname.ToLower()) : true));
+            // \ searching from DB
+
+
+            // select-option values
+            ViewData["RegionsList"] = new SelectList(new Applicant().RegionsList, "Value", "Text", region);
+            ViewData["CityDistrictList"] = new SelectList(_context.Citydistricts, "Id", "Title", citydistrictid);
+            ViewData["GendersList"] = new SelectList(new Applicant().GendersList, "Value", "Text", gender);
+            // \ select-option values 
+
+
+            // pagination
+            ViewData["Surname"] = surname ?? string.Empty;
             ViewData["Firstname"] = firstname ?? string.Empty;
             ViewData["Middlename"] = middlename ?? string.Empty;
             ViewData["Appcount"] = appcount ?? null;
             ViewData["Birthdate"] = birthdate ?? null;
-            ViewData["Contact"] = contact ?? null;
-            ViewData["Birthdate"] = birthdate ?? null;
+            ViewData["Contact"] = contact ?? string.Empty;
+            ViewData["ExtraContact"] = extracontact ?? string.Empty;
+            ViewData["Region"] = region ?? null;
+            ViewData["City"] = citydistrictid ?? null;
+            ViewData["Gender"] = gender ?? null;
+            ViewData["Address"] = address ?? string.Empty;
 
-            var callcentercrmContext = _context.Applicants
-                .Include(a => a.Applications)
-                .Include(a => a.CityDistrict)
-                .Include(a => a.Organization)
-                .Where(a => !String.IsNullOrEmpty(surname) ? a.Surname.ToLower().Contains(surname.ToLower()) : true
-                && !String.IsNullOrEmpty(firstname) ? a.Firstname.ToLower().Contains(firstname.ToLower()) : true
-                && !String.IsNullOrEmpty(middlename) ? a.Middlename.ToLower().Contains(middlename.ToLower()) : true
-                && !String.IsNullOrEmpty(address) ? a.Address.ToLower().Contains(address.ToLower()) : true
-                && !String.IsNullOrEmpty(contact) ? a.Contact == contact : true
-                && !String.IsNullOrEmpty(extracontact) ? a.ExtraContact == extracontact : true
-                && birthdate != null ? a.BirthDate.Equals(birthdate) : true
-                && (region != null && region != 0) ? (int)a.Region == region : true
-                && (citydistrictid != null && citydistrictid != 0) ? a.CityDistrictId == citydistrictid : true
-                && (gender != null && gender != 0) ? (int)a.Gender == gender : true
-                && (appcount != null && appcount != 0) ? a.Applications.Count == appcount : true);
+            int allCount = _context.Applicants.ToList().Count;
+            int searchedCount = applicants.ToList().Count;
+            int size = pageSize ?? 20;
+            int pageNumber = page ?? 1;
 
-            ViewData["RegionsList"] = new SelectList(new Applicant().RegionsList, "Value", "Text", region);
-            ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title", citydistrictid);
-            ViewData["GendersList"] = new SelectList(new Applicant().GendersList, "Value", "Text", gender);
+            ViewData["allCount"] = allCount;
+            ViewData["searchedCount"] = searchedCount;
+            ViewData["pageSize"] = size;
+            ViewData["pageNumber"] = pageNumber;
+            // \ pagination
 
-            return View(await callcentercrmContext.ToListAsync());
+
+            return View(applicants.ToPagedList(pageNumber, size));
         }
 
         public async Task<IActionResult> Details(int? id)

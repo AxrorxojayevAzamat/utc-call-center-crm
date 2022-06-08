@@ -134,9 +134,11 @@ namespace CallCenterCRM.Services
         public int AppCount(int userId, ApplicationStatus status)
         {
             User moderator = _context.Users.Where(a => a.ModeratorId == userId).FirstOrDefault();
+            User userOperator = _context.Users.Where(a => a.Id == userId && a.Role == Roles.CrmOperator).FirstOrDefault();
+
             var apps = _context.Applications.Include(a => a.Recipient)
-                .Where(a => (moderator != null && status != ApplicationStatus.SendMod 
-                ? a.Recipient.ModeratorId == userId : a.RecipientId == userId)
+                .Where(a => (userOperator == null ? 
+                (moderator != null && status != ApplicationStatus.SendMod ? a.Recipient.ModeratorId == userId : a.RecipientId == userId) : true)
                 && a.Status == status && a.IsGot == false).ToList();
             int count = apps.Count;
 

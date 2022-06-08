@@ -126,6 +126,8 @@ namespace CallCenterCRM.Forms
         [Display(Name = "Дополнительное примечание к заявлении")]
         public string? AdditionalNote { get; set; }
 
+        public string? AuthorName { get; set; }
+
         [NotMapped]
         public int? OrganizationId { get; set; }
 

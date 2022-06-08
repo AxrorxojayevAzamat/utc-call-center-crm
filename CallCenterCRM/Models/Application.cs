@@ -52,6 +52,10 @@ namespace CallCenterCRM.Models
         public int ApplicantId { get; set; }
         [Display(Name = "Статус")]
         public ApplicationStatus Status { get; set; }
+
+        [Display(Name = "Автор")]
+        public string? AuthorName{ get; set; }
+
         [Display(Name = "Заявител")]
         [ForeignKey(nameof(ApplicantId))]
         [InverseProperty("Applications")]

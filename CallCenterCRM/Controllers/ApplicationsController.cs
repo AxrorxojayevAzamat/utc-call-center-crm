@@ -11,6 +11,7 @@ using CallCenterCRM.Models;
 using CallCenterCRM.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using CallCenterCRM.Forms;
+using PagedList;
 
 namespace CallCenterCRM
 {
@@ -27,17 +28,50 @@ namespace CallCenterCRM
         }
 
         [Authorize(Roles = "CrmOperator")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? surname, string? firstname, string? middlename, int? region, int? citydistrictid, string? contact,
+            int? page, int? pageSize)
         {
-            var callcentercrmContext = _context.Applications
+            var applications = _context.Applications
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Answer)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.Id);
+                .Include(a => a.Recipient)
+                .Where(a => ((citydistrictid != null && citydistrictid != 0) ? a.Applicant.CityDistrictId == citydistrictid : true)
+                && ((region != null && region != 0) ? ((int)a.Applicant.Region) == region : true)
+                && (!String.IsNullOrEmpty(contact) ? a.Applicant.Contact == contact : true)
+                && (!String.IsNullOrEmpty(middlename) ? a.Applicant.Middlename.ToLower().Contains(middlename.ToLower()) : true)
+                && (!String.IsNullOrEmpty(firstname) ? a.Applicant.Firstname.ToLower().Contains(firstname.ToLower()) : true)
+                && (!String.IsNullOrEmpty(surname) ? a.Applicant.Surname.ToLower().Contains(surname.ToLower()) : true))
+                .OrderByDescending(a => a.UpdatedDate);
 
-            return View(await callcentercrmContext.ToListAsync());
+            // select-option values
+            ViewData["RegionsList"] = new SelectList(new Applicant().RegionsList, "Value", "Text", region);
+            ViewData["CityDistrictList"] = new SelectList(_context.Citydistricts, "Id", "Title", citydistrictid);
+            // \ select-option values 
+
+            // pagination
+            ViewData["Surname"] = surname ?? string.Empty;
+            ViewData["Firstname"] = firstname ?? string.Empty;
+            ViewData["Middlename"] = middlename ?? string.Empty;
+            ViewData["Contact"] = contact ?? string.Empty;
+            ViewData["Region"] = region ?? null;
+            ViewData["City"] = citydistrictid ?? null;
+
+            int allCount = _context.Applicants.ToList().Count;
+            int searchedCount = applications.ToList().Count;
+            int size = pageSize ?? 20;
+            int pageNumber = page ?? 1;
+
+            ViewData["allCount"] = allCount;
+            ViewData["searchedCount"] = searchedCount;
+            ViewData["pageSize"] = size;
+            ViewData["pageNumber"] = pageNumber;
+            // \ pagination
+
+
+            return View(applications.ToPagedList(pageNumber, size));
         }
 
         [Authorize(Roles = "CrmModerator, CrmOrganization")]
@@ -50,9 +84,9 @@ namespace CallCenterCRM
                 .Include(a => a.Attachment)
                 .Include(a => a.Answer)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.Id);
+                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate);
 
-            return View("Index", await callcentercrmContext.ToListAsync());
+            return View("Index0", await callcentercrmContext.ToListAsync());
         }
         [Authorize(Roles = "CrmOperator")]
         public async Task<IActionResult> ListByApplicant(int? applicantId)
@@ -64,9 +98,9 @@ namespace CallCenterCRM
                 .Include(a => a.Attachment)
                 .Include(a => a.Answer)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.Id);
+                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate);
 
-            return View("Index", await callcentercrmContext.ToListAsync());
+            return View("Index0", await callcentercrmContext.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id, int? userId, string? actionName)
@@ -217,6 +251,7 @@ namespace CallCenterCRM
                         AdditionalNote = applicantApp.AdditionalNote,
                         ApplicantId = applicant.Id,
                         AttachmentId = applicantApp.AttachmentId,
+                        AuthorName = applicantApp.AuthorName,
                         ClassificationId = applicantApp.ClassificationId,
                         Comment = applicantApp.Comment,
                         //ExpireTime = applicantApp.ExpireTime,
@@ -328,6 +363,7 @@ namespace CallCenterCRM
                         AdditionalNote = applicantApp.AdditionalNote,
                         ApplicantId = applicant.Id,
                         AttachmentId = applicantApp.AttachmentId,
+                        AuthorName = applicantApp.AuthorName,
                         ClassificationId = applicantApp.ClassificationId,
                         Comment = applicantApp.Comment,
                         //ExpireTime = applicantApp.ExpireTime,
@@ -363,6 +399,7 @@ namespace CallCenterCRM
             {
                 ApplicantId = application.Applicant.Id,
                 Address = application.Applicant.Address,
+                AuthorName = application.AuthorName,
                 BirthDate = application.Applicant.BirthDate,
                 CityDistrictId = application.Applicant.CityDistrictId,
                 Confidentiality = application.Applicant.Confidentiality,
@@ -451,6 +488,7 @@ namespace CallCenterCRM
                         AdditionalNote = applicantApp.AdditionalNote,
                         ApplicantId = applicant.Id,
                         AttachmentId = applicantApp.AttachmentId,
+                        AuthorName = applicantApp.AuthorName,
                         ClassificationId = applicantApp.ClassificationId,
                         Comment = applicantApp.Comment,
                         //ExpireTime = applicantApp.ExpireTime,
@@ -559,9 +597,9 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.Id).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate).ToList();
 
-            return View("Index", applications);
+            return View("Index0", applications);
         }
 
         public IActionResult RejectedMod()
@@ -571,9 +609,9 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.Id).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate).ToList();
 
-            return View("Index", applications);
+            return View("Index0", applications);
         }
         public IActionResult RejectedOrg(int recipientId)
         {
@@ -583,10 +621,10 @@ namespace CallCenterCRM
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
-                .Include(a => a.Classification).OrderByDescending(a => a.Id)
+                .Include(a => a.Classification).OrderByDescending(a => a.UpdatedDate)
                 .ToList();
 
-            return View("Index", applications);
+            return View("Index0", applications);
         }
 
         public IActionResult Delayed(int recipientId)
@@ -598,9 +636,9 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.Id).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate).ToList();
 
-            return View("Index", applications);
+            return View("Index0", applications);
         }
 
         [HttpGet]
@@ -634,7 +672,7 @@ namespace CallCenterCRM
         public IActionResult RejectMod(int id, Application app)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
-            
+
             if (application == null)
             {
                 return NotFound();
@@ -695,7 +733,7 @@ namespace CallCenterCRM
                     application.IsGot = false;
                     _context.Update(application);
                     _context.SaveChanges();
-                } 
+                }
                 else
                 {
                     var branches = _context.Users.Where(u => u.ModeratorId == application.RecipientId).ToList();
@@ -844,7 +882,7 @@ namespace CallCenterCRM
         public IActionResult AskDelay(int id)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
-            
+
             application.Status = ApplicationStatus.AskDelay;
             application.IsGot = false;
             _context.Update(application);
@@ -907,7 +945,7 @@ namespace CallCenterCRM
                     throw;
                 }
             }
-            
+
             return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
         }
     }

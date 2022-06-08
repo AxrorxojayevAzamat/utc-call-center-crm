@@ -15,11 +15,106 @@
     }
 
     string actionName = this.ViewContext.RouteData.Values["action"].ToString();
+
+    int[] page_sizes = { 20, 50, 75, 100 };
+
+    int allCount = ViewBag.allCount;
+    int totalItems = ViewBag.searchedCount;
+    int pageSize = ViewBag.pageSize;
+    int currentPage = ViewBag.pageNumber;
+    int maxPages = 10;
+    int totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
+    int startPage = currentPage - 5;
+    int endPage = currentPage + 4;
+
+    string? surname = ViewBag.Surname;
+    string? firstname = ViewBag.Firstname;
+    string? middlename = ViewBag.Middlename;
+    string? contact = ViewBag.Contact;
+    int? region = ViewBag.Region;
+    int? citydistrictid = ViewBag.City;
+
+    if (startPage <= 0)
+    {
+        endPage = endPage - (startPage - 1);
+        startPage = 1;
+    }
+
+    if (endPage > totalPages)
+    {
+        endPage = totalPages;
+        if (endPage > maxPages)
+        {
+            startPage = endPage - maxPages - 1;
+        }
+    }
 }
 
 <h1>Заявление</h1>
 
 <div class="table-responsive">
+    <form asp-controller="Applications" asp-action="Index" method="get">
+        <div class="row">
+            <input type="hidden" name="pageSize" value=@pageSize />
+            <div class="form-group col-md-4">
+                <label for="Surname" class="control-label">Фамилия</label>
+                <input name="Surname" id="Surname" class="form-control" />
+            </div>
+            <div class="form-group col-md-4">
+                <label for="Firstname" class="control-label">Имя</label>
+                <input name="Firstname" id="Firstname" class="form-control" />
+            </div>
+            <div class="form-group col-md-4">
+                <label for="Middlename" class="control-label">Отчество</label>
+                <input name="Middlename" id="Middlename" class="form-control" />
+            </div>
+            <div class="form-group col-md-4">
+                <label for="Contact" class="control-label">Контакт</label>
+                <input name="Contact" id="Contact" class="form-control" value=@ViewBag.Contact />
+            </div>
+            <div class="form-group col-md-4">
+                <label for="Region" class="control-label">Регион</label>
+                <select name="Region" id="Region" class="form-control" asp-items=@ViewBag.RegionsList>
+                    <option value=""> - </option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="CityDistrictId" class="control-label">Район/город</label>
+                <select name="CityDistrictId" id="CityDistrictId" class="form-control" asp-items="ViewBag.CityDistrictList">
+                    <option value=""> - </option>
+                </select>
+            </div>
+
+            <div class="col-md-12">
+                <div class="d-flex justify-content-end">
+                    <button id="clean_fields" class="btn btn-secondary">Очистить</button>
+                    <input type="submit" value="Поиск" class="btn btn-info" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <hr />
+
+    <div class="row justify-content-between">
+        <div class="form-group col-md-6">
+            Количество рядов:
+            @foreach (int size in page_sizes)
+            {
+                @Html.ActionLink($"{size}", "Index",
+            new { pageSize = size, surname, firstname, middlename, contact, region, citydistrictid},
+            new {@class = $"btn {(size == pageSize ? "btn-info":"btn-inverse-info")} "})
+            }
+        </div>
+        <div class="form-group col-md-6">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-export-excel" id="btnExport" onclick="ExportToExcel('xlsx')">
+                    Экспорт в Excel <i class="menu-icon mdi mdi-file-excel"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -50,8 +145,8 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId) 
-                        asp-route-actionName=@actionName>
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)
+                       asp-route-actionName=@actionName>
                             @applicationService.GetAppNumber(item)
                         </a>
                     </td>
@@ -83,7 +178,7 @@
                         @Html.DisplayFor(modelItem => item.Applicant.Type)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Recipient.Title)
+                        @Html.DisplayFor(modelItem => item.AuthorName)
                     </td>
                     <td>
                         @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
@@ -110,4 +205,44 @@
             }
         </tbody>
     </table>
+
+    <div class="row">
+        <div class="form-group d-flex justify-content-center">
+            @if (currentPage > 1)
+            {
+                @Html.ActionLink("<<", "Index",
+            new { page = 1, pageSize, surname, firstname, middlename, contact, region, citydistrictid},
+            new { @class = "btn btn-rounded btn-outline-info"})
+                @Html.ActionLink("<", "Index",
+            new { page = currentPage - 1, pageSize, surname, firstname, middlename, contact, region, citydistrictid},
+            new { @class = "btn btn-rounded btn-outline-info"})
+            }
+            @for (var pg = startPage; pg <= endPage; pg++)
+            {
+                @Html.ActionLink($"{pg}", "Index",
+            new { page = pg, pageSize, surname, firstname, middlename, contact, region, citydistrictid},
+            new {@class = $"btn btn-rounded {(pg == currentPage ? "btn-info":"btn-outline-info")} "})
+            }
+
+            @if (currentPage < totalPages)
+            {
+                @Html.ActionLink(">", "Index",
+            new { page = currentPage + 1, pageSize, surname, firstname, middlename, contact, region, citydistrictid},
+            new { @class = "btn btn-rounded btn-outline-info"})
+                @Html.ActionLink(">>", "Index",
+            new { page = totalPages, pageSize, surname, firstname, middlename, contact, region, citydistrictid},
+            new { @class = "btn btn-rounded btn-outline-info"})
+            }
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+		await Html.RenderPartialAsync("Scripts/_InputMaskScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_ExportExcelScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/CityScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/SearchFieldsScriptsPartial");
+	}
+}

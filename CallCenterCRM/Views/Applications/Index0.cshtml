@@ -1,0 +1,113 @@
+﻿@using CallCenterCRM.Interfaces
+@model IEnumerable<CallCenterCRM.Models.Application>
+@inject IApplicationService applicationService
+@inject IUserService userService
+
+@{
+    string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    string userIdentityId = GetUserClaim(typeIdentityId);
+
+    var isAuthenticated = User.Identity.IsAuthenticated;
+
+    string GetUserClaim(string type)
+    {
+        return User.Identities.First().Claims.First(c => c.Type == type).Value;
+    }
+
+    string actionName = this.ViewContext.RouteData.Values["action"].ToString();
+}
+
+<h1>Заявление</h1>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Номер обращения</th>
+                <th>Источник обращения</th>
+                <th>Дата поступления</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Отчество</th>
+                <th>Регион</th>
+                <th>Район/город</th>
+                <th>Телефон</th>
+                <th>Тип заявителя</th>
+                <th>Автор</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="table-row-item">
+
+                    <td>
+                        @if (applicationService.IsGot(userService.GetRole(userIdentityId), item.Status) && !item.IsGot)
+                        {
+                            <span class="count-app">00</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId) 
+                        asp-route-actionName=@actionName>
+                            @applicationService.GetAppNumber(item)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.ReferenceSource)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.CreatedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Firstname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Middlename)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Region)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.CityDistrict.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Contact)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Applicant.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Recipient.Title)
+                    </td>
+                    <td>
+                        @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
+                        {
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetStatusForOperator(item).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetStatusForOperator(item).icon"></i>
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
+                            </span>
+                            @if (item.Answer != null)
+                            {
+                                <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Answer.Status).color btn-fw">
+                                    <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Answer.Status).icon"></i>
+                                </span>
+                            }
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

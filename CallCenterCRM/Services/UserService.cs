@@ -43,6 +43,13 @@ namespace CallCenterCRM.Services
             return userRole;
         }
 
+        public string GetUserName(string userIdentityId)
+        {
+            string name = getUserByIdentityId(userIdentityId).Username;
+
+            return name;
+        }
+
         public bool HasBranches(string userIdentityId)
         {
             int usersCount = _context.Users.Where(a => a.ModeratorId == getUserByIdentityId(userIdentityId).Id).ToList().Count();
