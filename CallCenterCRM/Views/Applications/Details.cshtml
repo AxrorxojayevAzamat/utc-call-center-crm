@@ -78,14 +78,14 @@
                     @Html.DisplayNameFor(model => model.Attachment)
                 </dt>
                 <dd class="col-sm-8">
-                    <a href="~/uploads/@Model.Attachment.Path" target="_blank">@Model.Attachment.OriginName</a>
+                    <a href="~/uploads/@Model.Attachment.Path" target="_blank" class="attachment-name">@Model.Attachment.OriginName</a>
                 </dd>
             }
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Classification)
             </dt>
             <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Classification.Direction)
+                @Html.DisplayFor(model => model.Classification.Title)
             </dd>
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Recipient)
@@ -93,6 +93,13 @@
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Recipient.Title)
             </dd>
+            <dt class="col-sm-4">
+                Ответственное лицо
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Recipient.Surname @Model.Recipient.Firstname @Model.Recipient.Middlename
+            </dd>
+            
             @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
             {
                 <dt class="col-sm-4">
@@ -200,7 +207,7 @@
                         @Html.DisplayNameFor(model => model.Answer.Attachment)
                     </dt>
                     <dd class="col-sm-8">
-                        <a href="~/uploads/@Model.Answer.Attachment.Path" target="_blank">@Model.Answer.Attachment.OriginName</a>
+                        <a href="~/uploads/@Model.Answer.Attachment.Path" target="_blank" class="attachment-name">@Model.Answer.Attachment.OriginName</a>
                     </dd>
                 }
 

@@ -37,7 +37,7 @@
             <textarea asp-for="Address" class="form-control"></textarea>
             <span asp-validation-for="Address" class="text-danger"></span>
         </div>
-        @if (ViewBag.Role == Roles.CrmModerator)
+        @*@if (ViewBag.Role == Roles.CrmModerator)
         {
             <div class="form-group col-md-4">
                 <label asp-for="DirectionId" class="control-label"></label>
@@ -55,9 +55,10 @@
         }
         else
         {
-            <div class="form-group col-md-4">
-            </div>
-        }
+            
+        }*@
+        <div class="form-group col-md-4">
+        </div>
         <div class="form-group col-md-12 mt-3">
             <input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
             <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>

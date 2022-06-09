@@ -147,10 +147,10 @@ namespace CallCenterCRM.Services
 
         public int AnswerCount(int userId, AnswerStatus status)
         {
-            User moderator = _context.Users.Where(a => a.Id == userId).FirstOrDefault();
+            User moderator = _context.Users.Where(a => a.ModeratorId == userId).FirstOrDefault();
 
             int count = _context.Answers.Include(a => a.Author)
-                .Where(a => (moderator != null ? a.Author.Id == userId : a.AuthorId == userId) && a.Status == status && a.IsGot == false)
+                .Where(a => (moderator != null ? a.Author.ModeratorId == userId : a.AuthorId == userId) && a.Status == status && a.IsGot == false)
                 .ToList().Count;
             return count;
         }

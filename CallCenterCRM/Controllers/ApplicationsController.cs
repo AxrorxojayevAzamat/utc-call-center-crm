@@ -44,7 +44,7 @@ namespace CallCenterCRM
                 && (!String.IsNullOrEmpty(middlename) ? a.Applicant.Middlename.ToLower().Contains(middlename.ToLower()) : true)
                 && (!String.IsNullOrEmpty(firstname) ? a.Applicant.Firstname.ToLower().Contains(firstname.ToLower()) : true)
                 && (!String.IsNullOrEmpty(surname) ? a.Applicant.Surname.ToLower().Contains(surname.ToLower()) : true))
-                .OrderByDescending(a => a.UpdatedDate);
+                .OrderByDescending(a => a.CreatedDate);
 
             // select-option values
             ViewData["RegionsList"] = new SelectList(new Applicant().RegionsList, "Value", "Text", region);
@@ -84,9 +84,9 @@ namespace CallCenterCRM
                 .Include(a => a.Attachment)
                 .Include(a => a.Answer)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate);
+                .Include(a => a.Recipient).OrderByDescending(a => a.CreatedDate);
 
-            return View("Index0", await callcentercrmContext.ToListAsync());
+            return View("AppList", await callcentercrmContext.ToListAsync());
         }
         [Authorize(Roles = "CrmOperator")]
         public async Task<IActionResult> ListByApplicant(int? applicantId)
@@ -98,9 +98,9 @@ namespace CallCenterCRM
                 .Include(a => a.Attachment)
                 .Include(a => a.Answer)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate);
+                .Include(a => a.Recipient).OrderByDescending(a => a.CreatedDate);
 
-            return View("Index0", await callcentercrmContext.ToListAsync());
+            return View("AppList", await callcentercrmContext.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id, int? userId, string? actionName)
@@ -597,9 +597,9 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.CreatedDate).ToList();
 
-            return View("Index0", applications);
+            return View("AppList", applications);
         }
 
         public IActionResult RejectedMod()
@@ -609,9 +609,9 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.CreatedDate).ToList();
 
-            return View("Index0", applications);
+            return View("AppList", applications);
         }
         public IActionResult RejectedOrg(int recipientId)
         {
@@ -621,10 +621,10 @@ namespace CallCenterCRM
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
-                .Include(a => a.Classification).OrderByDescending(a => a.UpdatedDate)
+                .Include(a => a.Classification).OrderByDescending(a => a.CreatedDate)
                 .ToList();
 
-            return View("Index0", applications);
+            return View("AppList", applications);
         }
 
         public IActionResult Delayed(int recipientId)
@@ -636,9 +636,9 @@ namespace CallCenterCRM
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
-                .Include(a => a.Recipient).OrderByDescending(a => a.UpdatedDate).ToList();
+                .Include(a => a.Recipient).OrderByDescending(a => a.CreatedDate).ToList();
 
-            return View("Index0", applications);
+            return View("AppList", applications);
         }
 
         [HttpGet]
@@ -702,11 +702,19 @@ namespace CallCenterCRM
         [HttpGet]
         public IActionResult SendOrg(int id, int moderatorId)
         {
-            var branches = _context.Users.Where(u => u.ModeratorId == moderatorId).ToList();
+            var moderator = _context.Users.Where(u => u.Id == moderatorId)
+                .Include(u => u.Organizations)
+                .Include(m => m.Direction)
+                    .ThenInclude(d => d.Classifications)
+                .FirstOrDefault();
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
-            ViewData["RecipientId"] = new SelectList(branches, "Id", "Title", 0);
+
+            ViewData["RecipientId"] = new SelectList(moderator.Organizations.ToList(), "Id", "Title", 0);
+            ViewData["ClassificationId"] = new SelectList(moderator.Direction.Classifications.ToList(), "Id", "Title", application.ClassificationId);
+
             DateTime date = DateTime.Now.AddDays(3);
             application.ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind);
+
             return View(application);
         }
 
@@ -730,6 +738,7 @@ namespace CallCenterCRM
                     application.Status = ApplicationStatus.SendOrg;
                     application.RecipientId = app.RecipientId;
                     application.ExpireTime = app.ExpireTime;
+                    application.ClassificationId = app.ClassificationId;
                     application.IsGot = false;
                     _context.Update(application);
                     _context.SaveChanges();
@@ -831,6 +840,7 @@ namespace CallCenterCRM
                     application.Status = ApplicationStatus.Delay;
                     application.IsDelayed = true;
                     application.IsGot = false;
+                    application.ExpireTime = app.ExpireTime;
                     _context.Update(application);
                     _context.SaveChanges();
                 }

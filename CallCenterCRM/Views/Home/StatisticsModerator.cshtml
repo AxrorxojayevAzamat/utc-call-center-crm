@@ -34,6 +34,7 @@
             <div class="col-md-2">
                 <form asp-controller="Home" asp-action="StatisticsModerator" method="get">
                     <input type="hidden" name="userId" value=@userService.GetUserId(userIdentityId) />
+                    <label for="selectBranchId">Выбрать организацию:</label>
                     <select name="branchId" asp-items=@ViewBag.BranchesList id="selectBranchId">
                         <option value=""> - </option>
                     </select>

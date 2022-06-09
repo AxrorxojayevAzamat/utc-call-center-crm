@@ -184,6 +184,7 @@
                         <span class="menu-title">Ответы</span>
                         @if (appService.AnswerCount(userService.GetUserId(userIdentityId), AnswerStatus.Send) > 0
                        && userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
+
                         {
                             <span class="count-of-apps bg-green">@appService.AnswerCount(userService.GetUserId(userIdentityId),AnswerStatus.Send)</span>
                         }
