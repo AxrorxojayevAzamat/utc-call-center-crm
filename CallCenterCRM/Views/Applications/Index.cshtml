@@ -57,39 +57,39 @@
     <form asp-controller="Applications" asp-action="Index" method="get">
         <div class="row">
             <input type="hidden" name="pageSize" value=@pageSize />
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="Surname" class="control-label">Фамилия</label>
                 <input name="Surname" id="Surname" class="form-control" />
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="Firstname" class="control-label">Имя</label>
                 <input name="Firstname" id="Firstname" class="form-control" />
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="Middlename" class="control-label">Отчество</label>
                 <input name="Middlename" id="Middlename" class="form-control" />
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="Contact" class="control-label">Контакт</label>
                 <input name="Contact" id="Contact" class="form-control" value=@ViewBag.Contact />
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="Region" class="control-label">Регион</label>
                 <select name="Region" id="Region" class="form-control" asp-items=@ViewBag.RegionsList>
                     <option value=""> - </option>
                 </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="CityDistrictId" class="control-label">Район/город</label>
                 <select name="CityDistrictId" id="CityDistrictId" class="form-control" asp-items="ViewBag.CityDistrictList">
                     <option value=""> - </option>
                 </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="AppNum" class="control-label">Номер заявления</label>
                 <input name="AppNum" id="AppNum" class="form-control" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="d-flex justify-content-end">
                     <button id="clean_fields" class="btn btn-secondary">Очистить</button>
                     <input type="submit" value="Поиск" class="btn btn-info" />
@@ -151,7 +151,7 @@
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)
                        asp-route-actionName=@actionName>
-                            @item.AppNum
+                            @(item.AppNum ?? $"{item.Id}-{(int)item.Applicant.ReferenceSource}/{item.CreatedDate.Value.Year.ToString().Substring(2)}")
                         </a>
                     </td>
                     <td>

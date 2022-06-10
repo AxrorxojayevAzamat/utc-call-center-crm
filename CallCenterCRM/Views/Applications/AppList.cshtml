@@ -50,9 +50,9 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId) 
-                        asp-route-actionName=@actionName>
-                            @item.AppNum
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)
+                       asp-route-actionName=@actionName>
+                            @(item.AppNum ?? $"{item.Id}-{(int)item.Applicant.ReferenceSource}/{item.CreatedDate.Value.Year.ToString().Substring(2)}")
                         </a>
                     </td>
                     <td>

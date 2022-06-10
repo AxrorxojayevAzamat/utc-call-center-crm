@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Diagnostics;
 using CallCenterCRM.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json;
 
 namespace CallCenterCRM.Controllers
 {
@@ -16,23 +17,68 @@ namespace CallCenterCRM.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly CallcentercrmContext _context;
         private readonly IApplicationService _applicationService;
+        private readonly IUserService _userService;
         private const string homeUrl = "/";
 
-        public HomeController(ILogger<HomeController> logger, CallcentercrmContext context, IApplicationService applicationService)
+        public HomeController(ILogger<HomeController> logger, CallcentercrmContext context, IApplicationService applicationService, IUserService userService)
         {
             _logger = logger;
             _context = context;
             _applicationService = applicationService;
+            _userService = userService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(DateTimeOffset? fromDate, DateTimeOffset? toDate)
         {
-            //Guid valueIdentityId = Guid.Empty;
-            //string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+            string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
 
-            //var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
-            //valueIdentityId = new Guid(userIdentity);
-            //int userId = _context.Users.FirstOrDefault(d => d.IdentityId == valueIdentityId).Id;
+            Roles userRole = _userService.GetRole(userIdentity);
+            int userId = _userService.GetUserId(userIdentity);
+
+            List<int> allCount = new List<int>();
+            List<int> doneCount = new List<int>();
+            List<int> doughnutCount = new List<int>();
+
+            if (toDate != null)
+                toDate = toDate.Value.AddDays(1);
+
+            IQueryable<Application> applications = _context.Applications.Include(a => a.Applicant).Include(a => a.Recipient).Include(a => a.Answer)
+                .Where(a => ((userRole == Roles.CrmModerator) ? (a.RecipientId == userId || a.Recipient.ModeratorId == userId)
+                : (userRole == Roles.CrmOrganization) ? a.RecipientId == userId : true)
+                && (fromDate == null || DateTimeOffset.Compare((DateTimeOffset)a.CreatedDate, (DateTimeOffset)fromDate) >= 0)
+                && (toDate == null || DateTimeOffset.Compare((DateTimeOffset)a.CreatedDate, (DateTimeOffset)toDate) <= 0));
+
+            foreach (Regions region in Enum.GetValues(typeof(Regions)))
+            {
+                int all = applications.Where(a => a.Applicant.Region == region).Count();
+                int done = applications.Where(a => a.Applicant.Region == region && a.Answer.Status == AnswerStatus.Confirm).Count();
+                allCount.Add(all);
+                doneCount.Add(done);
+            }
+
+            foreach (DoughnutStatus doughnut in Enum.GetValues(typeof(DoughnutStatus)))
+            {
+                switch (doughnut)
+                {
+                    case DoughnutStatus.Done:
+                        doughnutCount.Add(applications.Where(a => a.Answer.Status == AnswerStatus.Confirm).Count()); break;
+                    case DoughnutStatus.Rejected:
+                        doughnutCount.Add(applications.Where(a => (userRole == Roles.CrmOrganization ? a.Status == ApplicationStatus.RejectOrg
+                            : a.Status == ApplicationStatus.RejectMod)).Count()); break;
+                    case DoughnutStatus.Delayed:
+                        doughnutCount.Add(applications.Where(a => a.Status == ApplicationStatus.AskDelay || a.Status == ApplicationStatus.Delay).Count()); break;
+                    default:
+                        doughnutCount.Add(applications.Where(a => !((userRole == Roles.CrmOrganization ? a.Status == ApplicationStatus.RejectOrg
+                            : a.Status == ApplicationStatus.RejectMod) || a.Answer.Status == AnswerStatus.Confirm
+                            || a.Status == ApplicationStatus.AskDelay || a.Status == ApplicationStatus.Delay)).Count()); break;
+                }
+
+            }
+
+            ViewData["barAllData"] = JsonSerializer.Serialize(allCount);
+            ViewData["barDoneData"] = JsonSerializer.Serialize(doneCount);
+            ViewData["doughnutData"] = JsonSerializer.Serialize(doughnutCount);
 
             return View();
         }

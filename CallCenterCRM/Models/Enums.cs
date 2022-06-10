@@ -82,4 +82,9 @@ namespace CallCenterCRM.Models
         [Display(Name = "Хорезм")] Xorazm = 13,
         [Display(Name = "Каракалпакстан")] Karakalpakstan = 14,
     }
+
+    public enum DoughnutStatus
+    {
+        Process, Done, Rejected, Delayed
+    }
 }

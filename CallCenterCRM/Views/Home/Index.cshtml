@@ -23,70 +23,41 @@
     {
     <dt>@prop.Key</dt>
     <dd>@prop.Value</dd>
+    @ViewBag.userId
     }
     </dl>*@
-    @ViewBag.userId
-<div>
-    <h1 class="text-center">Статусы</h1>
-    <hr />
-    <div class="row">
-        <div class="col-6">
-            <h3>Модератор/Организация</h3>
-            <div class="row">
-                <div class="col-6">
-                    <h5>Запросы</h5>
-                    @foreach (ApplicationStatus applicationStatus in Enum.GetValues(typeof(ApplicationStatus)))
-                    {
-                        <div class="py-1">
-                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(applicationStatus).color btn-fw">
-                                <i class="mdi mdi-@applicationService.GetAppStatusParams(applicationStatus).icon"></i>
-                                @applicationStatus.GetDisplayName()
-                            </span>
-                        </div>
 
-                    }
-                </div>
-                <div class="col-6">
-                    <h5>Ответы</h5>
-                    @foreach (AnswerStatus answerStatus in Enum.GetValues(typeof(AnswerStatus)))
-                    {
-                        <div class="py-1">
-                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(answerStatus).color btn-fw">
-                                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(answerStatus).icon"></i>
-                                @answerStatus.GetDisplayName()
-                            </span>
-                        </div>
-
-                    }
-                </div>
+<div class="row">
+    <form asp-controller="Home" asp-action="Index" method="get" class="mb-4">
+        <div class="row justify-content-end">
+            <div class="col-md-3 form-group">
+                <label class="control-label" for="fromDate">С даты:</label>
+                <input class="form-control" type="date" value=@ViewBag.fromDate name="fromDate" id="fromDate" />
+            </div>
+            <div class="col-md-3 form-group">
+                <label class="control-label" for="toDate">До даты:</label>
+                <input class="form-control" type="date" value=@ViewBag.toDate name="toDate" id="toDate" />
+            </div>
+            <div class="col-md-1 form-group" style="margin: 2em 0.75em 0 0;">
+                <input type="submit" class="btn btn-primary" value="Фильтр" />
             </div>
         </div>
-        <div class="col-6">
-            <h3>Оператор</h3>
-            <div class="py-1">
-                <span class="app-status btn-rounded btn-inverse-warning btn-fw">
-                    <i class="mdi mdi-send"></i>
-                    отправлено
-                </span>
-            </div>
-            <div class="py-1">
-                <span class="app-status btn-rounded btn-inverse-info btn-fw">
-                    <i class="mdi mdi-timetable"></i>
-                    в процессе
-                </span>
-            </div>
-            <div class="py-1">
-                <span class="app-status btn-rounded btn-inverse-success btn-fw">
-                    <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-                    обработан
-                </span>
-            </div>
-            <div class="py-1">
-                <span class="app-status btn-rounded btn-inverse-danger btn-fw">
-                    <i class="mdi mdi-close"></i>
-                    отклонен
-                </span>
-            </div>
-        </div>
+    </form>
+    <div class="col-md-6">
+        <input type="hidden" id="bar_all_data" value=@ViewBag.barAllData />
+        <input type="hidden" id="bar_done_data" value=@ViewBag.barDoneData />
+        <canvas id="myBar" style="width:100%; height: 500px"></canvas>
+    </div>
+    <div class="col-md-6">
+        <input type="hidden" id="doughnut_data" value=@ViewBag.doughnutData />
+        <canvas id="myDoughnut" style="width:100%; height: 500px"></canvas>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("Scripts/GetUrlParamsScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/SearchFieldsScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/_ChartJsScriptsPartial");
+	}
+}
