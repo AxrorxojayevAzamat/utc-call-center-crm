@@ -28,16 +28,33 @@
     </div>
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
-            <button class="btn btn-export-excel" id="btnExport" onclick="ExportToExcel('xlsx')">
-                Экспорт в Excel <i class="menu-icon mdi mdi-file-excel"></i>
-            </button>
-            <div class="col-md-2">
+            <div class="mt-4">
+                <button class="btn btn-export-excel" id="btnExport" onclick="ExportToExcel('xlsx')">
+                    Экспорт в Excel <i class="menu-icon mdi mdi-file-excel"></i>
+                </button>
+            </div>
+            <div class="col-md-8">
                 <form asp-controller="Home" asp-action="StatisticsModerator" method="get">
-                    <input type="hidden" name="userId" value=@userService.GetUserId(userIdentityId) />
-                    <label for="selectBranchId">Выбрать организацию:</label>
-                    <select name="branchId" asp-items=@ViewBag.BranchesList id="selectBranchId">
-                        <option value=""> - </option>
-                    </select>
+                    <div class="row justify-content-end">
+                        <input type="hidden" name="userId" value=@userService.GetUserId(userIdentityId) />
+                        <div class="col-md-3 form-group">
+                            <label class="control-label" for="fromDate">С даты:</label>
+                            <input class="form-control" type="date" value=@ViewBag.fromDate name="fromDate" id="fromDate" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="control-label" for="toDate">До даты:</label>
+                            <input class="form-control" type="date" value=@ViewBag.toDate name="toDate" id="toDate" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="control-label" for="selectBranchId">Выбрать организацию:</label>
+                            <select name="branchId" asp-items=@ViewBag.BranchesList id="selectBranchId">
+                                <option value=""> - </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 form-group" style="margin: 2em 0.75em 0 0;">
+                            <input type="submit" class="btn btn-primary" value="Фильтр" />
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -109,5 +126,6 @@
     @{
 		await Html.RenderPartialAsync("Scripts/_ExportExcelScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/SearchFieldsScriptsPartial");
 	}
 }

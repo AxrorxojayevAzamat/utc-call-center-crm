@@ -1,10 +1,18 @@
 ﻿<script>
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+	  get: (searchParams, prop) => searchParams.get(prop),
+	});
+
     let inputs_name = [ "Surname", "Firstname", "Middlename", "Appcount", "Contact", "ExtraContact", "BirthDate", "Address"]
     let selects_name = ["Region" ,"CityDistrictId", "Gender"]
+    let statics_name = ["fromDate", "toDate"]
 
     $(document).ready(() => {
         inputs_name.forEach(input => {
             $("#" + input).val(params[input] ?? null)
+        })
+        statics_name.forEach(static_input => {
+            $("#" + static_input).val(params[static_input] ?? null)
         })
     })
 

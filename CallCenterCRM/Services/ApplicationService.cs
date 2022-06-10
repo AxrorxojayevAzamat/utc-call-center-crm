@@ -137,8 +137,7 @@ namespace CallCenterCRM.Services
             User userOperator = _context.Users.Where(a => a.Id == userId && a.Role == Roles.CrmOperator).FirstOrDefault();
 
             var apps = _context.Applications.Include(a => a.Recipient)
-                .Where(a => (userOperator == null ? 
-                (moderator != null && status != ApplicationStatus.SendMod ? a.Recipient.ModeratorId == userId : a.RecipientId == userId) : true)
+                .Where(a => (userOperator != null || (moderator != null && status != ApplicationStatus.SendMod ? a.Recipient.ModeratorId == userId : a.RecipientId == userId))
                 && a.Status == status && a.IsGot == false).ToList();
             int count = apps.Count;
 
@@ -174,22 +173,24 @@ namespace CallCenterCRM.Services
                 || (role == Roles.CrmOrganization && status == AnswerStatus.Reject);
         }
 
-        public List<ModeratorStats>? GetModeratorStats(int userId, int? branchId)
+        public List<ModeratorStats>? GetModeratorStats(int userId, int? branchId, DateTimeOffset? fromDate, DateTimeOffset? toDate)
         {
             var stats = new List<ModeratorStats>();
-
+            if (toDate != null)
+                toDate.Value.AddDays(1);
 
             foreach (Regions region in Enum.GetValues(typeof(Regions)))
             {
                 var applications = _context.Applications
                     .Include(u => u.Applicant)
                     .Include(u => u.Recipient)
-                        //.ThenInclude(r => r.Organizations)
-                    .Where(a => a.Applicant.Region == region && 
-                    (branchId != null ? a.RecipientId == branchId : (a.Recipient.ModeratorId == userId || a.RecipientId == userId)));
+                    //.ThenInclude(r => r.Organizations)
+                    .Where(a => a.Applicant.Region == region
+                    && (branchId != null ? a.RecipientId == branchId : (a.Recipient.ModeratorId == userId || a.RecipientId == userId))
+                    && (fromDate == null || DateTimeOffset.Compare((DateTimeOffset)a.CreatedDate, (DateTimeOffset)fromDate) >= 0)
+                    && (toDate == null || DateTimeOffset.Compare((DateTimeOffset)a.CreatedDate, (DateTimeOffset)toDate) <= 0));
 
                 var user = _context.Users.Where(u => u.Id == userId).Include(u => u.Organizations);
-
 
                 ModeratorStats stat = new ModeratorStats()
                 {
@@ -219,16 +220,20 @@ namespace CallCenterCRM.Services
             return branchesCount;
         }
 
-        public List<OrganizationStats>? GetOrganizationStats(int userId)
+        public List<OrganizationStats>? GetOrganizationStats(int userId, DateTimeOffset? fromDate, DateTimeOffset? toDate)
         {
             var stats = new List<OrganizationStats>();
+            if (toDate != null)
+                toDate.Value.AddDays(1);
 
             foreach (Regions region in Enum.GetValues(typeof(Regions)))
             {
                 var applications = _context.Applications
                     .Include(u => u.Applicant)
                     .Include(u => u.Recipient)
-                    .Where(a => a.Applicant.Region == region && a.RecipientId == userId);
+                    .Where(a => a.Applicant.Region == region && a.RecipientId == userId
+                    && (fromDate == null || DateTimeOffset.Compare((DateTimeOffset)a.CreatedDate, (DateTimeOffset)fromDate) >= 0)
+                    && (toDate == null || DateTimeOffset.Compare((DateTimeOffset)a.CreatedDate, (DateTimeOffset)toDate) <= 0));
 
                 OrganizationStats stat = new OrganizationStats()
                 {
@@ -241,8 +246,8 @@ namespace CallCenterCRM.Services
 
                     DoneCount = GetStatusCount(applications).DoneCount,
                     ProcessCount = GetStatusCount(applications).ProcessCount,
-                    RejectedCount = GetStatusCount(applications).RejectedCount,
-                    
+                    RejectedCount = GetStatusCount(applications, true).RejectedCount,
+
                     AllCount = applications.Count(),
                 };
                 stats.Add(stat);
@@ -251,13 +256,13 @@ namespace CallCenterCRM.Services
             return stats;
         }
 
-        private static Stats GetStatusCount(IQueryable<Application> apps)
+        private static Stats GetStatusCount(IQueryable<Application> apps, bool? isBranch = false)
         {
 
             List<Application> appsDone = apps.Where(a => a.Answer.Status == AnswerStatus.Confirm).ToList();
             List<Application> appsProcess = apps.Where(a => !(a.Answer.Status == AnswerStatus.Confirm || a.Status == ApplicationStatus.RejectMod)).ToList();
-            List<Application> appReject = apps.Where(a => a.Status == ApplicationStatus.RejectMod).ToList();
-            
+            List<Application> appReject = apps.Where(a => (isBranch ?? false) ? a.Status == ApplicationStatus.RejectOrg : a.Status == ApplicationStatus.RejectMod).ToList();
+
             return new Stats()
             {
                 DoneCount = appsDone.Count,
@@ -272,7 +277,7 @@ namespace CallCenterCRM.Services
             List<Application> appsYurik = apps.Where(a => a.Applicant.Type == Types.Business).ToList();
             List<Application> appsMale = apps.Where(a => a.Applicant.Gender == Genders.Male).ToList();
             List<Application> appsFemale = apps.Where(a => a.Applicant.Gender == Genders.Female).ToList();
-            
+
             return new OrganizationStats()
             {
                 FizikCount = appsFizik.Count,
