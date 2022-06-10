@@ -28,7 +28,8 @@ namespace CallCenterCRM.Models
 
         [Key]
         public int Id { get; set; }
-        
+        public string? AppNum { get; set; } = null!;
+
         [Display(Name = "Классификация")]
         public int ClassificationId { get; set; }
         [Display(Name = "Срок")]

@@ -52,7 +52,7 @@
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId) 
                         asp-route-actionName=@actionName>
-                            @applicationService.GetAppNumber(item)
+                            @item.AppNum
                         </a>
                     </td>
                     <td>

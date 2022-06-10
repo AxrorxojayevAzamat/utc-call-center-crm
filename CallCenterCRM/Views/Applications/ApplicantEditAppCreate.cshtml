@@ -24,7 +24,7 @@
     <div class="row">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="OrganizationId" value=@userService.GetUserId(userIdentityId) />
-		<input type="hidden" asp-for="AuthorName" />
+		<input type="hidden" asp-for="AuthorName" value=@userService.GetUserName(userIdentityId) />
 		<input type="hidden" asp-for="CreatedDate" />
         <div class="form-group col-md-4">
             <label asp-for="ReferenceSource" class="control-label"></label>

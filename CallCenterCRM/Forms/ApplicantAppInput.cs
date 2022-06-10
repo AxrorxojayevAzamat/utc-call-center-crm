@@ -32,6 +32,7 @@ namespace CallCenterCRM.Forms
         [Key]
         [Column(TypeName = "int(11)")]
         public int AppId { get; set; }
+        public string? AppNum { get; set; } = null!;
 
         [Display(Name = "Источник обращения")]
         public ReferenceSources ReferenceSource { get; set; }

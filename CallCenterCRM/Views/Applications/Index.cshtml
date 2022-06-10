@@ -31,6 +31,7 @@
     string? firstname = ViewBag.Firstname;
     string? middlename = ViewBag.Middlename;
     string? contact = ViewBag.Contact;
+    string? appnum = ViewBag.AppNum;
     int? region = ViewBag.Region;
     int? citydistrictid = ViewBag.City;
 
@@ -84,8 +85,11 @@
                     <option value=""> - </option>
                 </select>
             </div>
-
-            <div class="col-md-12">
+            <div class="form-group col-md-4">
+                <label for="AppNum" class="control-label">Номер заявления</label>
+                <input name="AppNum" id="AppNum" class="form-control" />
+            </div>
+            <div class="col-md-8">
                 <div class="d-flex justify-content-end">
                     <button id="clean_fields" class="btn btn-secondary">Очистить</button>
                     <input type="submit" value="Поиск" class="btn btn-info" />
@@ -147,7 +151,7 @@
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId=@userService.GetUserId(userIdentityId)
                        asp-route-actionName=@actionName>
-                            @applicationService.GetAppNumber(item)
+                            @item.AppNum
                         </a>
                     </td>
                     <td>
@@ -243,6 +247,7 @@
 		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/_ExportExcelScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/CityScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/GetUrlParamsScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/SearchFieldsScriptsPartial");
 	}
 }

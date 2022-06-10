@@ -1,10 +1,6 @@
 ﻿<script>
 	let city_district = $("#CityDistrictId")
 
-	const params = new Proxy(new URLSearchParams(window.location.search), {
-	  get: (searchParams, prop) => searchParams.get(prop),
-	});
-
 	$(document).ready(() => {
 		requestToCity(params.Region, params.CityDistrictId)
 	})

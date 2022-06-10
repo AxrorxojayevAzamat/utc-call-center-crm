@@ -28,7 +28,7 @@ namespace CallCenterCRM
         }
 
         [Authorize(Roles = "CrmOperator")]
-        public async Task<IActionResult> Index(string? surname, string? firstname, string? middlename, int? region, int? citydistrictid, string? contact,
+        public async Task<IActionResult> Index(string? surname, string? firstname, string? middlename, int? region, int? citydistrictid, string? contact, string? appnum,
             int? page, int? pageSize)
         {
             var applications = _context.Applications
@@ -38,12 +38,13 @@ namespace CallCenterCRM
                 .Include(a => a.Answer)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
-                .Where(a => ((citydistrictid != null && citydistrictid != 0) ? a.Applicant.CityDistrictId == citydistrictid : true)
-                && ((region != null && region != 0) ? ((int)a.Applicant.Region) == region : true)
-                && (!String.IsNullOrEmpty(contact) ? a.Applicant.Contact == contact : true)
-                && (!String.IsNullOrEmpty(middlename) ? a.Applicant.Middlename.ToLower().Contains(middlename.ToLower()) : true)
-                && (!String.IsNullOrEmpty(firstname) ? a.Applicant.Firstname.ToLower().Contains(firstname.ToLower()) : true)
-                && (!String.IsNullOrEmpty(surname) ? a.Applicant.Surname.ToLower().Contains(surname.ToLower()) : true))
+                .Where(a => ((citydistrictid == null || citydistrictid == 0) || a.Applicant.CityDistrictId == citydistrictid )
+                && ((region == null || region == 0) || ((int)a.Applicant.Region) == region )
+                && (String.IsNullOrEmpty(contact) || a.Applicant.Contact == contact )
+                && (String.IsNullOrEmpty(middlename) || a.Applicant.Middlename.ToLower().Contains(middlename.ToLower()) )
+                && (String.IsNullOrEmpty(firstname) || a.Applicant.Firstname.ToLower().Contains(firstname.ToLower()) )
+                && (String.IsNullOrEmpty(surname) || a.Applicant.Surname.ToLower().Contains(surname.ToLower()))
+                && (String.IsNullOrEmpty(appnum) || a.AppNum.Contains(appnum)))
                 .OrderByDescending(a => a.CreatedDate);
 
             // select-option values
@@ -56,6 +57,7 @@ namespace CallCenterCRM
             ViewData["Firstname"] = firstname ?? string.Empty;
             ViewData["Middlename"] = middlename ?? string.Empty;
             ViewData["Contact"] = contact ?? string.Empty;
+            ViewData["AppNum"] = appnum ?? string.Empty;
             ViewData["Region"] = region ?? null;
             ViewData["City"] = citydistrictid ?? null;
 
@@ -260,6 +262,9 @@ namespace CallCenterCRM
                         RecipientId = applicantApp.RecipientId,
                         Type = applicantApp.AppType
                     };
+
+                    application.Applicant = applicant;
+                    application.AppNum = _applicationService.GetAppNumber(application);
                     _context.Applications.Add(application);
                     _context.SaveChanges();
 
@@ -372,9 +377,10 @@ namespace CallCenterCRM
                         RecipientId = applicantApp.RecipientId,
                         Type = applicantApp.AppType
                     };
+                    application.Applicant = applicant;
+                    application.AppNum = _applicationService.GetAppNumber(application);
                     _context.Applications.Add(application);
                     _context.SaveChanges();
-
                 }
                 catch (Exception ex)
                 {
@@ -400,6 +406,7 @@ namespace CallCenterCRM
                 ApplicantId = application.Applicant.Id,
                 Address = application.Applicant.Address,
                 AuthorName = application.AuthorName,
+                AppNum = application.AppNum,
                 BirthDate = application.Applicant.BirthDate,
                 CityDistrictId = application.Applicant.CityDistrictId,
                 Confidentiality = application.Applicant.Confidentiality,
@@ -489,6 +496,7 @@ namespace CallCenterCRM
                         ApplicantId = applicant.Id,
                         AttachmentId = applicantApp.AttachmentId,
                         AuthorName = applicantApp.AuthorName,
+                        AppNum = applicantApp.AppNum,
                         ClassificationId = applicantApp.ClassificationId,
                         Comment = applicantApp.Comment,
                         //ExpireTime = applicantApp.ExpireTime,

@@ -1,9 +1,5 @@
 ﻿<script>
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-	  get: (searchParams, prop) => searchParams.get(prop),
-	});
-
-    let inputs_name = [ "Surname", "Firstname", "Middlename", "Appcount", "Contact", "ExtraContact", "BirthDate", "Address"]
+    let inputs_name = [ "Surname", "Firstname", "Middlename", "Appcount", "Contact", "ExtraContact", "BirthDate", "Address", "AppNum"]
     let selects_name = ["Region" ,"CityDistrictId", "Gender"]
     let statics_name = ["fromDate", "toDate"]
 
