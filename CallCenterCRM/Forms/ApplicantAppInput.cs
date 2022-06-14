@@ -95,7 +95,7 @@ namespace CallCenterCRM.Forms
 
         [Column(TypeName = "datetime")]
         [Display(Name = "Срок")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:00}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyy}")]
         public DateTime? ExpireTime { get; set; }
 
         [Display(Name = "Тип обращения")]

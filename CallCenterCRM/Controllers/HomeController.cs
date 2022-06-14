@@ -19,6 +19,7 @@ namespace CallCenterCRM.Controllers
         private readonly IApplicationService _applicationService;
         private readonly IUserService _userService;
         private const string homeUrl = "/";
+        private const string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 
         public HomeController(ILogger<HomeController> logger, CallcentercrmContext context, IApplicationService applicationService, IUserService userService)
         {
@@ -30,7 +31,6 @@ namespace CallCenterCRM.Controllers
 
         public IActionResult Index(DateTimeOffset? fromDate, DateTimeOffset? toDate)
         {
-            string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
             var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
 
             Roles userRole = _userService.GetRole(userIdentity);

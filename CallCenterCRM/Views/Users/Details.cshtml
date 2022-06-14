@@ -56,47 +56,74 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
+        @if (Model.Surname != null && Model.Surname != "")
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Surname)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Surname)
+            </dd>
+        }
+        @if (Model.Firstname != null && Model.Firstname != "")
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Firstname)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Firstname)
+            </dd>
+        }
+        @if (Model.Middlename != null && Model.Middlename != "")
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Middlename)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Middlename)
+            </dd>
+        }
+        @if (Model.PassportData != null && Model.PassportData != "")
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PassportData)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PassportData)
+            </dd>
+        }
+        @if (Model.Address != null && Model.Address != "")
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+        }
+        @if (Model.ModeratorId != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Moderator)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Moderator.Title)
+            </dd>
+        }
+        @if (Model.DirectionId != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Direction)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Direction.Title)
+            </dd>
+        }
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Surname)
+            @Html.DisplayNameFor(model => model.Role)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Surname)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Firstname)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Firstname)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Middlename)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Middlename)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PassportData)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PassportData)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Moderator)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Moderator.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Direction)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Direction.Title)
+            @Model.Role.GetDisplayName()
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedDate)
@@ -116,8 +143,9 @@
     @if (userService.GetUserRole(userIdentityId) == Roles.CrmAdmin.GetDisplayName())
     {
         <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
-        <a asp-action="PasswordChange" asp-route-id="@Model?.Id" asp-route-byAdmin="true"  class="btn btn-info btn-rounded btn-fw">
-            Изменить пароль</a>
+        <a asp-action="PasswordChange" asp-route-id="@Model?.Id" asp-route-byAdmin="true" class="btn btn-info btn-rounded btn-fw">
+            Изменить пароль
+        </a>
 
     }
     @if (userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())

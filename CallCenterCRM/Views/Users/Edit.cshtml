@@ -1,4 +1,4 @@
-﻿@model CallCenterCRM.Models.User
+﻿@model CallCenterCRM.Forms.UpdateUserInput
 
 @{
     ViewData["Title"] = "Edit";
@@ -11,17 +11,21 @@
 <form asp-action="Edit">
     <div class="row">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="CreatedDate" />
+        <input type="hidden" asp-for="Id" class="form-control" />
+        <div class="form-group col-md-4">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Username" class="control-label"></label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
         <div class="form-group col-md-4">
             <label asp-for="Email" class="control-label"></label>
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="form-group col-md-4">
-            <label asp-for="City" class="control-label"></label>
-            <input asp-for="City" class="form-control" />
-            <span asp-validation-for="City" class="text-danger"></span>
         </div>
         <div class="form-group col-md-4">
             <label asp-for="Contact" class="control-label"></label>
@@ -29,71 +33,29 @@
             <span asp-validation-for="Contact" class="text-danger"></span>
         </div>
         <div class="form-group col-md-4">
-            <label asp-for="Username" class="control-label"></label>
-            <input asp-for="Username" class="form-control" />
-            <span asp-validation-for="Username" class="text-danger"></span>
-        </div>
-        @*		<div class="form-group col-md-4">
-            <label asp-for="Password" class="control-label"></label>
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-            </div>*@
-        <div class="form-group col-md-4">
-            <label asp-for="Title" class="control-label"></label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-        @*@if (ViewBag.Role == Roles.CrmModerator)
-        {
-            <div class="form-group col-md-4">
-                <label asp-for="ClassificationId" class="control-label"></label>
-                <select asp-for="ClassificationId" class="form-control" asp-items="ViewBag.ClassificationId"></select>
-                <span asp-validation-for="ClassificationId" class="text-danger"></span>
-            </div>
-        }
-        else if (ViewBag.Role == Roles.CrmOrganization)
-        {
-            <div class="form-group col-md-4">
-                <label asp-for="ModeratorId" class="control-label"></label>
-                <select asp-for="ModeratorId" class="form-control" asp-items="ViewBag.ModeratorId"></select>
-                <span asp-validation-for="ModeratorId" class="text-danger"></span>
-            </div>
-        }
-        else
-        {
-            <div class="form-group col-md-4">
-            </div>
-        }
-
-        <div class="form-group col-md-4">
-            <label asp-for="Surname" class="control-label"></label>
-            <input asp-for="Surname" class="form-control" />
-            <span asp-validation-for="Surname" class="text-danger"></span>
+            <label asp-for="City" class="control-label"></label>
+            <input asp-for="City" class="form-control" />
+            <span asp-validation-for="City" class="text-danger"></span>
         </div>
         <div class="form-group col-md-4">
-            <label asp-for="Firstname" class="control-label"></label>
-            <input asp-for="Firstname" class="form-control" />
-            <span asp-validation-for="Firstname" class="text-danger"></span>
+            <label asp-for="Role" class="control-label"></label>
+            <select asp-for="Role" class="form-control" asp-items="Model.RolesList"></select>
+            <span asp-validation-for="Role" class="text-danger"></span>
         </div>
-        <div class="form-group col-md-4">
-            <label asp-for="Middlename" class="control-label"></label>
-            <input asp-for="Middlename" class="form-control" />
-            <span asp-validation-for="Middlename" class="text-danger"></span>
+        <div class="form-group col-md-4" id="ModeratorField">
+            <label asp-for="ModeratorId" class="control-label"></label>
+            <select asp-for="ModeratorId" class="form-control" asp-items="ViewBag.ModeratorId"></select>
+            <span asp-validation-for="ModeratorId" class="text-danger"></span>
         </div>
-        <div class="form-group col-md-6">
-            <label asp-for="PassportData" class="control-label"></label>
-            <textarea asp-for="PassportData" class="form-control"> </textarea>
-            <span asp-validation-for="PassportData" class="text-danger"></span>
+        <div class="form-group col-md-4" id="DirectionField">
+            <label asp-for="DirectionId" class="control-label"></label>
+            <select asp-for="DirectionId" class="form-control" asp-items="ViewBag.DirectionId"></select>
+            <span asp-validation-for="DirectionId" class="text-danger"></span>
         </div>
-        <div class="form-group col-md-6">
-            <label asp-for="Address" class="control-label"></label>
-            <textarea asp-for="Address" class="form-control"></textarea>
-            <span asp-validation-for="Address" class="text-danger"></span>
-        </div>*@
 
         <div class="form-group col-md-12 mt-3">
             <input type="submit" value="Сохранить" class="btn btn-success btn-rounded" />
-            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
+            <a asp-action="Index" class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
         </div>
     </div>
 </form>
@@ -102,5 +64,7 @@
     @{
 		await Html.RenderPartialAsync("Scripts/_ValidationScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/_InputMaskScriptsPartial");
+        await Html.RenderPartialAsync("Scripts/PasswordScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/RoleScriptsPartial");
 	}
 }

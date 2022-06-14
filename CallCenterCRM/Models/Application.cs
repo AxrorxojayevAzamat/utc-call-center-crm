@@ -33,7 +33,8 @@ namespace CallCenterCRM.Models
         [Display(Name = "Классификация")]
         public int ClassificationId { get; set; }
         [Display(Name = "Срок")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
         [ExpireTimeValidationAttribute]
         public DateTime ExpireTime { get; set; }
         

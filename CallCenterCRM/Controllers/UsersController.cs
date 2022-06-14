@@ -12,6 +12,7 @@ using CallCenterCRM.Features.Identity;
 using System.ComponentModel.DataAnnotations;
 using CallCenterCRM.Forms;
 using Microsoft.AspNetCore.Authorization;
+using CallCenterCRM.Interfaces;
 
 namespace CallCenterCRM.Controllers
 {
@@ -20,17 +21,20 @@ namespace CallCenterCRM.Controllers
     {
         private readonly CallcentercrmContext _context;
         private readonly IdentityService identityService;
+        private readonly IUserService _userService;
+        private const string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 
-        public UsersController(CallcentercrmContext context, IdentityService identityService)
+        public UsersController(CallcentercrmContext context, IdentityService identityService, IUserService userService)
         {
             _context = context;
             this.identityService = identityService;
+            _userService = userService;
         }
 
         [Authorize(Roles = "CrmAdmin")]
         public async Task<IActionResult> Index()
         {
-            var callcentercrmContext = _context.Users.Include(u => u.Moderator);
+            var callcentercrmContext = _context.Users.Include(u => u.Moderator).OrderByDescending(u => u.CreatedDate);
             return View(await callcentercrmContext.ToListAsync());
         }
 
@@ -101,6 +105,7 @@ namespace CallCenterCRM.Controllers
             return View(user);
         }
 
+        [Authorize(Roles = "CrmAdmin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -108,50 +113,67 @@ namespace CallCenterCRM.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = _context.Users.Include(u => u.Direction).Where(u => u.Id == id).FirstOrDefault();
+
             if (user == null)
             {
                 return NotFound();
             }
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Username", user.ModeratorId);
-            ViewBag.Role = user.Role;
-            if (user.Role == Roles.CrmModerator)
+
+            ViewData["ModeratorId"] = new SelectList(_context.Users.Where(u => u.Role == Roles.CrmModerator), "Id", "Username", user.ModeratorId);
+            ViewData["DirectionId"] = new SelectList(_context.Directions, "Id", "Title", user.DirectionId);
+            UpdateUserInput userModel = new UpdateUserInput()
             {
-                ViewData["DirectionId"] = new SelectList(_context.Directions, "Id", "Title", user.DirectionId);
-            }
-            return View(user);
+                Id = user.Id,
+                Title = user.Title,
+                Username = user.Username,
+                Email = user.Email,
+                Contact = user.Contact,
+                Role = user.Role,
+                City = user.City,
+                ModeratorId = user.ModeratorId,
+                DirectionId = user.DirectionId,
+            };
+
+            return View(userModel);
         }
 
+        [Authorize(Roles = "CrmAdmin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind] User user)
+        public async Task<IActionResult> Edit([Bind] UpdateUserInput userInput)
         {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
+            var user = _context.Users.Where(u => u.Id == userInput.Id).FirstOrDefault();
+            string oldRoleName = Enum.GetName(typeof(Roles), user.Role);
+            user.Title = userInput.Title;
+            user.Username = userInput.Username;
+            user.Email = userInput.Email;
+            user.Contact = userInput.Contact;
+            user.Role = userInput.Role;
+            user.City = userInput.City;
+            user.ModeratorId = userInput.Role == Roles.CrmModerator || userInput.Role == Roles.CrmOperator ? null : userInput.ModeratorId;
+            user.DirectionId = userInput.Role == Roles.CrmOrganization || userInput.Role == Roles.CrmOperator ? null : userInput.DirectionId;
 
             if (ModelState.IsValid)
             {
+                string roleName = Enum.GetName(typeof(Roles), userInput.Role);
+
                 try
                 {
+                    User userResponse = await identityService.UpdateUser(user, roleName, oldRoleName);
+                    user.Role = userResponse.Role;
+
                     _context.Update(user);
                     _context.SaveChanges();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw new Exception(ex.Message);
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "City", user.ModeratorId);
+
             return View(user);
         }
 
@@ -284,6 +306,9 @@ namespace CallCenterCRM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PasswordChange(int id, PasswordChangeInput passwordChange)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+            Roles userRole = _userService.GetRole(userIdentity);
+
             if (id != passwordChange.UserId)
             {
                 return NotFound();
@@ -320,7 +345,7 @@ namespace CallCenterCRM.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", userRole != Roles.CrmAdmin ? "Home" : "Users");
             }
             return View(passwordChange);
         }

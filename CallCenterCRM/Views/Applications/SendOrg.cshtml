@@ -23,10 +23,18 @@
             <select asp-for="RecipientId" class="form-control" asp-items="ViewBag.RecipientId"></select>
             <span asp-validation-for="RecipientId" class="text-danger"></span>
         </div>
-         <div class="form-group col-md-4">
+        <div class="form-group col-md-4">
             <label asp-for="ClassificationId" class="control-label"></label>
-            <select asp-for="ClassificationId" class="form-control" asp-items="ViewBag.ClassificationId">
-            </select>
+            <input type="hidden" asp-for="ClassificationId" id="ClassificationId" />
+            <div class="row">
+                <div class="col-md-10">
+                    <select id="ClassificationIdSelect" class="form-control" asp-items="ViewBag.ClassificationId" disabled>
+                    </select>
+                </div>
+                <div class="col-md-2 px-0">
+                    <button id="enableClassification" class="btn btn-primary"><i class="mdi mdi-lead-pencil icon-edit"></i></button>
+                </div>
+            </div>
         </div>
         <div class="form-group col-md-12 mt-3">
             <input type="submit" value="Отправить" asp-action="SendOrg" asp-route-id=@Model.Id class="btn btn-info btn-rounded" />
@@ -39,5 +47,6 @@
     @{
 		await Html.RenderPartialAsync("Scripts/_ValidationScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/EnableSelectScriptsPartial");
 	}
 }

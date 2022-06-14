@@ -38,11 +38,11 @@ namespace CallCenterCRM
                 .Include(a => a.Answer)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
-                .Where(a => ((citydistrictid == null || citydistrictid == 0) || a.Applicant.CityDistrictId == citydistrictid )
-                && ((region == null || region == 0) || ((int)a.Applicant.Region) == region )
-                && (String.IsNullOrEmpty(contact) || a.Applicant.Contact == contact )
-                && (String.IsNullOrEmpty(middlename) || a.Applicant.Middlename.ToLower().Contains(middlename.ToLower()) )
-                && (String.IsNullOrEmpty(firstname) || a.Applicant.Firstname.ToLower().Contains(firstname.ToLower()) )
+                .Where(a => ((citydistrictid == null || citydistrictid == 0) || a.Applicant.CityDistrictId == citydistrictid)
+                && ((region == null || region == 0) || ((int)a.Applicant.Region) == region)
+                && (String.IsNullOrEmpty(contact) || a.Applicant.Contact == contact)
+                && (String.IsNullOrEmpty(middlename) || a.Applicant.Middlename.ToLower().Contains(middlename.ToLower()))
+                && (String.IsNullOrEmpty(firstname) || a.Applicant.Firstname.ToLower().Contains(firstname.ToLower()))
                 && (String.IsNullOrEmpty(surname) || a.Applicant.Surname.ToLower().Contains(surname.ToLower()))
                 && (String.IsNullOrEmpty(appnum) || a.AppNum.Contains(appnum)))
                 .OrderByDescending(a => a.CreatedDate);
@@ -121,19 +121,32 @@ namespace CallCenterCRM
                 .Include(a => a.Answer)
                     .ThenInclude(a => a.Attachment)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             User user = _context.Users.Where(a => a.Id == userId).FirstOrDefault();
+
+            bool willBeSave = (application.Status == ApplicationStatus.SendMod && application.RecipientId == userId) ||
+                 ((application.RecipientId == userId || application.Recipient.ModeratorId == userId || application.Applicant.OrganizationId == userId)
+                && userId != null && application.IsGot == false);
+
             if (application.Status == ApplicationStatus.SendMod && application.RecipientId == userId)
             {
                 application.Status = ApplicationStatus.GotMod;
             }
+
             if ((application.RecipientId == userId || application.Recipient.ModeratorId == userId || application.Applicant.OrganizationId == userId)
                 && userId != null && application.IsGot == false)
             {
                 application.IsGot = _applicationService.IsGot(user.Role, application.Status);
             }
-            _context.Update(application);
-            _context.SaveChanges();
+
+            if (willBeSave)
+            {
+                _context.Update(application);
+                _context.SaveChanges();
+            }
+
             ViewData["actionName"] = actionName;
+
             if (application == null)
             {
                 return NotFound();
@@ -147,7 +160,7 @@ namespace CallCenterCRM
             DateTime date = DateTime.Now.AddDays(3);
             Application application = new Application()
             {
-                ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind),
+                ExpireTime = new DateTime(date.Year, date.Month, date.Day),
             };
             application.ApplicantId = applicantId;
 
@@ -194,7 +207,7 @@ namespace CallCenterCRM
             DateTime date = DateTime.Now.AddDays(3);
             ApplicantAppInput applicantApp = new ApplicantAppInput()
             {
-                ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind),
+                ExpireTime = new DateTime(date.Year, date.Month, date.Day),
                 BirthDate = DateTime.Today.AddYears(-18),
             };
 
@@ -273,7 +286,7 @@ namespace CallCenterCRM
                 {
                     throw ex;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "Applicants");
             }
 
             return View(applicantApp);
@@ -292,7 +305,7 @@ namespace CallCenterCRM
             {
                 ApplicantId = applicant.Id,
                 Address = applicant.Address,
-                ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind),
+                ExpireTime = new DateTime(date.Year, date.Month, date.Day),
                 BirthDate = applicant.BirthDate,
                 CityDistrictId = applicant.CityDistrictId,
                 Confidentiality = applicant.Confidentiality,
@@ -386,7 +399,7 @@ namespace CallCenterCRM
                 {
                     throw ex;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "Applicants");
             }
 
             return View(applicantApp);
@@ -520,7 +533,8 @@ namespace CallCenterCRM
                 {
                     throw ex;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { Id = applicantApp.AppId,
+                });
             }
 
             return View(applicantApp);
@@ -721,7 +735,7 @@ namespace CallCenterCRM
             ViewData["ClassificationId"] = new SelectList(moderator.Direction.Classifications.ToList(), "Id", "Title", application.ClassificationId);
 
             DateTime date = DateTime.Now.AddDays(3);
-            application.ExpireTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, date.Kind);
+            application.ExpireTime = new DateTime(date.Year, date.Month, date.Day);
 
             return View(application);
         }

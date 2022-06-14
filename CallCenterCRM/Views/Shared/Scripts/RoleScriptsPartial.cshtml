@@ -3,18 +3,23 @@
         $("#Role")[0].firstChild.remove()
         $("#DirectionField").hide()
         $("#ModeratorField").hide()
+        handleRoleDirection($("#Role").val())
     })
 
     $("#Role").change(function(e) {
-        if(e.target.value === "2") {
+       handleRoleDirection(e.target.value)
+    })
+
+    function handleRoleDirection(value) {
+         if(value === "2") {
             $("#DirectionField").show()
             $("#ModeratorField").hide()
-        } else if(e.target.value === "3") {
+        } else if(value === "3") {
             $("#DirectionField").hide()
             $("#ModeratorField").show()
         } else {
             $("#DirectionField").hide()
             $("#ModeratorField").hide()
         }
-    })
+    }
 </script>

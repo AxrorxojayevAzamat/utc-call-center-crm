@@ -1,0 +1,10 @@
+﻿<script>
+    $("#enableClassification").on("click", function (e) {
+        e.preventDefault()
+        $("#ClassificationIdSelect").prop("disabled", false);
+    });
+
+    $("#ClassificationIdSelect").change(function(e) {
+        $("#ClassificationId").val(e.target.value)
+    })
+</script>
