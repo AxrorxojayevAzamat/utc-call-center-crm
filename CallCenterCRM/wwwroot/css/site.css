@@ -2779,7 +2779,12 @@ a.dropdown-item i.text-primary {
     color: #213FFF;
     text-decoration: underline;
 }
-/*.table-row-item:hover {
-    opacity: 0.7;
-border: 2px solid #000;
-}*/
+
+.add-fields {
+/*    text-align: right;*/
+    cursor: pointer;
+}
+.additional-searching-fields {
+    display: none;
+}
+
