@@ -34,7 +34,7 @@
                 Номер обращения
             </dt>
             <dd class="col-sm-8">
-                 @(Model.AppNum ?? $"{Model.Id}-{(int)Model.Applicant.ReferenceSource}/{Model.CreatedDate.Value.Year.ToString().Substring(2)}")
+                @(Model.AppNum ?? $"{Model.Id}-{(int)Model.Applicant.ReferenceSource}/{Model.CreatedDate.Value.Year.ToString().Substring(2)}")
             </dd>
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Type)
@@ -99,7 +99,7 @@
             <dd class="col-sm-8">
                 @Model.Recipient.Surname @Model.Recipient.Firstname @Model.Recipient.Middlename
             </dd>
-            
+
             @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
             {
                 <dt class="col-sm-4">
@@ -269,26 +269,26 @@
                     }
                 }
             }
-            @if(Model.Status == ApplicationStatus.RejectOrg)
+            @if (Model.Status == ApplicationStatus.RejectOrg)
             {
                 <a asp-action="SendOrg" asp-route-id="@Model?.Id" asp-route-moderatorId=@userService.GetUserId(userIdentityId) class="btn btn-warning btn-rounded btn-fw">Отправить организацию</a>
             }
         }
         else if (userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName())
         {
-            @if (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.AskDelay 
-            || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay)
+            @if (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.AskDelay
+           || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay)
             {
-                @if(Model.ExpireTime > currentTime && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.Delay))
+                @if (Model.ExpireTime > currentTime && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.Delay))
                 {
-                    <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id" 
-                        asp-route-authorId=@userService.GetUserId(userIdentityId) class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
-                    @if(Model.Status == ApplicationStatus.SendOrg)
+                    <a asp-controller="Answers" asp-action="Create" asp-route-applicationId="@Model?.Id"
+       asp-route-authorId=@userService.GetUserId(userIdentityId) class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
+                    @if (Model.Status == ApplicationStatus.SendOrg)
                     {
                         <a asp-action="RejectOrg" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
                     }
-                } 
-                @if (Model.ExpireTime <= currentTime && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay) )
+                }
+                @if (Model.ExpireTime <= currentTime && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay))
                 {
                     <a asp-action="AskDelay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Спросите продолжить</a>
                 }
@@ -298,11 +298,20 @@
     else if (Model.Answer != null && Model.Answer.Status != AnswerStatus.Confirm)
     {
         <a asp-controller="Answers" asp-action="Details" asp-route-id="@Model.Answer.Id" asp-route-userId=@userService.GetUserId(userIdentityId)
-        asp-route-actionName="AnswersList">
+       asp-route-actionName="AnswersList">
             Ответ
         </a>
     }
-    <a asp-controller="Applications" asp-action=@ViewBag.actionName asp-route-recipientId=@userService.GetUserId(userIdentityId)
-        class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+
+    @if (ViewBag.actionName == "ListByApplicant")
+    {
+        <a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    }
+    else
+    {
+        <a asp-controller="Applications" asp-action=@ViewBag.actionName asp-route-recipientId=@userService.GetUserId(userIdentityId)
+       class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    }
+
 </div>
 

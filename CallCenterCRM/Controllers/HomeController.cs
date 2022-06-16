@@ -62,12 +62,13 @@ namespace CallCenterCRM.Controllers
                 switch (doughnut)
                 {
                     case DoughnutStatus.Done:
-                        doughnutCount.Add(applications.Where(a => a.Answer.Status == AnswerStatus.Confirm).Count()); break;
+                        doughnutCount.Add(applications.Where(a => a.Answer != null && a.Answer.Status == AnswerStatus.Confirm).Count()); break;
                     case DoughnutStatus.Rejected:
                         doughnutCount.Add(applications.Where(a => (userRole == Roles.CrmOrganization ? a.Status == ApplicationStatus.RejectOrg
                             : a.Status == ApplicationStatus.RejectMod)).Count()); break;
                     case DoughnutStatus.Delayed:
-                        doughnutCount.Add(applications.Where(a => a.Status == ApplicationStatus.AskDelay || a.Status == ApplicationStatus.Delay).Count()); break;
+                        doughnutCount.Add(applications.Where(a => a.Answer == null
+                        && (a.Status == ApplicationStatus.AskDelay || a.Status == ApplicationStatus.Delay)).Count()); break;
                     default:
                         doughnutCount.Add(applications.Where(a => !((userRole == Roles.CrmOrganization ? a.Status == ApplicationStatus.RejectOrg
                             : a.Status == ApplicationStatus.RejectMod) || a.Answer.Status == AnswerStatus.Confirm

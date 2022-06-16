@@ -52,7 +52,7 @@
                     </td>
                     <td>
                         @if (item.ExpireTime <= ViewBag.FireDate && item.Answer == null && (userService.GetRole(userIdentityId) == Roles.CrmOrganization
-                       || (userService.GetRole(userIdentityId) == Roles.CrmModerator && userService.HasBranches(userIdentityId))))
+                       || (userService.GetRole(userIdentityId) == Roles.CrmModerator && !userService.HasBranches(userIdentityId))))
                         {
                             <i class="menu-icon mdi mdi-fire fire-color"></i>
                         }

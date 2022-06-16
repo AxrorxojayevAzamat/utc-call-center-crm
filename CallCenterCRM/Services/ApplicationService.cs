@@ -259,7 +259,8 @@ namespace CallCenterCRM.Services
         public List<Application> FiredApps(int userId, int takeCount)
         {
             IQueryable<Application> applicationsQuery = _context.Applications.Include(a => a.Applicant).Include(a => a.Answer)
-                .Where(a => a.RecipientId == userId && a.ExpireTime <= DateTime.Now.AddDays(1) && a.Answer == null)
+                .Where(a => a.RecipientId == userId && a.ExpireTime <= DateTime.Now.AddDays(1) && a.Answer == null && 
+                !(a.Status == ApplicationStatus.RejectOrg || a.Status == ApplicationStatus.RejectMod))
                 .OrderBy(a => a.ExpireTime);
 
             if(takeCount != 0)

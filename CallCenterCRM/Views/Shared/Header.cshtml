@@ -37,7 +37,7 @@
         </ul>
         <ul class="navbar-nav ms-auto">
             @if (userService.GetRole(userIdentityId) == Roles.CrmOrganization 
-            || (userService.GetRole(userIdentityId) == Roles.CrmModerator && userService.HasBranches(userIdentityId)))
+            || (userService.GetRole(userIdentityId) == Roles.CrmModerator && !userService.HasBranches(userIdentityId)))
             {
                 <li class="nav-item dropdown d-lg-block user-dropdown mx-5">
                     <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
