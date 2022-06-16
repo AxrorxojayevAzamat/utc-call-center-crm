@@ -33,7 +33,7 @@ namespace CallCenterCRM.Controllers
                     .ThenInclude(a => a.Recipient)
                 .Include(a => a.Attachment)
                 .Include(a => a.Author);
-            return View(await callcentercrmContext.ToListAsync());
+            return View(callcentercrmContext.ToList().OrderByDescending(a => a.CreatedDate));
         }
 
         [Authorize(Roles = "CrmModerator, CrmOrganization")]
@@ -43,7 +43,7 @@ namespace CallCenterCRM.Controllers
                 .Where(a => a.AuthorId == authorId || a.Author.ModeratorId == authorId)
                 .Include(a => a.Attachment);
 
-            return View("Index", await callcentercrmContext.ToListAsync());
+            return View("Index", callcentercrmContext.ToList().OrderByDescending(a => a.CreatedDate));
         }
 
         public async Task<IActionResult> Details(int? id, int? userId, string? actionName)
@@ -61,17 +61,27 @@ namespace CallCenterCRM.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             User user = _context.Users.Where(a => a.Id == userId).FirstOrDefault();
+
+            bool willBeSave = answer.Status == AnswerStatus.Send && answer.Author.ModeratorId == userId
+                || (answer.AuthorId == userId || answer.Author.ModeratorId == userId);
+
             if (answer.Status == AnswerStatus.Send && answer.Author.ModeratorId == userId)
             {
                 answer.Status = AnswerStatus.GotMod;
             }
+
             if (answer.AuthorId == userId || answer.Author.ModeratorId == userId)
             {
                 answer.IsGot = _applicationService.IsGotAnswer(user.Role, answer.Status);
             }
-            _context.Update(answer);
-            _context.SaveChanges();
-            //ViewData["actionName"] = actionName
+
+            ViewData["actionName"] = actionName;
+
+            if (willBeSave)
+            {
+                _context.Update(answer);
+                _context.SaveChanges();
+            }
 
             if (answer == null)
             {
@@ -146,7 +156,8 @@ namespace CallCenterCRM.Controllers
             }
 
             var answer = _context.Answers.Include(a => a.Application)
-                .ThenInclude(a => a.Classification).Where(a => a.Id == id).FirstOrDefault();
+                .ThenInclude(a => a.Classification).Include(a => a.Attachment)
+                .Where(a => a.Id == id).FirstOrDefault();
 
             if (answer == null)
             {
@@ -174,7 +185,7 @@ namespace CallCenterCRM.Controllers
                 {
                     int attachmentId = -1;
 
-                    if (file != null) 
+                    if (file != null)
                     {
                         attachmentId = _attachmentService.UploadFileToStorage(file);
                     }
@@ -241,7 +252,7 @@ namespace CallCenterCRM.Controllers
         public IActionResult Rejected(int authorId)
         {
             var answers = _context.Answers.Include(a => a.Author)
-                .Where(a => a.AuthorId == authorId && a.Status == AnswerStatus.Reject).ToList();
+                .Where(a => a.AuthorId == authorId && a.Status == AnswerStatus.Reject).ToList().OrderByDescending(a => a.CreatedDate);
 
             return View("Index", answers);
         }
@@ -251,7 +262,7 @@ namespace CallCenterCRM.Controllers
         public IActionResult Edited(int authorId)
         {
             var answers = _context.Answers.Include(a => a.Author)
-                .Where(a => a.Author.ModeratorId == authorId && a.Status == AnswerStatus.Edit).ToList();
+                .Where(a => a.Author.ModeratorId == authorId && a.Status == AnswerStatus.Edit).ToList().OrderByDescending(a => a.CreatedDate);
 
             return View("Index", answers);
         }

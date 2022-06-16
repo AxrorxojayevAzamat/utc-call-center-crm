@@ -418,6 +418,10 @@ namespace CallCenterCRM
                 return NotFound();
             }
             var application = _context.Applications.Where(a => a.Id == id).Include(a => a.Applicant).FirstOrDefault();
+            
+            Attachment attachment = new Attachment();
+            if (application.AttachmentId != null) attachment = _context.Attachments.Where(_context => _context.Id == application.AttachmentId).FirstOrDefault();
+            ViewData["attachmentModel"] = attachment.Id != 0 ? attachment : null;
 
             DateTime date = DateTime.Now.AddDays(3);
             ApplicantAppInput applicantApp = new ApplicantAppInput()
@@ -855,6 +859,7 @@ namespace CallCenterCRM
         public IActionResult Delay(int id)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            ViewData["MinDate"] = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
 
             return View(application);
         }

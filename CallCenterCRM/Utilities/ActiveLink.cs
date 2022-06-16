@@ -9,7 +9,7 @@ namespace CallCenterCRM.Utilities
     {
         public static string IsActive(this IHtmlHelper htmlHelper, string controller, string action)
         {
-            string[] onePageActions = { "Details", "Edit", "Delete", "Create" };
+            string[] onePageActions = { "Details", "Edit", "Delete", "Create", "Fired" };
             string[] linkActions = { "Index", "AppsList", "SendOrg", "Delayed", "Selected", "RejectedOrg",
                 "RejectedMod", "Rejected", "Edited", "Branches", "AnswersList" };
             string[] listActions = { "Index", "AppsList", "AnswersList" };

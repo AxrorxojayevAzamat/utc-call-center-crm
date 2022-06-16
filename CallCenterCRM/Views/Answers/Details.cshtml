@@ -228,5 +228,8 @@
     {
         <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-rounded btn-fw">Изменять</a>
     }
-    <a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+
+    <a asp-controller="Answers" asp-action=@ViewBag.actionName asp-route-authorId=@userService.GetUserId(userIdentityId)
+       class="btn btn-secondary btn-rounded btn-fw">Назад</a>
+    @*<a href="javascript:history.go(-1)" class="btn btn-secondary btn-rounded btn-fw">Назад</a>*@
 </div>
