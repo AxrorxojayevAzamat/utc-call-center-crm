@@ -179,6 +179,13 @@ namespace CallCenterCRM.Controllers
 
         public async Task<IActionResult> Profile(int? id)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (id != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();

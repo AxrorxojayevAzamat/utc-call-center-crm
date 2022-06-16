@@ -18,12 +18,15 @@ namespace CallCenterCRM.Controllers
         private readonly CallcentercrmContext _context;
         private readonly IAttachmentService _attachmentService;
         private readonly IApplicationService _applicationService;
+        private readonly IUserService _userService;
+        private const string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 
-        public AnswersController(CallcentercrmContext context, IAttachmentService attachmentService, IApplicationService applicationService)
+        public AnswersController(CallcentercrmContext context, IAttachmentService attachmentService, IApplicationService applicationService, IUserService userService)
         {
             _context = context;
             _attachmentService = attachmentService;
             _applicationService = applicationService;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index()
@@ -39,6 +42,13 @@ namespace CallCenterCRM.Controllers
         [Authorize(Roles = "CrmModerator, CrmOrganization")]
         public async Task<IActionResult> AnswersList(int? authorId)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (authorId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             var callcentercrmContext = _context.Answers.Include(a => a.Author)
                 .Where(a => a.AuthorId == authorId || a.Author.ModeratorId == authorId)
                 .Include(a => a.Attachment);
@@ -48,6 +58,13 @@ namespace CallCenterCRM.Controllers
 
         public async Task<IActionResult> Details(int? id, int? userId, string? actionName)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (userId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -251,6 +268,13 @@ namespace CallCenterCRM.Controllers
         [HttpGet]
         public IActionResult Rejected(int authorId)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (authorId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             var answers = _context.Answers.Include(a => a.Author)
                 .Where(a => a.AuthorId == authorId && a.Status == AnswerStatus.Reject).ToList().OrderByDescending(a => a.CreatedDate);
 
@@ -261,6 +285,13 @@ namespace CallCenterCRM.Controllers
         [HttpGet]
         public IActionResult Edited(int authorId)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (authorId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             var answers = _context.Answers.Include(a => a.Author)
                 .Where(a => a.Author.ModeratorId == authorId && a.Status == AnswerStatus.Edit).ToList().OrderByDescending(a => a.CreatedDate);
 

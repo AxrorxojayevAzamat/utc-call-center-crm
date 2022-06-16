@@ -83,6 +83,13 @@ namespace CallCenterCRM
         [Authorize(Roles = "CrmModerator, CrmOrganization")]
         public async Task<IActionResult> AppsList(int? recipientId)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (recipientId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             var callcentercrmContext = _context.Applications.Include(a => a.Recipient)
                 .Where(a => a.RecipientId == recipientId || a.Recipient.ModeratorId == recipientId)
                 .Include(a => a.Applicant)
@@ -113,6 +120,13 @@ namespace CallCenterCRM
 
         public async Task<IActionResult> Details(int? id, int? userId, string? actionName)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (userId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -647,6 +661,13 @@ namespace CallCenterCRM
         }
         public IActionResult RejectedOrg(int recipientId)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (recipientId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             var applications = _context.Applications.Include(a => a.Recipient)
                 .Where(a => (a.Status == ApplicationStatus.RejectOrg || a.Status == ApplicationStatus.RejectMod)
                 && (a.Recipient.ModeratorId == recipientId || a.Recipient.Id == recipientId))
@@ -661,6 +682,13 @@ namespace CallCenterCRM
 
         public IActionResult Delayed(int recipientId)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (recipientId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             var applications = _context.Applications.Include(a => a.Recipient)
                 .Where(a => (a.Status == ApplicationStatus.Delay || a.Status == ApplicationStatus.AskDelay || a.Status == ApplicationStatus.RejectDelay)
                 && (a.Recipient.ModeratorId == recipientId || a.Recipient.Id == recipientId))
@@ -743,6 +771,13 @@ namespace CallCenterCRM
         [HttpGet]
         public IActionResult SendOrg(int id, int moderatorId)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            if (moderatorId != _userService.GetUserId(userIdentity))
+            {
+                return NotFound();
+            }
+
             var moderator = _context.Users.Where(u => u.Id == moderatorId)
                 .Include(u => u.Organizations)
                 .Include(m => m.Direction)
