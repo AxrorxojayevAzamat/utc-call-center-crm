@@ -2693,6 +2693,7 @@ h5 span.crm {
 }
 
 .app-status {
+    position: relative;
     curson: default !important;
     display: inline-block;
     font-weight: 400;
@@ -2701,6 +2702,21 @@ h5 span.crm {
     padding: 0.2rem 0.75rem;
     border-radius: 50px;
 }
+
+    .app-status .app-status-tooltip {
+        opacity: 0;
+        position: absolute;
+        top: 18px;
+        padding: 0 6px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        z-index: 10;
+        transition: ease-in-out .3s all;
+    }
+
+    .app-status:hover .app-status-tooltip {
+        opacity: 1;
+    }
 
 .table-row-item {
     /*    cursor: pointer;*/
@@ -2766,7 +2782,7 @@ h5 span.crm {
 }
 
 a.dropdown-item i.text-primary {
-    color: #426696!important;
+    color: #426696 !important;
 }
 
 .btn-export-excel {
@@ -2781,10 +2797,70 @@ a.dropdown-item i.text-primary {
 }
 
 .add-fields {
-/*    text-align: right;*/
+    /*    text-align: right;*/
     cursor: pointer;
 }
+
 .additional-searching-fields {
     display: none;
 }
 
+.fire-color {
+    color: #f27d0c;
+}
+
+.count-fire-apps {
+    position: absolute;
+    font-size: 12px;
+    background-color: #f27d0c;
+    min-width: 15px;
+    height: 15px;
+    text-align: center;
+    border-radius: 50%;
+    color: #fff;
+    top: 6px;
+}
+
+.fire-app-details {
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.fire-app-list {
+    color: #213FFF;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.fire-app-date {
+    font-size: 12px;
+    color: #6c7383;
+}
+
+.fire-dropdown-item {
+    border-bottom: 1px solid #dee2e6;
+    padding: 5px 10px;
+    width: 300px;
+}
+
+.fire-dropdown-wrapper {
+    max-height: 290px;
+    overflow-y: auto;
+}
+
+    .fire-dropdown-wrapper::-webkit-scrollbar {
+        width: 1vw; /* THIS WILL RESET THE DEFAULT SCORLLBAR STYLING */
+    }
+
+    /* TO STYLE THE SCROLLBAR TRACK */
+    .fire-dropdown-wrapper::-webkit-scrollbar-track {
+        background-color: #ffffff; /* THIS WILL SET THE COLOR OF THE SCROLLBAR TRACK */
+    }
+
+    /* TO STYLE THE SCROLLBAR THUMB */
+    .fire-dropdown-wrapper::-webkit-scrollbar-thumb {
+        background-color: #dee2e6;
+        border: 0.3vw solid #ffffff;
+        border-radius: 5vw;
+    }

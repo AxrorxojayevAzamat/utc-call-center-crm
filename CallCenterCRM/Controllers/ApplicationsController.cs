@@ -20,11 +20,15 @@ namespace CallCenterCRM
         private readonly CallcentercrmContext _context;
         private readonly IAttachmentService _attachmentService;
         private readonly IApplicationService _applicationService;
-        public ApplicationsController(CallcentercrmContext context, IAttachmentService attachmentService, IApplicationService applicationService)
+        private readonly IUserService _userService;
+        private const string nameIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+
+        public ApplicationsController(CallcentercrmContext context, IAttachmentService attachmentService, IApplicationService applicationService, IUserService userService)
         {
             _context = context;
             _attachmentService = attachmentService;
             _applicationService = applicationService;
+            _userService = userService;
         }
 
         [Authorize(Roles = "CrmOperator")]
@@ -87,6 +91,8 @@ namespace CallCenterCRM
                 .Include(a => a.Answer)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient).OrderByDescending(a => a.CreatedDate);
+
+            ViewData["FireDate"] = DateTime.Now.AddDays(1);
 
             return View("AppList", await callcentercrmContext.ToListAsync());
         }
@@ -663,6 +669,15 @@ namespace CallCenterCRM
             return View("AppList", applications);
         }
 
+        public IActionResult Fired()
+        {
+            string userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
+            List<Application> applications = _applicationService.FiredApps(_userService.GetUserId(userIdentity));
+
+            return View("AppList", applications.OrderByDescending(a => a.CreatedDate));
+        }
+
         [HttpGet]
         public async Task<IActionResult> RejectMod(int? id)
         {
@@ -733,6 +748,7 @@ namespace CallCenterCRM
 
             ViewData["RecipientId"] = new SelectList(moderator.Organizations.ToList(), "Id", "Title", 0);
             ViewData["ClassificationId"] = new SelectList(moderator.Direction.Classifications.ToList(), "Id", "Title", application.ClassificationId);
+            ViewData["MinDate"] = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
 
             DateTime date = DateTime.Now.AddDays(3);
             application.ExpireTime = new DateTime(date.Year, date.Month, date.Day);
@@ -980,5 +996,9 @@ namespace CallCenterCRM
 
             return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
         }
+
+        
+
+
     }
 }

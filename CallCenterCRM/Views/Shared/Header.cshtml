@@ -1,57 +1,115 @@
 ﻿@using CallCenterCRM.Interfaces
 @inject IUserService userService
+@inject IApplicationService applicationService
 
-@*
-	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
-	string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
-	string userIdentityId = GetUserClaim(typeIdentityId);
+    string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    string userIdentityId = GetUserClaim(typeIdentityId);
 
-	var isAuthenticated = User.Identity.IsAuthenticated;
-	
-	string GetUserClaim(string type)
-	{
-		return User.Identities.First().Claims.First(c => c.Type == type).Value;
-	}
+    var isAuthenticated = User.Identity.IsAuthenticated;
+
+    string GetUserClaim(string type)
+    {
+        return User.Identities.First().Claims.First(c => c.Type == type).Value;
+    }
+
+    string GetApplicantFullname(Applicant applicant)
+    {
+        return $"{applicant.Surname} {applicant.Firstname} {applicant.Middlename}";
+    }
+
+    //int countApps = 0;
+    int countApps = applicationService.FiredApps(userService.GetUserId(userIdentityId)).Count();
 }
+
 <nav class="navbar default-layout col-lg-12 col-12 p-0 d-flex align-items-top flex-row">
-	<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-		<a href="/">
-			<img src="~/images/uztelecom_logo.png" height="16"/>
-		</a>
-	</div>
-	<div class="navbar-menu-wrapper d-flex align-items-top">
-		<ul class="navbar-nav">
-			<li class="nav-item font-weight-semibold d-lg-block ms-0">
-				<h1 class="welcome-text"><span class="text-black fw-bold">@userService.GetUserTitle(userIdentityId)</span></h1>
-					<h3 class="welcome-sub-text">@userService.GetUserRole(userIdentityId)</h3>
-			</li>
-		</ul>
-		<ul class="navbar-nav ms-auto">
-			<li class="nav-item dropdown d-lg-block user-dropdown">
-				<a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-					<h6>
-						<i class="menu-icon mdi mdi-account-circle-outline"></i>
-						@GetUserClaim("name")
-					</h6>
-				</a>
-				<div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
-					@if (userService.GetUserRole(userIdentityId) != Roles.CrmAdmin.GetDisplayName())
-					{
-						<a asp-controller="Users" asp-action="Profile" asp-route-id=@userService.GetUserId(userIdentityId) class="dropdown-item">
-							<i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> Профиль <span class="badge badge-pill badge-danger"></span>
-						</a>
-						<a asp-controller="Users" asp-action="PasswordChange" asp-route-id=@userService.GetUserId(userIdentityId) class="dropdown-item">
-							<i class="dropdown-item-icon mdi mdi-account-key text-primary me-2"></i> Пароль <span class="badge badge-pill badge-danger"></span>
-						</a>
-					}
-					<a asp-area="" asp-controller="Home" asp-action="Logout" class="dropdown-item"><i class="dropdown-item-icon mdi mdi-logout text-primary me-2"></i>Выход</a>
-				</div>
-			</li>
-		</ul>
-		<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
-			<span class="mdi mdi-menu"></span>
-		</button>
-	</div>
+    <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+        <a href="/">
+            <img src="~/images/uztelecom_logo.png" height="16" />
+        </a>
+    </div>
+    <div class="navbar-menu-wrapper d-flex align-items-top">
+        <ul class="navbar-nav">
+            <li class="nav-item font-weight-semibold d-lg-block ms-0">
+                <h1 class="welcome-text"><span class="text-black fw-bold">@userService.GetUserTitle(userIdentityId)</span></h1>
+                <h3 class="welcome-sub-text">@userService.GetUserRole(userIdentityId)</h3>
+            </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+            @if (userService.GetRole(userIdentityId) == Roles.CrmOrganization 
+            || (userService.GetRole(userIdentityId) == Roles.CrmModerator && userService.HasBranches(userIdentityId)))
+            {
+                <li class="nav-item dropdown d-lg-block user-dropdown mx-5">
+                    <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                        <h6>
+                            <i class="menu-icon mdi mdi-fire"></i>
+                            Важные приложения
+                            @if (countApps > 0)
+                            {
+                                <span class="count-fire-apps">@countApps</span>
+                            }
+                        </h6>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown " aria-labelledby="UserDropdown">
+                        @if (countApps > 0)
+                        {
+                            <div class="fire-dropdown-wrapper p-2">
+                                @foreach (Application app in applicationService.FiredApps(userService.GetUserId(userIdentityId), 5))
+                                {
+                                    <div class="fire-dropdown-item">
+                                        <h6>
+                                            <i class="menu-icon mdi mdi-fire fire-color"></i>
+                                            <b>@(app.AppNum ?? $"{app.Id}-{(int)app.Applicant.ReferenceSource}/{app.CreatedDate.Value.Year.ToString().Substring(2)}")</b>
+                                        </h6>
+                                        <p>@GetApplicantFullname(app.Applicant)</p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <span class="fire-app-date">@app.ExpireTime.ToString("dd.MM.yyyy")</span>
+                                            </div>
+                                            <div class="col-md-6 d-flex justify-content-end">
+                                                <a asp-controller="Applications" asp-action="Details" asp-route-id="@app.Id"
+                                       asp-route-userId=@userService.GetUserId(userIdentityId) asp-route-actionName="AppsList" class="fire-app-details">Подробнее</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="d-flex w-100 justify-content-center py-3">
+                                <a asp-controller="Applications" asp-action="Fired" class="fire-app-list">Показать все</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="w-100 text-center py-3">
+                                Пока нет важных приложений
+                            </div>
+                        }
+                    </div>
+                </li>
+            }
+            <li class="nav-item dropdown d-lg-block user-dropdown">
+                <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                    <h6>
+                        <i class="menu-icon mdi mdi-account-circle-outline"></i>
+                        @GetUserClaim("name")
+                    </h6>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                    @if (userService.GetUserRole(userIdentityId) != Roles.CrmAdmin.GetDisplayName())
+                    {
+                        <a asp-controller="Users" asp-action="Profile" asp-route-id=@userService.GetUserId(userIdentityId) class="dropdown-item">
+                            <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> Профиль <span class="badge badge-pill badge-danger"></span>
+                        </a>
+                        <a asp-controller="Users" asp-action="PasswordChange" asp-route-id=@userService.GetUserId(userIdentityId) class="dropdown-item">
+                            <i class="dropdown-item-icon mdi mdi-account-key text-primary me-2"></i> Пароль <span class="badge badge-pill badge-danger"></span>
+                        </a>
+                    }
+                    <a asp-area="" asp-controller="Home" asp-action="Logout" class="dropdown-item"><i class="dropdown-item-icon mdi mdi-logout text-primary me-2"></i>Выход</a>
+                </div>
+            </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+        </button>
+    </div>
 </nav>

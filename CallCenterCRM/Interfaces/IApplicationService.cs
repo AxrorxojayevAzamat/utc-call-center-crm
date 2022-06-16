@@ -19,5 +19,7 @@ namespace CallCenterCRM.Interfaces
         public List<ModeratorStats>? GetModeratorStats(int userId, int? branchId, DateTimeOffset? fromDate, DateTimeOffset? toDate);
         public List<OrganizationStats>? GetOrganizationStats(int userId, DateTimeOffset? fromDate, DateTimeOffset? toDate);
 
+        public List<Application> FiredApps(int userId, int takeCount = 0);
+
     }
 }

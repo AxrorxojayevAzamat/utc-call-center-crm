@@ -8,7 +8,7 @@ namespace CallCenterCRM.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}")]
         public DateTimeOffset? CreatedDate { get; set; }
         [Display(Name = "Дата обновления")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTimeOffset? UpdatedDate { get; set; }
     }
 }

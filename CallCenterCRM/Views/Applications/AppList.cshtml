@@ -24,6 +24,7 @@
         <thead>
             <tr>
                 <th></th>
+                <th></th>
                 <th>Номер обращения</th>
                 <th>Источник обращения</th>
                 <th>Дата поступления</th>
@@ -47,6 +48,13 @@
                         @if (applicationService.IsGot(userService.GetRole(userIdentityId), item.Status) && !item.IsGot)
                         {
                             <span class="count-app">00</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.ExpireTime <= ViewBag.FireDate && item.Answer == null && (userService.GetRole(userIdentityId) == Roles.CrmOrganization
+                       || (userService.GetRole(userIdentityId) == Roles.CrmModerator && userService.HasBranches(userIdentityId))))
+                        {
+                            <i class="menu-icon mdi mdi-fire fire-color"></i>
                         }
                     </td>
                     <td>
@@ -86,23 +94,16 @@
                         @Html.DisplayFor(modelItem => item.Recipient.Title)
                     </td>
                     <td>
-                        @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
+                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
+                            <i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
+                            <span class="app-status-tooltip">@item.Status.GetDisplayName()</span>
+                        </span>
+                        @if (item.Answer != null)
                         {
-                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetStatusForOperator(item).color btn-fw">
-                                <i class="mdi mdi-@applicationService.GetStatusForOperator(item).icon"></i>
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Answer.Status).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Answer.Status).icon"></i>
+                                <span class="app-status-tooltip">@item.Answer.Status.GetDisplayName()</span>
                             </span>
-                        }
-                        else
-                        {
-                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
-                                <i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
-                            </span>
-                            @if (item.Answer != null)
-                            {
-                                <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Answer.Status).color btn-fw">
-                                    <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Answer.Status).icon"></i>
-                                </span>
-                            }
                         }
                     </td>
 

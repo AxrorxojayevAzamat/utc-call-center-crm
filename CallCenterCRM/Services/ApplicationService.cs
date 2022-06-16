@@ -256,6 +256,21 @@ namespace CallCenterCRM.Services
             return stats;
         }
 
+        public List<Application> FiredApps(int userId, int takeCount)
+        {
+            IQueryable<Application> applicationsQuery = _context.Applications.Include(a => a.Applicant).Include(a => a.Answer)
+                .Where(a => a.RecipientId == userId && a.ExpireTime <= DateTime.Now.AddDays(1) && a.Answer == null)
+                .OrderBy(a => a.ExpireTime);
+
+            if(takeCount != 0)
+            {
+                return applicationsQuery.Take(takeCount).ToList();
+            }
+
+            return applicationsQuery.ToList();
+        }
+
+
         private static Stats GetStatusCount(IQueryable<Application> apps, bool? isBranch = false)
         {
 
