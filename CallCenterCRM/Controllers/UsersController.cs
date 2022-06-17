@@ -183,7 +183,7 @@ namespace CallCenterCRM.Controllers
 
             if (id != _userService.GetUserId(userIdentity))
             {
-                return NotFound();
+                return RedirectToAction("AccessDenied", "Account");
             }
 
             if (id == null)

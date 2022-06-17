@@ -1,14 +1,20 @@
 ﻿<script>
     let inputs_name = [ "Surname", "Firstname", "Middlename", "Appcount", "Contact", "ExtraContact", "BirthDate", "Address", "AppNum"]
     let selects_name = ["Region" ,"CityDistrictId", "Gender"]
-    let statics_name = ["fromDate", "toDate"]
+    let stats_name = ["fromDate", "toDate"]
+    let attr = ["min", "max"]
 
     $(document).ready(() => {
         inputs_name.forEach(input => {
             $("#" + input).val(params[input] ?? null)
         })
-        statics_name.forEach(static_input => {
-            $("#" + static_input).val(params[static_input] ?? null)
+        stats_name.forEach((stat_input,i) => {
+            $("#" + stat_input).val(params[stat_input] ?? null)
+            let j = i === 1 ? 0 : 1;
+            if(params[stat_input])
+            {
+                $("#" + stats_name[j]).attr(attr[i], params[stat_input])
+            }
         })
     })
 
@@ -23,5 +29,13 @@
 
     $("#add_fields").click(function(e) {
         $("#additional-searching-fields").slideToggle();
+    })
+
+    $("#fromDate").change(function (e) {
+        $("#toDate").attr("min", e.target.value)
+    })
+
+    $("#toDate").change(function (e) {
+        $("#fromDate").attr("max", e.target.value)
     })
 </script>
