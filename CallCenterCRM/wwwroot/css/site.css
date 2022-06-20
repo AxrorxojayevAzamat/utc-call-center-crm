@@ -2684,7 +2684,7 @@ textarea.form-control {
 }
 
 .application-count {
-    width: 26px;
+    min-width: 26px;
     padding: 6px;
 }
 

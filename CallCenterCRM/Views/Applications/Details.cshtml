@@ -81,6 +81,14 @@
                     @Html.DisplayFor(model => model.Applicant.OrganizationName)
                 </dd>
             }
+
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Applicant.Type)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Applicant.Type)
+            </dd>
+
             @if (Model.Applicant.Type == Types.Individual)
             {
                 <dt class="col-sm-4">
@@ -127,46 +135,32 @@
                 @Model.Recipient.Surname @Model.Recipient.Firstname @Model.Recipient.Middlename
             </dd>
 
-            @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
-            {
-                <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.Status)
-                </dt>
-                <dd class="col-sm-8">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Answer.Status)
+            </dt>
+            <dd class="col-sm-8">
+                @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
+                {
                     <span class="app-status btn-rounded btn-inverse-@applicationService.GetStatusForOperator(Model).color btn-fw">
                         <i class="mdi mdi-@applicationService.GetStatusForOperator(Model).icon"></i>
                         @applicationService.GetStatusForOperator(Model).text
                     </span>
-                </dd>
-            }
-            else
-            {
-                @if (Model.Answer != null && Model.Answer.Status == AnswerStatus.Confirm)
-                {
-                    <dt class="col-sm-4">
-                        @Html.DisplayNameFor(model => model.Answer.Status)
-                    </dt>
-                    <dd class="col-sm-8">
-                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(Model.Answer.Status).color btn-fw">
-                            <i class="mdi mdi-@applicationService.GetAnswerStatusParams(Model.Answer.Status).icon"></i>
-                            @Model.Answer.Status.GetDisplayName()
-                        </span>
-                    </dd>
                 }
                 else
                 {
-                    <dt class="col-sm-4">
-                        @Html.DisplayNameFor(model => model.Status)
-                    </dt>
-                    <dd class="col-sm-8">
-                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(Model.Status).color btn-fw">
-                            <i class="mdi mdi-@applicationService.GetAppStatusParams(Model.Status).icon"></i>
-                            @Model.Status.GetDisplayName()
-                        </span>
-                    </dd>
-
+                    <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(Model.Status).color btn-fw">
+                        <i class="mdi mdi-@applicationService.GetAppStatusParams(Model.Status).icon"></i>
+                        @Model.Status.GetDisplayName()
+                    </span>
                 }
-            }
+                @if (Model.Answer != null && Model.Answer.Status == AnswerStatus.Confirm)
+                {
+                    <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(Model.Answer.Status).color btn-fw">
+                        <i class="mdi mdi-@applicationService.GetAnswerStatusParams(Model.Answer.Status).icon"></i>
+                        @Model.Answer.Status.GetDisplayName()
+                    </span>
+                }
+            </dd>
             @if (applicationService.ShowReason(Model, userService.GetUserRole(userIdentityId)))
             {
                 <dt class="col-sm-4">

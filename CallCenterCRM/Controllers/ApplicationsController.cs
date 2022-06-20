@@ -253,6 +253,8 @@ namespace CallCenterCRM
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateApplicant(ApplicantAppInput applicantApp, IFormFile file)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+            
             if (ModelState.IsValid)
             {
                 try
@@ -319,7 +321,11 @@ namespace CallCenterCRM
                 {
                     throw ex;
                 }
-                return RedirectToAction(nameof(Index), "Applicants");
+                return RedirectToAction(nameof(Details), new
+                {
+                    Id = applicantApp.AppId,
+                    userId = _userService.GetUserId(userIdentity)
+                });
             }
 
             return View(applicantApp);
@@ -369,6 +375,8 @@ namespace CallCenterCRM
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditApplicantCreateApp(ApplicantAppInput applicantApp, IFormFile file)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+            
             if (ModelState.IsValid)
             {
                 try
@@ -435,7 +443,11 @@ namespace CallCenterCRM
                 {
                     throw ex;
                 }
-                return RedirectToAction(nameof(Index), "Applicants");
+                return RedirectToAction(nameof(Details), new
+                {
+                    Id = applicantApp.AppId,
+                    userId = _userService.GetUserId(userIdentity)
+                });
             }
 
             return View(applicantApp);

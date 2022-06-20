@@ -87,15 +87,15 @@ namespace CallCenterCRM.Services
 
         public StatusParam GetStatusForOperator(Application application)
         {
-            if (application.Answer != null && application.Answer.Status == AnswerStatus.Confirm)
-            {
-                return new StatusParam()
-                {
-                    color = "success",
-                    icon = "checkbox-marked-circle-outline",
-                    text = "обработан"
-                };
-            }
+            //if (application.Answer != null && application.Answer.Status == AnswerStatus.Confirm)
+            //{
+            //    return new StatusParam()
+            //    {
+            //        color = "success",
+            //        icon = "checkbox-marked-circle-outline",
+            //        text = "обработан"
+            //    };
+            //}
 
             if (application.Status == ApplicationStatus.RejectMod)
             {

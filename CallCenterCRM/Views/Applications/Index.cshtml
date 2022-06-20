@@ -186,11 +186,22 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.AuthorName)
                     </td>
+
                     <td>
-                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetStatusForOperator(item).color btn-fw">
-                            <i class="mdi mdi-@applicationService.GetStatusForOperator(item).icon"></i>
-                            <span class="app-status-tooltip">@applicationService.GetStatusForOperator(item).text</span>
-                        </span>
+                        @if (item.Answer != null && item.Answer.Status == AnswerStatus.Confirm)
+                        {
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Answer.Status).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Answer.Status).icon"></i>
+                                <span class="app-status-tooltip">@item.Answer.Status.GetDisplayName()</span>
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetStatusForOperator(item).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetStatusForOperator(item).icon"></i>
+                                <span class="app-status-tooltip">@applicationService.GetStatusForOperator(item).text</span>
+                            </span>
+                        }
                     </td>
 
                 </tr>

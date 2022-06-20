@@ -52,8 +52,8 @@
                     </td>
                     <td>
                         @if (item.ExpireTime <= ViewBag.FireDate && item.Answer == null && (userService.GetRole(userIdentityId) == Roles.CrmOrganization
-                       || (userService.GetRole(userIdentityId) == Roles.CrmModerator && !userService.HasBranches(userIdentityId)))  && 
-                        !(item.Status == ApplicationStatus.RejectOrg || item.Status == ApplicationStatus.RejectMod))
+                       || (userService.GetRole(userIdentityId) == Roles.CrmModerator && !userService.HasBranches(userIdentityId))) &&
+                       !(item.Status == ApplicationStatus.RejectOrg || item.Status == ApplicationStatus.RejectMod))
                         {
                             <i class="menu-icon mdi mdi-fire fire-color"></i>
                         }
@@ -95,15 +95,18 @@
                         @Html.DisplayFor(modelItem => item.Recipient.Title)
                     </td>
                     <td>
-                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
-                            <i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
-                            <span class="app-status-tooltip">@item.Status.GetDisplayName()</span>
-                        </span>
-                        @if (item.Answer != null)
+                        @if (item.Answer != null && item.Answer.Status == AnswerStatus.Confirm)
                         {
                             <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(item.Answer.Status).color btn-fw">
                                 <i class="mdi mdi-@applicationService.GetAnswerStatusParams(item.Answer.Status).icon"></i>
                                 <span class="app-status-tooltip">@item.Answer.Status.GetDisplayName()</span>
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(item.Status).color btn-fw">
+                                <i class="mdi mdi-@applicationService.GetAppStatusParams(item.Status).icon"></i>
+                                <span class="app-status-tooltip">@item.Status.GetDisplayName()</span>
                             </span>
                         }
                     </td>
