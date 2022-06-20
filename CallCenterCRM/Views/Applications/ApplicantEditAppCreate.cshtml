@@ -14,8 +14,6 @@
 	}
 }
 
-<h1>Редактировать</h1>
-
 <h4>Заявление</h4>
 <hr />
 <form asp-action="EditApplicantCreateApp" enctype="multipart/form-data">
@@ -87,12 +85,13 @@
         </div>
         <div class="form-group col-md-4">
             <label asp-for="Type" class="control-label"></label>
-            <select asp-for="Type" class="form-control" asp-items="Model.TypesList"></select>
+            <select asp-for="Type" class="form-control" asp-items="Model.TypesList" id="TypeApplicant"></select>
             <span asp-validation-for="Type" class="text-danger"></span>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-4" id="EmploymentWrapper">
             <label asp-for="Employment" class="control-label"></label>
-            <select asp-for="Employment" class="form-control" asp-items="Model.EmploymentsList"></select>
+            <select class="form-control" asp-items="Model.EmploymentsList" id="EmploymentIdSelect"></select>
+            <input type="hidden" asp-for="Employment" />
             <span asp-validation-for="Employment" class="text-danger"></span>
         </div>
         <div class="form-group form-check col-md-4">
@@ -100,9 +99,19 @@
                 <input class="form-check-input" asp-for="Confidentiality" /> @Html.DisplayNameFor(model => model.Confidentiality)
             </label>
         </div>
+        <div class="form-group col-md-4" id="OrganizationNameWrapper">
+            <label asp-for="OrganizationName" class="control-label"></label>
+            <input asp-for="OrganizationName" class="form-control" />
+            <span asp-validation-for="OrganizationName" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4" id="StirWrapper">
+            <label asp-for="Stir" class="control-label"></label>
+            <input asp-for="Stir" class="form-control" />
+            <span asp-validation-for="Stir" class="text-danger"></span>
+        </div>
     </div>
     <br />
-    <h1>Заявление</h1>
+    <h1>Обращения</h1>
     <hr />
     <div class="row">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -169,6 +178,7 @@
 		await Html.RenderPartialAsync("Scripts/_Select2ScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/ClassificationScriptsPartial");
 		await Html.RenderPartialAsync("Scripts/CityScriptsPartial");
+		await Html.RenderPartialAsync("Scripts/ApplicantTypeScriptsPartial");
 	}
     <script>
 		setTimeout(

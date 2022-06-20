@@ -43,9 +43,7 @@
 
 <h1>Заявители</h1>
 
-<p>
-    <a asp-controller="Applications" asp-action="CreateApplicant" class="btn btn-success btn-rounded">Создать новое</a>
-</p>
+
 <div class="table-responsive">
     <form asp-controller="Applicants" asp-action="Index" method="get">
         <div class="row">
@@ -115,7 +113,20 @@
         </div>
 
     </form>
+    <p class="d-flex justify-content-end my-3">
+        @if (totalItems > 0 || totalItems == null)
+        {
+            <a asp-controller="Applications" asp-action="CreateApplicant" class="btn btn-success btn-rounded">Создать новое</a>
 
+        }
+        else
+        {
+            <a asp-controller="Applications" asp-action="CreateApplicant" class="btn btn-success btn-rounded"
+           asp-route-surname=@surname asp-route-firstname=@firstname asp-route-middlename=@middlename asp-route-birthdate=@birthdate
+           asp-route-contact=@contact asp-route-extracontact=@extracontact asp-route-region=@region asp-route-citydistrictid=@citydistrictid
+           asp-route-gender=@gender asp-route-address=@address>Создать новое</a>
+        }
+    </p>
     <hr />
 
     <div class="row justify-content-between">

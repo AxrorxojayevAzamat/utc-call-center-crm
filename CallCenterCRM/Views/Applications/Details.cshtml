@@ -19,7 +19,7 @@
 
 <div class="row">
     <div class="col-6">
-        <h4>Заявление</h4>
+        <h4>Обращения</h4>
         @if (userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
         {
             <div class="toggle-selected">
@@ -61,6 +61,33 @@
                 </dt>
                 <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.Comment)
+                </dd>
+            }
+            @if (Model.AdditionalNote != null && Model.AdditionalNote != "")
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.AdditionalNote)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.AdditionalNote)
+                </dd>
+            }
+            @if (Model.Applicant.OrganizationName != null && Model.Applicant.OrganizationName != "")
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Applicant.OrganizationName)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Applicant.OrganizationName)
+                </dd>
+            }
+            @if (Model.Applicant.Type == Types.Individual)
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Applicant.Employment)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Applicant.Employment)
                 </dd>
             }
             @if (Model.AdditionalNote != null && Model.AdditionalNote != "")

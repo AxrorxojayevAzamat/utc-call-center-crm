@@ -11,14 +11,14 @@ namespace CallCenterCRM.Models
 
     public enum Genders
     {
-        [Display(Name = "мужчина")] Male = 0,
-        [Display(Name = "женщина")] Female = 1
+        [Display(Name = "Мужской")] Male = 0,
+        [Display(Name = "женский")] Female = 1
     }
 
     public enum Types
     {
-        [Display(Name = "Юрик. лиц.")] Business = 0,
-        [Display(Name = "Физ. лиц.")] Individual = 1
+        [Display(Name = "Физ. лиц.")] Individual = 0,
+        [Display(Name = "Юрик. лиц.")] Business = 1
     }
     public enum Roles
     {

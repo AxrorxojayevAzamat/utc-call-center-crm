@@ -84,7 +84,7 @@ namespace CallCenterCRM.Forms
         public Types Type { get; set; }
 
         [Display(Name = "Занятость")]
-        public Employments Employment { get; set; }
+        public Employments? Employment { get; set; }
 
         [Display(Name = "Конфиденциальность обращение")]
         public bool Confidentiality { get; set; }
@@ -128,6 +128,14 @@ namespace CallCenterCRM.Forms
         public string? AdditionalNote { get; set; }
 
         public string? AuthorName { get; set; }
+
+        [StringLength(255)]
+        [Display(Name = "Наименование организации")]
+        public string? OrganizationName { get; set; }
+
+        [StringLength(255)]
+        [Display(Name = "СТИР")]
+        public string? Stir { get; set; }
 
         [NotMapped]
         public int? OrganizationId { get; set; }

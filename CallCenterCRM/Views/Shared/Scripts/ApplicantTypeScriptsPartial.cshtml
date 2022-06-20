@@ -1,0 +1,29 @@
+﻿<script>
+    $(document).ready(() => {
+        handleTypeApplicant($("#TypeApplicant").val())
+    })
+
+    $("#TypeApplicant").change(function(e) {
+       handleTypeApplicant(e.target.value)
+    })
+
+    function handleTypeApplicant(value) {
+        if(value === "0") {
+            $("#EmploymentIdSelect").attr("disabled", false);
+            $("#OrganizationNameWrapper").hide();
+            $("#StirWrapper").hide();
+        } else if(value === "1") {
+            $("#EmploymentIdSelect").attr("disabled", true);
+            $("#OrganizationNameWrapper").show();
+            $("#StirWrapper").show();
+        } else {
+            $("#EmploymentIdSelect").attr("disabled", true);
+            $("#OrganizationNameWrapper").hide();
+            $("#StirWrapper").hide();
+        }
+    } 
+
+    $("#EmploymentIdSelect").change(function(e) {
+        $("#Employment").val(e.target.value)
+    })
+</script>

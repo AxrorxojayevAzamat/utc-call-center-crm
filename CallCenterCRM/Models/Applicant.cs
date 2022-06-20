@@ -53,12 +53,12 @@ namespace CallCenterCRM.Models
         public string? ExtraContact { get; set; } = null!;
         [Display(Name = "Регион")]
         public Regions Region { get; set; }
-        [Display(Name = "Город или район")]
+        [Display(Name = "Район/город")]
         public int? CityDistrictId { get; set; }
         [StringLength(255)]
         [Display(Name = "Махалла")]
         public string? Maxalla { get; set; } = null!;
-        [Display(Name = "Адрес")]
+        [Display(Name = "Место проживания")]
         public string Address { get; set; } = null!;
         [Display(Name = "Пол")]
         public Genders Gender { get; set; }
@@ -68,8 +68,18 @@ namespace CallCenterCRM.Models
         public DateTime BirthDate { get; set; }
         [Display(Name = "Тип заявителя")]
         public Types Type { get; set; }
+
+        [StringLength(255)]
+        [Display(Name = "Наименование организации")]
+        public string? OrganizationName{ get; set; }
+
+        [StringLength(255)]
+        [Display(Name = "СТИР")]
+        public string? Stir { get; set; }
+
         [Display(Name = "Занятость")]
-        public Employments Employment { get; set; }
+        public Employments? Employment { get; set; }
+
         [Display(Name = "Конфиденциальность обращение")]
         public bool Confidentiality { get; set; }
         

@@ -22,7 +22,7 @@
             <li class="nav-item @Html.IsActive(controller: "Home", action: "Index")">
                 <a class="nav-link" href="/">
                     <i class="mdi mdi-home menu-icon"></i>
-                    <span class="menu-title">Домашняя страница</span>
+                    <span class="menu-title">Главная страница</span>
                 </a>
             </li>
 
@@ -31,7 +31,7 @@
                 <li class="nav-item @Html.IsActive(controller: "Applicants", action: "Index")">
                     <a class="nav-link" asp-area="" asp-controller="Applicants" asp-action="Index">
                         <i class="menu-icon mdi mdi-account-card-details"></i>
-                        <span class="menu-title">Заявители</span>
+                        <span class="menu-title">База Заявителей</span>
                     </a>
                 </li>
             }
@@ -40,7 +40,7 @@
                 <li class="nav-item @Html.IsActive(controller: "Users", action: "Branches")">
                     <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Branches" asp-route-moderatorId=@userService.GetUserId(userIdentityId)>
                         <i class="menu-icon mdi mdi-source-branch"></i>
-                        <span class="menu-title">Филиалы</span>
+                        <span class="menu-title">Организации или отделы</span>
                     </a>
                 </li>
             }
@@ -55,7 +55,7 @@
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="AppsList"
                asp-route-recipientId=@userService.GetUserId(userIdentityId)>
                             <i class="menu-icon mdi mdi-file-document-box"></i>
-                            <span class="menu-title">Заявление</span>
+                            <span class="menu-title">Обращения</span>
                             @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.SendMod) > 0
                            && userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
                             {
@@ -83,19 +83,19 @@
                     <li class="nav-item @Html.IsActive(controller: "Applications", action: "Index")">
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Index">
                             <i class="menu-icon mdi mdi-file-document-box"></i>
-                            <span class="menu-title">Заявление</span>
+                            <span class="menu-title">Обращения</span>
                         </a>
                     </li>
                     <li class="nav-item @Html.IsActive(controller: "Applications", action: "Selected")">
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Selected">
                             <i class="menu-icon mdi mdi-star-outline"></i>
-                            <span class="menu-title">Выбранные приложения</span>
+                            <span class="menu-title">Избранные</span>
                         </a>
                     </li>
                     <li class="nav-item @Html.IsActive(controller: "Applications", action: "RejectedMod")">
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="RejectedMod">
                             <i class="menu-icon mdi mdi-lead-pencil"></i>
-                            <span class="menu-title">Переработанные приложения</span>
+                            <span class="menu-title">Отклоненные </span>
                             @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.RejectMod) > 0
                            && userService.GetUserRole(userIdentityId) == Roles.CrmOperator.GetDisplayName())
                             {
@@ -143,7 +143,7 @@
                     <li class="nav-item @Html.IsActive(controller: "Applications", action: "Delayed")">
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Delayed" asp-route-recipientId=@userService.GetUserId(userIdentityId)>
                             <i class="menu-icon mdi mdi-clock-end"></i>
-                            <span class="menu-title">Просроченные заявки</span>
+                            <span class="menu-title">Просроченные</span>
                             @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.AskDelay) > 0
                            && userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
                             {
@@ -157,7 +157,7 @@
                     <li class="nav-item @Html.IsActive(controller: "Applications", action: "Delayed")">
                         <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="Delayed" asp-route-recipientId=@userService.GetUserId(userIdentityId)>
                             <i class="menu-icon mdi mdi-clock-end"></i>
-                            <span class="menu-title">Просроченные заявки</span>
+                            <span class="menu-title">Просроченные</span>
                             @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.RejectDelay)
                            + appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.Delay) > 0
                            && userService.GetUserRole(userIdentityId) == Roles.CrmOrganization.GetDisplayName())
@@ -170,7 +170,7 @@
                 <li class="nav-item @Html.IsActive(controller: "Applications", action: "RejectedOrg")">
                     <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="RejectedOrg" asp-route-recipientId=@userService.GetUserId(userIdentityId)>
                         <i class="menu-icon mdi mdi-close-circle-outline"></i>
-                        <span class="menu-title">Отклоненные заявки</span>
+                        <span class="menu-title">Отклоненные</span>
                         @if (appService.AppCount(userService.GetUserId(userIdentityId), ApplicationStatus.RejectOrg) > 0
                        && userService.GetUserRole(userIdentityId) == Roles.CrmModerator.GetDisplayName())
                         {

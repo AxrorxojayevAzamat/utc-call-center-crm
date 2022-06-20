@@ -17,7 +17,7 @@
     string actionName = this.ViewContext.RouteData.Values["action"].ToString();
 }
 
-<h1>Заявление</h1>
+<h1>Обращения</h1>
 
 <div class="table-responsive">
     <table class="table table-striped">
@@ -52,7 +52,8 @@
                     </td>
                     <td>
                         @if (item.ExpireTime <= ViewBag.FireDate && item.Answer == null && (userService.GetRole(userIdentityId) == Roles.CrmOrganization
-                       || (userService.GetRole(userIdentityId) == Roles.CrmModerator && !userService.HasBranches(userIdentityId))))
+                       || (userService.GetRole(userIdentityId) == Roles.CrmModerator && !userService.HasBranches(userIdentityId)))  && 
+                        !(item.Status == ApplicationStatus.RejectOrg || item.Status == ApplicationStatus.RejectMod))
                         {
                             <i class="menu-icon mdi mdi-fire fire-color"></i>
                         }

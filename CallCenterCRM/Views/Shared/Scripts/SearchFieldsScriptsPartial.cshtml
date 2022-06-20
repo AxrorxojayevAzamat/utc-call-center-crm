@@ -18,6 +18,15 @@
         })
     })
 
+    $('form').each(function() {
+        $(this).find('input').keypress(function(e) {
+            if(e.which == 10 || e.which == 13) {
+                this.form.submit();
+                return false;
+            }
+        });
+    });
+
     $("#clean_fields").click(function(e) {
         inputs_name.forEach(name =>{
             $("#" + name).val(null)

@@ -2680,7 +2680,7 @@ a {
 }
 
 textarea.form-control {
-    height: auto;
+    height: 150px;
 }
 
 .application-count {

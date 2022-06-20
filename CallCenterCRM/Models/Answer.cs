@@ -47,6 +47,9 @@ namespace CallCenterCRM.Models
         [Display(Name = "Заявление")]
         public int ApplicationId { get; set; }
 
+        [Display(Name = "Причина")]
+        public string? Reason { get; set; } = null!;
+
         [ForeignKey(nameof(ApplicationId))]
         [InverseProperty("Answer")]
         public virtual Application? Application { get; set; } = null!;

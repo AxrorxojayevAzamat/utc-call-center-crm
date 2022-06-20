@@ -12,6 +12,7 @@ using CallCenterCRM.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using CallCenterCRM.Forms;
 using PagedList;
+using System.ComponentModel.DataAnnotations;
 
 namespace CallCenterCRM
 {
@@ -222,16 +223,26 @@ namespace CallCenterCRM
             return View(application);
         }
 
-        public IActionResult CreateApplicant()
+        public IActionResult CreateApplicant(string? surname, string? firstname, string? middlename, DateTime? birthdate, 
+            string? contact, string? extracontact, int? region, int? citydistrictid, int? gender, string? address)
         {
             DateTime date = DateTime.Now.AddDays(3);
+            DateTime eightTeenYearAgo = DateTime.Today.AddYears(-18);
             ApplicantAppInput applicantApp = new ApplicantAppInput()
             {
-                ExpireTime = new DateTime(date.Year, date.Month, date.Day),
-                BirthDate = DateTime.Today.AddYears(-18),
+                Surname = surname ?? "",
+                Firstname = firstname ?? "",
+                Middlename = middlename ?? "",
+                Contact = contact ?? "",
+                ExtraContact = extracontact ?? "",
+                Address = address ?? "",
+                ExpireTime =  new DateTime(date.Year, date.Month, date.Day),
+                BirthDate = birthdate ?? eightTeenYearAgo,
             };
 
-            ViewData["CityDistrictId"] = new SelectList(_context.Citydistricts, "Id", "Title");
+            ViewData["RegionsList"] = new SelectList(new Applicant().RegionsList, "Value", "Text", region);
+            ViewData["GendersList"] = new SelectList(new Applicant().GendersList, "Value", "Text", gender);
+
             ViewData["OrganizationId"] = new SelectList(_context.Users, "Id", "Title");
             ViewData["ClassificationId"] = new SelectList(_context.Classifications, "Id", "Title");
             ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Title", applicantApp.RecipientId);
@@ -265,7 +276,7 @@ namespace CallCenterCRM
                         CityDistrictId = applicantApp.CityDistrictId,
                         Confidentiality = applicantApp.Confidentiality,
                         Contact = applicantApp.Contact,
-                        Employment = applicantApp.Employment,
+                        Employment =applicantApp.Employment,
                         ExtraContact = applicantApp.ExtraContact,
                         Firstname = applicantApp.Firstname,
                         Gender = applicantApp.Gender,
@@ -276,6 +287,8 @@ namespace CallCenterCRM
                         Region = applicantApp.Region,
                         Surname = applicantApp.Surname,
                         Type = applicantApp.Type,
+                        OrganizationName = applicantApp.Type == Types.Business ? applicantApp.OrganizationName : "",
+                        Stir = applicantApp.Type == Types.Business ? applicantApp.Stir : "",
                     };
 
                     _context.Applicants.Add(applicant);
@@ -338,6 +351,7 @@ namespace CallCenterCRM
                 Maxalla = applicant.Maxalla,
                 Middlename = applicant.Middlename,
                 OrganizationId = applicant.OrganizationId,
+                OrganizationName = applicant.OrganizationName,
                 ReferenceSource = applicant.ReferenceSource,
                 Region = applicant.Region,
                 Surname = applicant.Surname,
@@ -386,6 +400,8 @@ namespace CallCenterCRM
                         Maxalla = applicantApp.Maxalla,
                         Middlename = applicantApp.Middlename,
                         OrganizationId = applicantApp.OrganizationId,
+                        OrganizationName = applicantApp.OrganizationName,
+                        Stir = applicantApp.Stir,
                         ReferenceSource = applicantApp.ReferenceSource,
                         Region = applicantApp.Region,
                         Surname = applicantApp.Surname,
@@ -432,7 +448,7 @@ namespace CallCenterCRM
                 return NotFound();
             }
             var application = _context.Applications.Where(a => a.Id == id).Include(a => a.Applicant).FirstOrDefault();
-            
+
             Attachment attachment = new Attachment();
             if (application.AttachmentId != null) attachment = _context.Attachments.Where(_context => _context.Id == application.AttachmentId).FirstOrDefault();
             ViewData["attachmentModel"] = attachment.Id != 0 ? attachment : null;
@@ -449,7 +465,7 @@ namespace CallCenterCRM
                 Confidentiality = application.Applicant.Confidentiality,
                 Contact = application.Applicant.Contact,
                 CreatedDate = application.Applicant.CreatedDate,
-                Employment = application.Applicant.Employment,
+                Employment = (Employments)application.Applicant.Employment,
                 ExtraContact = application.Applicant.ExtraContact,
                 Firstname = application.Applicant.Firstname,
                 Gender = application.Applicant.Gender,
@@ -466,6 +482,8 @@ namespace CallCenterCRM
                 ExpireTime = application.ExpireTime,
                 Comment = application.Comment,
                 MeaningOfApplication = application.MeaningOfApplication,
+                OrganizationName = application.Applicant.OrganizationName,
+                Stir = application.Applicant.Stir,
                 Reason = application.Reason,
                 RecipientId = application.RecipientId,
                 AppType = application.Type,
@@ -484,6 +502,8 @@ namespace CallCenterCRM
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ApplicantAppInput applicantApp, IFormFile file)
         {
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+
             if (ModelState.IsValid)
             {
                 try
@@ -516,8 +536,10 @@ namespace CallCenterCRM
                         Maxalla = applicantApp.Maxalla,
                         Middlename = applicantApp.Middlename,
                         OrganizationId = applicantApp.OrganizationId,
+                        OrganizationName = applicantApp.OrganizationName,
                         ReferenceSource = applicantApp.ReferenceSource,
                         Region = applicantApp.Region,
+                        Stir = applicantApp.Stir,
                         Surname = applicantApp.Surname,
                         Type = applicantApp.Type,
                         CreatedDate = applicantApp.CreatedDate,
@@ -557,7 +579,10 @@ namespace CallCenterCRM
                 {
                     throw ex;
                 }
-                return RedirectToAction(nameof(Details), new { Id = applicantApp.AppId,
+                return RedirectToAction(nameof(Details), new
+                {
+                    Id = applicantApp.AppId,
+                    userId = _userService.GetUserId(userIdentity)
                 });
             }
 
@@ -1037,7 +1062,7 @@ namespace CallCenterCRM
             return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
         }
 
-        
+
 
 
     }

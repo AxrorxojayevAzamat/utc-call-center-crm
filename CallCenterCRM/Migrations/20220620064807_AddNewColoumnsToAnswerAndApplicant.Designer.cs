@@ -3,6 +3,7 @@ using System;
 using CallCenterCRM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CallCenterCRM.Migrations
 {
     [DbContext(typeof(CallcentercrmContext))]
-    partial class CallcentercrmContextModelSnapshot : ModelSnapshot
+    [Migration("20220620064807_AddNewColoumnsToAnswerAndApplicant")]
+    partial class AddNewColoumnsToAnswerAndApplicant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,7 +111,7 @@ namespace CallCenterCRM.Migrations
                     b.Property<DateTime>("BirthDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 20, 10, 33, 42, 878, DateTimeKind.Utc).AddTicks(4797));
+                        .HasDefaultValue(new DateTime(2022, 6, 20, 6, 48, 7, 481, DateTimeKind.Utc).AddTicks(2602));
 
                     b.Property<int?>("CityDistrictId")
                         .HasColumnType("integer");
@@ -160,10 +162,6 @@ namespace CallCenterCRM.Migrations
 
                     b.Property<int>("Region")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Stir")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
