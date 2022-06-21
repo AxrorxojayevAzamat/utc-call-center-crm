@@ -25,27 +25,43 @@ namespace CallCenterCRM.Models
 
         [Key]
         public int Id { get; set; }
+
         [StringLength(255)]
         [Display(Name = "Ответственное лицо")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string ResponsiblePerson { get; set; } = null!;
+
         [StringLength(255)]
         [Display(Name = "Исполнитель")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string Executor { get; set; } = null!;
+
         [Display(Name = "Ответное письмо")]
         public int? AttachmentId { get; set; }
+
         [Display(Name = "Регистрационный номер")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string RegisterNumber { get; set; }
+
         [StringLength(255)]
         [Display(Name = "Результат рассмотрения")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string Result { get; set; } = null!;
+
         [Display(Name = "Вывод ")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string Conclusion { get; set; } = null!;
+
         [Display(Name = "Организация")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public int AuthorId { get; set; }
+
         [Display(Name = "Статус")]
         public AnswerStatus Status { get; set; }
+
         [Display(Name = "Заявление")]
         public int ApplicationId { get; set; }
+
 
         [Display(Name = "Причина")]
         public string? Reason { get; set; } = null!;
@@ -53,14 +69,17 @@ namespace CallCenterCRM.Models
         [ForeignKey(nameof(ApplicationId))]
         [InverseProperty("Answer")]
         public virtual Application? Application { get; set; } = null!;
+
         [Display(Name = "Вложение")]
         [ForeignKey(nameof(AttachmentId))]
         [InverseProperty("Answer")]
         public virtual Attachment? Attachment { get; set; } = null!;
+
         [Display(Name = "Организация")]
         [ForeignKey(nameof(AuthorId))]
         [InverseProperty(nameof(User.Answers))]
         public virtual User? Author { get; set; } = null!;
+
         public bool IsGot { get; set; }
 
         /*notmapped*/

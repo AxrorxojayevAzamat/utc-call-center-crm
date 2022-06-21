@@ -1,6 +1,7 @@
 ﻿<script>
     $(document).ready(() => {
         handleTypeApplicant($("#TypeApplicant").val())
+        $("#BirthDate").val(params["birthdate"].slice(0,10).split(".").reverse().join("-") ?? null)
     })
 
     $("#TypeApplicant").change(function(e) {

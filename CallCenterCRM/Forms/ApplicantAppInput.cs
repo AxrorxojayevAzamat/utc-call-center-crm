@@ -35,22 +35,27 @@ namespace CallCenterCRM.Forms
         public string? AppNum { get; set; } = null!;
 
         [Display(Name = "Источник обращения")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public ReferenceSources ReferenceSource { get; set; }
 
         [StringLength(255)]
         [Display(Name = "Фамилия")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string Surname { get; set; } = null!;
 
         [StringLength(255)]
         [Display(Name = "Имя")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string Firstname { get; set; } = null!;
 
         [StringLength(255)]
         [Display(Name = "Отчество")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string Middlename { get; set; } = null!;
 
         [StringLength(255)]
         [Display(Name = "Контакт")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string Contact { get; set; } = null!;
 
         [StringLength(255)]
@@ -59,6 +64,7 @@ namespace CallCenterCRM.Forms
 
         [Column(TypeName = "int(11)")]
         [Display(Name = "Регион")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public Regions Region { get; set; }
 
         [Display(Name = "Город или район")]
@@ -70,17 +76,21 @@ namespace CallCenterCRM.Forms
 
         [Column(TypeName = "text")]
         [Display(Name = "Адрес")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string Address { get; set; } = null!;
 
         [Display(Name = "Пол")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public Genders Gender { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name = "Дата рождения")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public DateTime BirthDate { get; set; }
 
         [Display(Name = "Тип заявителя")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public Types Type { get; set; }
 
         [Display(Name = "Занятость")]
@@ -91,6 +101,7 @@ namespace CallCenterCRM.Forms
 
         [Column(TypeName = "int(11)")]
         [Display(Name = "Классификация")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public int ClassificationId { get; set; }
 
         [Column(TypeName = "datetime")]
@@ -99,6 +110,7 @@ namespace CallCenterCRM.Forms
         public DateTime? ExpireTime { get; set; }
 
         [Display(Name = "Тип обращения")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public AppTypes AppType { get; set; }
 
         [Column(TypeName = "text")]
@@ -111,6 +123,7 @@ namespace CallCenterCRM.Forms
 
         [Column(TypeName = "int(11)")]
         [Display(Name = "Получатель")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public int RecipientId { get; set; }
 
         [Column(TypeName = "int(11)")]
@@ -122,6 +135,7 @@ namespace CallCenterCRM.Forms
         public int ApplicantId { get; set; }
 
         [Display(Name = "Суть обращения")]
+        [Required(ErrorMessage = "Обязательное поле для ввода")]
         public string MeaningOfApplication { get; set; } = null!;
 
         [Display(Name = "Дополнительное примечание к заявлении")]
