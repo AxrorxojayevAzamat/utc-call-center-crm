@@ -52,7 +52,7 @@
                 @Html.DisplayNameFor(model => model.ExpireTime)
             </dt>
             <dd class="col-sm-8">
-                @((Model.ExpireTime.ToShortDateString() != "01.01.0001" ) ? Html.DisplayFor(model => model.ExpireTime) : "-")
+                @(Model.ExpireTime.Year > 1 ? Html.DisplayFor(model => model.ExpireTime) : "-")
             </dd>
             @if (Model.Comment != null && Model.Comment != "")
             {
@@ -192,12 +192,15 @@
             <h4>Ответ</h4>
             <hr />
             <dl class="row">
-                <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.Answer.ResponsiblePerson)
-                </dt>
-                <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.Answer.ResponsiblePerson)
-                </dd>
+                @if (Model.Answer.ResponsiblePerson != null && Model.Answer.ResponsiblePerson != "")
+                {
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Answer.ResponsiblePerson)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Answer.ResponsiblePerson)
+                    </dd>   
+                }
                 <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Answer.Executor)
                 </dt>
