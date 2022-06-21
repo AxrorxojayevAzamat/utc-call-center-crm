@@ -31,6 +31,12 @@
         <hr />
         <dl class="row">
             <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.AuthorName)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.AuthorName)
+            </dd>
+            <dt class="col-sm-4">
                 Номер обращения
             </dt>
             <dd class="col-sm-8">
@@ -122,6 +128,15 @@
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Classification.Title)
             </dd>
+            @if(Model.Recipient.Moderator != null)
+            {
+                <dt class="col-sm-4">
+                    Отправитель
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Recipient.Moderator.Title)
+                </dd>
+            }
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Recipient)
             </dt>

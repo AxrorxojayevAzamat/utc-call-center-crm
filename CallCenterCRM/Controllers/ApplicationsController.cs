@@ -139,6 +139,7 @@ namespace CallCenterCRM
                 .Include(a => a.Attachment)
                 .Include(a => a.Classification)
                 .Include(a => a.Recipient)
+                    .ThenInclude(a => a.Moderator)
                 .Include(a => a.Answer)
                     .ThenInclude(a => a.Attachment)
                 .FirstOrDefaultAsync(m => m.Id == id);
