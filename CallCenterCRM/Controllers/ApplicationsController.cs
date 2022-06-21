@@ -731,6 +731,7 @@ namespace CallCenterCRM
             var applications = _context.Applications.Include(a => a.Recipient)
                 .Where(a => (a.Status == ApplicationStatus.Delay || a.Status == ApplicationStatus.AskDelay || a.Status == ApplicationStatus.RejectDelay)
                 && (a.Recipient.ModeratorId == recipientId || a.Recipient.Id == recipientId))
+                .Include(a => a.Answer)
                 .Include(a => a.Applicant)
                     .ThenInclude(a => a.CityDistrict)
                 .Include(a => a.Attachment)
