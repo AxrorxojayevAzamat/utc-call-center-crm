@@ -98,7 +98,7 @@
                     Номер обращения
                 </dt>
                 <dd class="col-sm-8">
-                    @applicationService.GetAppNumber(Model.Application)
+                    @(Model.Application.AppNum ?? $"{Model.Application.Id}-{(int)Model.Application.Applicant.ReferenceSource}/{Model.Application.CreatedDate.Value.Year.ToString().Substring(2)}")
                 </dd>
                 <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Application.Type)
@@ -146,12 +146,6 @@
                     </dd>
                 }
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.Application.Classification)
-                </dt>
-                <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.Application.Classification.Direction)
-                </dd>
-                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Application.Recipient)
                 </dt>
                 <dd class="col-sm-8">
@@ -171,31 +165,15 @@
                 }
                 else
                 {
-                    @if (Model.Application.Answer != null && Model.Application.Answer.Status == AnswerStatus.Confirm)
-                    {
-                        <dt class="col-sm-4">
-                            @Html.DisplayNameFor(model => model.Application.Answer.Status)
-                        </dt>
-                        <dd class="col-sm-8">
-                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAnswerStatusParams(Model.Application.Answer.Status).color btn-fw">
-                                <i class="mdi mdi-@applicationService.GetAnswerStatusParams(Model.Application.Answer.Status).icon"></i>
-                                @Model.Application.Answer.Status.GetDisplayName()
-                            </span>
-                        </dd>
-                    }
-                    else
-                    {
-                        <dt class="col-sm-4">
-                            @Html.DisplayNameFor(model => model.Application.Status)
-                        </dt>
-                        <dd class="col-sm-8">
-                            <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(Model.Application.Status).color btn-fw">
-                                <i class="mdi mdi-@applicationService.GetAppStatusParams(Model.Application.Status).icon"></i>
-                                @Model.Application.Status.GetDisplayName()
-                            </span>
-                        </dd>
-
-                    }
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Application.Status)
+                    </dt>
+                    <dd class="col-sm-8">
+                        <span class="app-status btn-rounded btn-inverse-@applicationService.GetAppStatusParams(Model.Application.Status).color btn-fw">
+                            <i class="mdi mdi-@applicationService.GetAppStatusParams(Model.Application.Status).icon"></i>
+                            @Model.Application.Status.GetDisplayName()
+                        </span>
+                    </dd>
                 }
                 @if (applicationService.ShowReason(Model.Application, userService.GetUserRole(userIdentityId)))
                 {

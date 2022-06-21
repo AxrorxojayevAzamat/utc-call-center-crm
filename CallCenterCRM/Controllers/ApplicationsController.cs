@@ -841,7 +841,7 @@ namespace CallCenterCRM
         public IActionResult SendOrg(int id, Application app)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
-            int recipientId = application.RecipientId;
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
 
             if (application == null)
             {
@@ -879,7 +879,7 @@ namespace CallCenterCRM
                 }
             }
 
-            return RedirectToAction(nameof(AppsList), new { recipientId });
+            return RedirectToAction(nameof(AppsList), new { recipientId = _userService.GetUserId(userIdentity) });
         }
 
         [HttpGet]
@@ -896,7 +896,7 @@ namespace CallCenterCRM
         public IActionResult RejectOrg(int id, Application app)
         {
             var application = _context.Applications.Include(a => a.Recipient).FirstOrDefault(a => a.Id == id);
-            int recipientId = application.RecipientId;
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
 
             if (application == null)
             {
@@ -926,7 +926,7 @@ namespace CallCenterCRM
                 }
             }
 
-            return RedirectToAction(nameof(AppsList), new { recipientId });
+            return RedirectToAction(nameof(AppsList), new { recipientId = _userService.GetUserId(userIdentity) });
         }
 
         [HttpGet]
@@ -944,7 +944,7 @@ namespace CallCenterCRM
         public IActionResult Delay(int id, Application app)
         {
             var application = _context.Applications.Include(a => a.Recipient).FirstOrDefault(a => a.Id == id);
-            int recipientId = application.RecipientId;
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
 
             if (application == null)
             {
@@ -974,7 +974,7 @@ namespace CallCenterCRM
                 }
             }
 
-            return RedirectToAction(nameof(AppsList), new { recipientId });
+            return RedirectToAction(nameof(AppsList), new { recipientId = _userService.GetUserId(userIdentity) });
         }
 
 
@@ -1009,13 +1009,14 @@ namespace CallCenterCRM
         public IActionResult AskDelay(int id)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
 
             application.Status = ApplicationStatus.AskDelay;
             application.IsGot = false;
             _context.Update(application);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
+            return RedirectToAction(nameof(AppsList), new { recipientId = _userService.GetUserId(userIdentity) });
         }
 
         [HttpGet]
@@ -1049,6 +1050,8 @@ namespace CallCenterCRM
         public IActionResult RejectDelay(int id, Application app)
         {
             var application = _context.Applications.FirstOrDefault(a => a.Id == id);
+            var userIdentity = User.Identities.First().Claims.First(c => c.Type == nameIdentityId).Value;
+            
             if (application == null)
             {
                 return NotFound();
@@ -1073,11 +1076,8 @@ namespace CallCenterCRM
                 }
             }
 
-            return RedirectToAction(nameof(AppsList), new { recipientId = application.RecipientId });
+            return RedirectToAction(nameof(AppsList), new { recipientId = _userService.GetUserId(userIdentity) });
         }
-
-
-
 
     }
 }
