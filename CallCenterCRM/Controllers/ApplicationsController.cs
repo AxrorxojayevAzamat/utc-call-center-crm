@@ -315,6 +315,7 @@ namespace CallCenterCRM
                     application.AppNum = _applicationService.GetAppNumber(application);
                     _context.Applications.Add(application);
                     _context.SaveChanges();
+                    applicantApp.AppId = application.Id;
 
                 }
                 catch (Exception ex)
@@ -438,6 +439,7 @@ namespace CallCenterCRM
                     application.AppNum = _applicationService.GetAppNumber(application);
                     _context.Applications.Add(application);
                     _context.SaveChanges();
+                    applicantApp.AppId = application.Id;
                 }
                 catch (Exception ex)
                 {
