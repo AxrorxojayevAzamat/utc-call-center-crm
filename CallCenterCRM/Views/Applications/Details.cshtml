@@ -287,7 +287,7 @@
                 {
                     @if (Model.Status == ApplicationStatus.AskDelay)
                     {
-                        <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отложить</a>
+                        <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Продлить срок</a>
                         <a asp-action="RejectDelay" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонить задержку</a>
                     }
                     else
@@ -303,7 +303,7 @@
        class="btn btn-success btn-rounded btn-fw">Написание ответа</a>
                     @if (Model.Status != ApplicationStatus.Delay)
                     {
-                        <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Отложить</a>
+                        <a asp-action="Delay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Продлить срок</a>
                         <a asp-action="RejectMod" asp-route-id="@Model?.Id" class="btn btn-danger btn-rounded btn-fw">Отклонять</a>
                     }
                 }
@@ -329,7 +329,7 @@
                 }
                 @if (Model.ExpireTime <= currentTime && (Model.Status == ApplicationStatus.SendOrg || Model.Status == ApplicationStatus.RejectDelay || Model.Status == ApplicationStatus.Delay))
                 {
-                    <a asp-action="AskDelay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Спросите продолжить</a>
+                    <a asp-action="AskDelay" asp-route-id="@Model?.Id" class="btn btn-warning btn-rounded btn-fw">Запросить продление</a>
                 }
             }
         }

@@ -50,7 +50,7 @@ namespace CallCenterCRM.Models
         [Display(Name = "В процессе работы")] SendOrg = 2,
         [Display(Name = "Отказ от организации")] RejectOrg = -2,
         [Display(Name = "Отредактирован")] Edit = 3,
-        [Display(Name = "Просьба о задержке")] AskDelay = 4,
+        [Display(Name = "Просьба о продление")] AskDelay = 4,
         [Display(Name = "Отказ о задержке")] RejectDelay = -4,
         [Display(Name = "Просрочен")] Delay = 5,
         [Display(Name = "Взял модератор")] GotMod = 0,
