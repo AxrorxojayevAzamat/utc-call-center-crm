@@ -35,7 +35,8 @@ namespace CallCenterCRM.Controllers
 
             Roles userRole = _userService.GetRole(userIdentity);
             int userId = _userService.GetUserId(userIdentity);
-
+            ViewData["role"] = userRole;
+            
             List<int> allCount = new List<int>();
             List<int> doneCount = new List<int>();
             List<int> doughnutCount = new List<int>();
