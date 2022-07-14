@@ -1,4 +1,18 @@
 ﻿@model CallCenterCRM.Models.Application
+@using CallCenterCRM.Interfaces
+@inject IUserService userService
+
+@{
+    string typeIdentityId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    string userIdentityId = GetUserClaim(typeIdentityId);
+
+    var isAuthenticated = User.Identity.IsAuthenticated;
+
+    string GetUserClaim(string type)
+    {
+        return User.Identities.First().Claims.First(c => c.Type == type).Value;
+    }
+}
 
 <h1>Отправить в организацию</h1>
 
@@ -34,7 +48,8 @@
         </div>
         <div class="form-group col-md-12 mt-3">
             <input type="submit" value="Отправить" asp-action="SendOrg" asp-route-id=@Model.Id class="btn btn-info btn-rounded" />
-            <a asp-action="Details" asp-route-id=@Model.Id class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
+            <a asp-action="Details" asp-route-userId=@userService.GetUserId(userIdentityId) asp-route-id=@Model.Id  asp-route-actionName="AppsList"
+            class="btn btn-secondary btn-rounded btn-fw mx-3">Назад</a>
         </div>
     </div>
 </form>
