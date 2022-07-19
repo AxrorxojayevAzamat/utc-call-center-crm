@@ -55,7 +55,7 @@ builder.Services.AddAuthentication(options =>
     {
 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.SignOutScheme = "Cookies";
+        options.SignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
 
         options.Authority = configuration.GetValue<string>("Identity:Url");
         options.GetClaimsFromUserInfoEndpoint = true;
