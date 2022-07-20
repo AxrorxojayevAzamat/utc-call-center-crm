@@ -41,7 +41,7 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
-    options.DefaultChallengeScheme = "oidc";
+    options.DefaultChallengeScheme = "OpenIdConnect";
 })
     .AddCookie("Cookies", options =>
    {
@@ -51,7 +51,7 @@ builder.Services.AddAuthentication(options =>
        if (builder.Environment.IsDevelopment())
            options.Cookie.SecurePolicy = CookieSecurePolicy.None;
    })
-    .AddOpenIdConnect("oidc", options =>
+    .AddOpenIdConnect("OpenIdConnect", options =>
     {
 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
