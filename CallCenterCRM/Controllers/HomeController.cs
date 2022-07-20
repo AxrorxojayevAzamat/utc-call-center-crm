@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CallCenterCRM.Data;
 using CallCenterCRM.Models;
@@ -99,7 +99,7 @@ namespace CallCenterCRM.Controllers
         [Route("action")]
         public IActionResult Logout()
         {
-            return SignOut(new AuthenticationProperties() { RedirectUri = homeUrl }, "Cookies", "oidc");
+            return SignOut(new AuthenticationProperties() { RedirectUri = homeUrl }, "Cookies", "OpenIdConnect");
         }
 
         [Authorize(Roles = "CrmOperator")]
