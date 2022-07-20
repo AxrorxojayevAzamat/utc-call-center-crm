@@ -87,6 +87,12 @@
                     </div>
                 </li>
             }
+            @if (userService.GetRole(userIdentityId) == Roles.CrmOperator)
+            {
+                <li class="pb-2">
+                    <a asp-controller="Applications" asp-action="CreateApplicant" class="btn btn-success btn-rounded">Создать новое</a>
+                </li>   
+            }
             <li class="nav-item dropdown d-lg-block user-dropdown">
                 <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                     <h6>

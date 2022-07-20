@@ -2710,6 +2710,7 @@ h5 span.crm {
         padding: 0 6px;
         background-color: #f8f9fa;
         border-radius: 6px;
+        right: 30px;
         z-index: 10;
         transition: ease-in-out .3s all;
     }
@@ -2864,3 +2865,12 @@ a.dropdown-item i.text-primary {
         border: 0.3vw solid #ffffff;
         border-radius: 5vw;
     }
+
+.c-20xx {
+    position: fixed;
+    bottom: 10px;
+    color: #8d8d8d;
+    font-size: 12px;
+    width: 220px;
+    padding-left: 20px;
+}
