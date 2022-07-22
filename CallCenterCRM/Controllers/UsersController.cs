@@ -13,6 +13,8 @@ using System.ComponentModel.DataAnnotations;
 using CallCenterCRM.Forms;
 using Microsoft.AspNetCore.Authorization;
 using CallCenterCRM.Interfaces;
+using UTC.Auth.Client;
+using System.Text.Json;
 
 namespace CallCenterCRM.Controllers
 {
@@ -94,9 +96,9 @@ namespace CallCenterCRM.Controllers
                     _context.Add(user);
                     _context.SaveChanges();
                 }
-                catch (Exception ex)
+                catch (ApiException<UTC.Auth.Client.ProblemDetails> ex)
                 {
-                    throw new Exception(ex.Message);
+                    throw new Exception(JsonSerializer.Serialize( ex.Result.AdditionalProperties));
                 }
 
                 return RedirectToAction(nameof(Index));
