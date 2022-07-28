@@ -59,7 +59,7 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id"><i class="mdi mdi-lead-pencil icon-edit"></i></a>
                     <a asp-action="Details" asp-route-id="@item.Id"><i class="mdi mdi-eye"></i></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>
+                    @*<a asp-action="Delete" asp-route-id="@item.Id"><i class="mdi mdi-delete"></i></a>*@
                     <a asp-action="PasswordChange" asp-route-id="@item.Id" asp-route-byAdmin="true"><i class="mdi mdi-key-variant"></i></a>
                 </td>
             </tr>
