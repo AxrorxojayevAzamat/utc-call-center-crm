@@ -10,10 +10,16 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using System.Configuration;
+using Serilog;
+using Serilog.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
+builder.Host.UseSerilog((ctx, lc) => lc
+        .Enrich.WithExceptionDetails()
+        .WriteTo.Console()
+        .ReadFrom.Configuration(ctx.Configuration));
 
 //Http client
 builder.Services.AddHttpContextAccessor();
@@ -84,8 +90,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<CallcentercrmContext>();
-    db.Database.EnsureDeleted();   // удаляем бд со старой схемой
-    //db.Database.EnsureCreated();   // создаем бд с новой схемой
+    db.Database.EnsureDeleted();   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+    //db.Database.EnsureCreated();   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     db.Database.Migrate();
 }
 
