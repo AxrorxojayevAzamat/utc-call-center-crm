@@ -16,7 +16,15 @@ namespace CallCenterCRM.Services
         }
         public string GetAppNumber(Application item)
         {
-            int Id = _context.Applications.OrderBy(a => a.Id).Last().Id + 1;
+            var element = _context.Applications.Count();
+            int Id = 0;
+            if(element > 0)
+            {
+                Id = _context.Applications.OrderBy(a => a.Id).Last().Id + 1;
+            } else
+            {
+                Id = 1;
+            }
             int RefSrcCode = (int)item.Applicant.ReferenceSource;
             string Year = DateTime.Now.Year.ToString().Substring(2);
 
