@@ -42,6 +42,36 @@
             <dd class="col-sm-8">
                 @(Model.AppNum ?? $"{Model.Id}-{(int)Model.Applicant.ReferenceSource}/{Model.CreatedDate.Value.Year.ToString().Substring(2)}")
             </dd>
+            @if(!(Model.Applicant.Surname == "" && Model.Applicant.Firstname == "" && Model.Applicant.Middlename == ""))
+            {
+               <dt class="col-sm-4">
+                    Ф.И.О
+                </dt>
+                <dd class="col-sm-8">
+                    @($"{Model.Applicant.Surname} {Model.Applicant.Firstname} {Model.Applicant.Middlename}")
+                </dd> 
+            }
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Applicant.Region)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Applicant.Region)
+            </dd>
+            @if (Model.Applicant.CityDistrict != null)
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Applicant.CityDistrictId)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Applicant.CityDistrict.Title)
+                </dd> 
+            }
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Applicant.Address)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Applicant.Address)
+            </dd>
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Type)
             </dt>
@@ -104,13 +134,22 @@
                     @Html.DisplayFor(model => model.Applicant.Employment)
                 </dd>
             }
-            @if (Model.AdditionalNote != null && Model.AdditionalNote != "")
+            @if (Model.Applicant.Contact!= null && Model.Applicant.Contact!= "")
             {
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.AdditionalNote)
+                    @Html.DisplayNameFor(model => model.Applicant.Contact)
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.AdditionalNote)
+                    @Html.DisplayFor(model => model.Applicant.Contact)
+                </dd>
+            }
+            @if (Model.Applicant.ExtraContact!= null && Model.Applicant.ExtraContact!= "")
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Applicant.ExtraContact)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Applicant.ExtraContact)
                 </dd>
             }
             @if (Model.Attachment != null)
